@@ -1,0 +1,17 @@
+.iconsBox {
+  @apply px-6 py-4 text-white border rounded-md cursor-pointer bg-home-left-pane border-home-gray hover:bg-body-normal;
+}
+
+.controls {
+  @apply bg-red-500;
+}
+
+.nodeBox textarea {
+  @apply w-full h-full p-4 text-white border-2 rounded-md resize-none border-home-gray bg-body-main-bg focus:outline-none focus:border-2 focus:border-body-normal;
+}
+
+.nodeBox{
+@apply w-full h-full
+}
+
+

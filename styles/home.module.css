@@ -1,0 +1,47 @@
+.leftPane {
+  @apply fixed w-1/5 h-screen text-white border-r border-opacity-50 border-home-gray bg-home-left-pane;
+}
+
+.innerPane {
+  @apply fixed h-full px-2 border-r border-opacity-50 shadow-lg border-home-gray w-13 bg-home-left-pane;
+}
+
+.icons {
+  @apply flex flex-col items-center mx-auto mt-4 space-y-3 cursor-pointer;
+}
+
+.icons img {
+  @apply p-1 rounded-md opacity-50 hover:bg-home-gray hover:bg-opacity-50 hover:opacity-100;
+}
+
+.iconsHover {
+  @apply flex items-center ml-auto space-x-2;
+}
+
+.iconsHover img {
+  @apply w-4 h-4 opacity-50 hover:opacity-100;
+}
+
+.mainPane {
+  @apply flex flex-col h-full mt-5 ml-14;
+}
+
+.showPane {
+  @apply flex justify-center;
+}
+
+.showPane img {
+  @apply p-1 rounded-md opacity-50 cursor-pointer hover:bg-home-gray hover:bg-opacity-50 hover:opacity-100;
+}
+
+.mainContent {
+  @apply text-white cursor-pointer text-opacity-70;
+}
+
+.nameBox {
+  @apply flex flex-row px-6 py-1 mx-3 rounded-md cursor-pointer my-2px hover:bg-home-gray hover:bg-opacity-30;
+}
+
+.selected {
+  @apply bg-opacity-30 bg-home-gray;
+}
