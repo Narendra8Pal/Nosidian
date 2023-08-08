@@ -1,5 +1,6 @@
 // REACT, files, styles
-import { useCallback, useState, useContext, useEffect } from "react";
+import {  useState, useContext, useEffect} from "react";
+import {useCallback, memo} from "react"
 import { Handle, Position, NodeResizer, NodeResizeControl } from "reactflow";
 import CanvasStyles from "@/styles/canvas.module.css";
 import { userContext } from "./canvas.js";
@@ -240,4 +241,4 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
   );
 }
 
-export default TextUpdaterNode;
+export default memo (TextUpdaterNode);

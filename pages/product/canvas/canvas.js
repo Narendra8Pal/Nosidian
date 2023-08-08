@@ -1,7 +1,7 @@
 //styles, files, REACT
 import Home from "../home";
 import canvasStyles from "@/styles/canvas.module.css";
-import CanvasStyles from "@/styles/canvas.module.css"
+import CanvasStyles from "@/styles/canvas.module.css";
 import CustomNode from "./customNode";
 import { useState } from "react";
 import TextUpdaterNode from "./textUpdaterNode";
@@ -20,10 +20,10 @@ import ReactFlow, {
   removeElements,
   applyNodeChanges,
   applyEdgeChanges,
+  NodeToolbar,
 } from "reactflow";
 import Draggable, { DraggableCore } from "react-draggable";
 import { useDrag } from "@use-gesture/react";
-
 
 const userContext = createContext();
 
@@ -31,8 +31,6 @@ const proOptions = { hideAttribution: true };
 const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used inside the component
 
 const canvas = () => {
-  
-
   const initialNodes = [
     {
       id: "1",
@@ -45,10 +43,6 @@ const canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
-
-
-
-
   // const onConnect = (params) => {
   //   if (params.source !== params.target) {
   //     const newEdge = {
@@ -59,7 +53,6 @@ const canvas = () => {
   //     setEdges((prevEdges) => addEdge(newEdge, prevEdges));
   //   }
   // };
-
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nodes) => applyNodeChanges(changes, nodes)),
@@ -76,9 +69,9 @@ const canvas = () => {
       position: { x: 450, y: 450 },
       data: { value: 123 },
       type: "textUpdater",
-    }
+    };
     setNodes((prevNodes) => [...prevNodes, newNode]);
-    console.log(newNode.id,'this is from handleCreateNode')
+    console.log(newNode.id, "this is from handleCreateNode");
   };
 
   const handleCreateEdge = (sourceNodeId, targetNodeId) => {
@@ -86,10 +79,12 @@ const canvas = () => {
       id: `${sourceNodeId}-${targetNodeId}`,
       source: sourceNodeId,
       target: targetNodeId,
-    }
-    setEdges((prevEdges) => [...prevEdges, newEdge])
-    console.log(newEdge.id, "handle createEdge func coming up")
-  }
+    };
+    setEdges((prevEdges) => [...prevEdges, newEdge]);
+    console.log(newEdge.id, "handle createEdge func coming up");
+  };
+
+const elements = nodes.concat(edges)
 
   return (
     <>
@@ -105,6 +100,7 @@ const canvas = () => {
           nodeTypes={nodeTypes}
           proOptions={proOptions}
           // fitView
+          elements={elements}
         >
           <Panel
             position="bottom-center"
@@ -124,12 +120,16 @@ const canvas = () => {
           />
           <Background variant="" gap={12} size={1} />
 
-          <userContext.Provider value={nodes}>
-            <TextUpdaterNode/>
-          </userContext.Provider>
+          {/* <userContext.Provider value={nodes}>
+            <TextUpdaterNode />
+          </userContext.Provider> */}
 
-
-
+          <TextUpdaterNode
+            // nodeTypes={{ textUpdater: TextUpdaterNode }}
+            nodes={nodes}
+            edges={edges}
+            onCreateEdge={handleCreateEdge}
+          />
         </ReactFlow>
       </div>
     </>
