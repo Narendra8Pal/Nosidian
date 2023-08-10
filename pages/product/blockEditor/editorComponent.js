@@ -1,20 +1,35 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React from "react";
+import dynamic from "next/dynamic";
+import Home from "@/pages/product/home.js";
 
-const EditorWidget = dynamic(import('./blockEditor.js'), { ssr: false });// it will be executed on the client side after the initial page load (working with DOM)
+const EditorWidget = dynamic(import("./blockEditor.js"), { ssr: false }); // it will be executed on the client side after the initial page load (working with DOM)
 
 const EditorComponent = () => {
   const handleSaveToServer = (data) => {
     // Handle saving data to the server
-    // also you can send the data to the server from here 
-    console.log('EditorJS data:', data);
+    // also you can send the data to the server from here
+    console.log("EditorJS data:", data);
+  };
+
+  const handleReady = (editor) => {
+    new DragDrop(editor);
   };
 
   return (
-    <div className='bg-white'>
-      <h1>EditorJS Example</h1>
-      <EditorWidget onSave={handleSaveToServer} />
-    </div>
+    <>
+      <div className="flex">
+        <div className="w-1/4">
+          <Home />
+        </div>
+        <div className="w-3/4">
+          <EditorWidget
+            style={{ marginTop: "20px" }}
+            onSave={handleSaveToServer}
+            onReady={handleReady}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 

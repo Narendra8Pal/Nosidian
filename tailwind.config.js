@@ -16,9 +16,15 @@ module.exports = {
  'left-pane': "#212120",
  'gray': "#5e5e5e",
       },
+      editor:{
+        "btn-icon":"#c0c2c4"
+      },
       },
       width: {
-"13": "3%"
+"13": "3%",
+      },
+      maxWidth: {
+        '1000': "1000px",
       },
       margin: {
         "2px": "2px",

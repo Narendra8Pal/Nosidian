@@ -3,5 +3,30 @@
 @tailwind utilities;
 
 body {
-@apply bg-body-main-bg
+  @apply bg-body-main-bg;
+}
+
+/* .ce-block_content{
+    @apply  w-1000 mx-auto bg-emerald-200
+} */
+
+.cdx-block {
+  @apply ml-auto text-white mr-52 max-w-1000;
+}
+
+.ce-block__content,
+.ce-toolbar__content {
+  @apply max-w-1000;
+}
+
+.ce-toolbar__plus {
+  @apply hover:bg-editor-btn-icon hover:bg-opacity-30 text-home-gray hover:text-white hover:text-opacity-70;
+}
+
+.ce-toolbar__settings-btn {
+  @apply hover:bg-editor-btn-icon hover:bg-opacity-30 text-home-gray hover:text-white hover:text-opacity-70;
+}
+
+.ce-inline-tool {
+  /* @apply bg-home-gray text-black */
 }

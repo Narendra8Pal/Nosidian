@@ -1,0 +1,7 @@
+.cdx_block{
+    @apply bg-white max-w-full mx-auto 
+}
+
+.ce_block_content {
+    @apply max-w-full bg-white
+}
