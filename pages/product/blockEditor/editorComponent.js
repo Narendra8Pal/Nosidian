@@ -18,12 +18,12 @@ const EditorComponent = () => {
   return (
     <>
       <div className="flex">
-        <div className="w-1/4">
+        <div className="w-1/5">
           <Home />
         </div>
-        <div className="w-3/4">
+        <div className="w-4/5">
           <EditorWidget
-            style={{ marginTop: "20px" }}
+            // style={{ marginTop: "20px" }}
             onSave={handleSaveToServer}
             onReady={handleReady}
           />

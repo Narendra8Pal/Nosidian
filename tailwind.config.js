@@ -17,18 +17,23 @@ module.exports = {
  'gray': "#5e5e5e",
       },
       editor:{
-        "btn-icon":"#c0c2c4"
+        "btn-icon":"#c0c2c4",
+        "text":"#DCDCDC",
+        "body": "#1c1c1b",
+        // "body": "#1a1a18",
       },
       },
       width: {
 "13": "3%",
       },
       maxWidth: {
+        '800': '800px',
         '1000': "1000px",
       },
       margin: {
         "2px": "2px",
-        "3%":"30px"
+        "3%":"30px",
+        "363px": "363px",
       }
     },
   },

@@ -1,7 +1,7 @@
-.cdx_block{
-    @apply bg-white max-w-full mx-auto 
+.coverPage{
+@apply h-64 w-full
 }
 
-.ce_block_content {
-    @apply max-w-full bg-white
+.heading{
+@apply mt-32 ml-363px mr-auto text-4xl font-bold text-editor-text max-w-800 
 }

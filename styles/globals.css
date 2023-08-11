@@ -3,20 +3,35 @@
 @tailwind utilities;
 
 body {
-  @apply bg-body-main-bg;
+  @apply bg-editor-body;
+  /* @apply bg-body-main-bg; */
 }
 
-/* .ce-block_content{
-    @apply  w-1000 mx-auto bg-emerald-200
-} */
+::selection{
+  @apply bg-body-normal;
+}
+
 
 .cdx-block {
-  @apply ml-auto text-white mr-52 max-w-1000;
+  @apply  text-lg text-editor-text ;
+}
+
+.codex-editor__redactor{
+  /* @apply pt-16 mr-96; */
+  @apply pt-4;
 }
 
 .ce-block__content,
 .ce-toolbar__content {
-  @apply max-w-1000;
+  @apply  max-w-800;
+}
+
+.ce-toolbar__actions{
+/* @apply mr-48; */
+}
+
+.cdx-search-field__input{
+  @apply text-black
 }
 
 .ce-toolbar__plus {
@@ -27,6 +42,43 @@ body {
   @apply hover:bg-editor-btn-icon hover:bg-opacity-30 text-home-gray hover:text-white hover:text-opacity-70;
 }
 
-.ce-inline-tool {
-  /* @apply bg-home-gray text-black */
+.ce-inline-toolbar__toggler-and-button-wrapper{
+  @apply text-black
 }
+
+.ce-conversion-tool{
+  @apply text-black
+}
+
+.ce-block--selected.ce-block--focused .ce-block__content {
+  @apply  bg-home-gray bg-opacity-20 ;
+}
+
+.ce-block--selected .ce-block__content {
+  @apply  bg-home-gray bg-opacity-20 ;
+}
+
+
+
+/* ! this is for the unsplash package for editorjs  */
+
+/* .inline-image__embed-button {
+  @apply bg-body-normal text-white rounded-sm !important
+} */
+
+/* .inline-image__tab{
+  @apply  active:text-body-normal active:border-none active:border-body-normal  !important
+} */
+
+/* .inline-image__tab.active {
+  border-width: 0 0 0 0 !important;
+} */
+
+/* .inline-image__tab{
+  @apply hover:bg-home-gray hover:bg-opacity-50 rounded-md !important
+} */
+
+/* .inline-image__control-panel{
+  all: unset;
+} */
+/* ! end of -- this is for the unsplash package for editorjs  */
