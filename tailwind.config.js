@@ -21,6 +21,7 @@ module.exports = {
         "text":"#DCDCDC",
         "body": "#1c1c1b",
         // "body": "#1a1a18",
+        // "body": "#1f2323",
       },
       },
       width: {
