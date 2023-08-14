@@ -1,7 +1,7 @@
 // REACT, STYLES, FILES
 import React, { useEffect, useRef, useState } from "react";
 import styles from "@/styles/editor.module.css";
-import SimpleImage from "./unsplash";
+import SimpleImage from "./imageTool";
 
 // library
 import EditorJS from "@editorjs/editorjs";
@@ -57,7 +57,7 @@ const BlockEditor = ({ onSave }) => {
           // },
 
           image: {
-            class: SimpleImage, 
+            class: SimpleImage,
             inlineToolbar: true,
           },
 

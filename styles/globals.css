@@ -7,31 +7,30 @@ body {
   /* @apply bg-body-main-bg; */
 }
 
-::selection{
+::selection {
   @apply bg-home-gray;
 }
 
-
 .cdx-block {
-  @apply  text-lg text-editor-text ;
+  @apply text-lg text-editor-text;
 }
 
-.codex-editor__redactor{
+.codex-editor__redactor {
   /* @apply pt-16 mr-96; */
   @apply pt-4;
 }
 
 .ce-block__content,
 .ce-toolbar__content {
-  @apply  max-w-800;
+  @apply max-w-800;
 }
 
-.ce-toolbar__actions{
-/* @apply mr-48; */
+.ce-toolbar__actions {
+  /* @apply mr-48; */
 }
 
-.cdx-search-field__input{
-  @apply text-black
+.cdx-search-field__input {
+  @apply text-black;
 }
 
 .ce-toolbar__plus {
@@ -42,23 +41,21 @@ body {
   @apply hover:bg-editor-btn-icon hover:bg-opacity-30 text-home-gray hover:text-white hover:text-opacity-70;
 }
 
-.ce-inline-toolbar__toggler-and-button-wrapper{
-  @apply text-black
+.ce-inline-toolbar__toggler-and-button-wrapper {
+  @apply text-black;
 }
 
-.ce-conversion-tool{
-  @apply text-black
+.ce-conversion-tool {
+  @apply text-black;
 }
 
 .ce-block--selected.ce-block--focused .ce-block__content {
-  @apply  bg-home-gray bg-opacity-20 ;
+  @apply bg-home-gray bg-opacity-20;
 }
 
 .ce-block--selected .ce-block__content {
-  @apply  bg-home-gray bg-opacity-20 ;
+  @apply bg-home-gray bg-opacity-20;
 }
-
-
 
 /* ! this is for the unsplash package for editorjs  */
 
@@ -83,12 +80,12 @@ body {
 } */
 /* ! end of -- this is for the unsplash package for editorjs  */
 
-
 .simple-image {
   padding: 20px 0;
 }
 
-.simple-image input, .simple-image [contentEditable] {
+.simple-image input,
+.simple-image [contentEditable] {
   width: 100%;
   padding: 10px;
   border: 1px solid #e4e4e4;
@@ -100,6 +97,26 @@ body {
 .simple-image img {
   max-width: 100%;
   margin-bottom: 15px;
+}
+
+.img-box {
+  @apply w-1/2 p-3 mx-auto rounded-sm bg-home-gray;
+}
+
+.uploadBtn {
+  @apply w-full px-2 py-1 mx-auto mb-2 text-white border border-white rounded-lg ;
+}
+
+.upload-icons{
+  @apply flex w-full py-2 border-b mb-5
+}
+
+.embedImg-icon{
+  @apply hover:bg-home-left-pane hover:rounded-md hover:px-2 hover:py-1 bg-opacity-50 text-white px-2 py-1 cursor-pointer
+}
+
+.unsplashImg-icon{
+  @apply hover:bg-home-left-pane bg-opacity-50 text-white ml-3 hover:rounded-md hover:px-2 hover:py-1 px-2 py-1 cursor-pointer
 }
 
 /* ? this is for the render setting menu  */
