@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 function PhotoSearch() {
   const [photos, setPhotos] = useState([]);
   const query = 'nature';
-  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+  const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
 
   useEffect(() => {
     fetch(`https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`)
@@ -18,8 +18,8 @@ function PhotoSearch() {
 
   return (
     <div>
-      {photos.map(photo => (
-        <img key={photo.id} src={photo.urls.regular} alt={photo.alt_description} />
+      {photos && photos.map(photo => (
+        <img key={photo.id} src={photo.urls.regular} className='w-1/12 h-1/6' alt={photo.alt_description} />
       ))}
     </div>
   );
