@@ -22,6 +22,7 @@ module.exports = {
         "body": "#1c1c1b",
         // "body": "#1a1a18",
         // "body": "#1f2323",
+        'imgShowcase':"#2d2e30"
       },
       },
       width: {

@@ -14,6 +14,7 @@ class SimpleImage {
 
     this.wrapper = undefined;
     this.addImg = undefined;
+    this.box = undefined;
     this.settings = [
       {
         name: "withBorder",
@@ -40,15 +41,18 @@ class SimpleImage {
   }
 
   render() {
-    const query = "nature";
+    const query = "apple";
     const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
 
     this.addImg = document.createElement("div");
     this.addImg.classList.add("img-box");
 
     this.wrapper = document.createElement("div");
-
     this.wrapper.classList.add("simple-image");
+
+    this.box = document.createElement("div");
+    this.box.classList.add("showcase-box");
+    this.box.appendChild(this.wrapper);
 
     if (this.data && this.data.url) {
       this._createImage(this.data.url, this.data.caption);
@@ -103,8 +107,6 @@ class SimpleImage {
     uploadIcons.appendChild(embedImgIcon);
     uploadIcons.appendChild(unsplashImgIcon);
 
-
-
     unsplashImgIcon.addEventListener("click", () => {
       fetch(
         `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`
@@ -112,20 +114,22 @@ class SimpleImage {
         .then((response) => response.json())
         .then((data) => {
           // imgShowcase.appendChild(data)
-          const imgUrls = data.results.map(result => result.urls.regular);
+          const imgUrls = data.results.map((result) => result.urls.regular);
+
 
           for (const imgUrl of imgUrls) {
             const imgShowcase = document.createElement("img");
-            imgShowcase.setAttribute('src', imgUrl);
+            imgShowcase.setAttribute("src", imgUrl);
             this.wrapper.appendChild(imgShowcase);
+
+            imgShowcase.classList.add("unsplash-img");
+            this.addImg.appendChild(this.box);
           }
           console.log(data, "success bro");
         })
         .catch((error) => {
           console.error("Error fetching photos:", error);
         });
-
- 
     });
 
     this.addImg.appendChild(uploadIcons);
@@ -133,7 +137,8 @@ class SimpleImage {
 
     const container = document.createElement("div");
     container.appendChild(this.addImg);
-    container.appendChild(this.wrapper);
+    // container.appendChild(this.wrapper);
+    // container.appendChild(this.box);
 
     return container;
   }

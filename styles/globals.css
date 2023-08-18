@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 body {
-  @apply bg-editor-body;
+  @apply bg-editor-body ;
   /* @apply bg-body-main-bg; */
+}
+
+body::-webkit-scrollbar{
+@apply w-2
+}
+
+body::-webkit-scrollbar-thumb{
+@apply bg-[#6b7280] 
 }
 
 ::selection {
@@ -80,9 +88,14 @@ body {
 } */
 /* ! end of -- this is for the unsplash package for editorjs  */
 
-.simple-image {
+/* .simple-image {
   padding: 20px 0;
-}
+  grid-template-columns: auto auto auto ;
+  display: grid;
+  height: ;
+} */
+
+
 
 .simple-image input,
 .simple-image [contentEditable] {
@@ -94,13 +107,41 @@ body {
   font-size: 14px;
 }
 
-.simple-image img {
+/* .simple-image img {
   max-width: 100%;
   margin-bottom: 15px;
+} */
+
+
+
+.simple-image img{
+  /* @apply  mb-4 h-36 w-52 rounded-md cursor-pointer object-cover */
+}
+
+.simple-image{
+  @apply py-5 grid grid-cols-4 gap-x-3 bg-editor-imgShowcase p-6 rounded-md shadow-2xl
+}
+
+
+.unsplash-img{
+  @apply h-28 w-36 rounded-md cursor-pointer object-cover mb-4
+  }
+  
+
+.showcase-box{
+@apply h-96 overflow-y-auto rounded-md w-full 
+}
+
+.showcase-box::-webkit-scrollbar {
+@apply w-1.5
+}
+
+.showcase-box::-webkit-scrollbar-thumb {
+  @apply bg-[#6b7280] rounded-md
 }
 
 .img-box {
-  @apply w-1/2 p-3 mx-auto rounded-sm bg-home-gray;
+  @apply w-10/12 p-3 mx-auto rounded-sm shadow-2xl bg-editor-imgShowcase;
 }
 
 .uploadBtn {
@@ -112,11 +153,11 @@ body {
 }
 
 .embedImg-icon{
-  @apply hover:bg-home-left-pane hover:rounded-md hover:px-2 hover:py-1 bg-opacity-50 text-white px-2 py-1 cursor-pointer
+  @apply hover:bg-home-gray hover:rounded-md hover:px-2 hover:py-1 hover:bg-opacity-50 text-white px-2 py-1 cursor-pointer
 }
 
 .unsplashImg-icon{
-  @apply hover:bg-home-left-pane bg-opacity-50 text-white ml-3 hover:rounded-md hover:px-2 hover:py-1 px-2 py-1 cursor-pointer
+  @apply hover:bg-home-gray hover:bg-opacity-50 text-white ml-3 hover:rounded-md hover:px-2 hover:py-1 px-2 py-1 cursor-pointer
 }
 
 /* ? this is for the render setting menu  */
