@@ -15,6 +15,7 @@ class SimpleImage {
     this.wrapper = undefined;
     this.addImg = undefined;
     this.box = undefined;
+    this.embedImg = undefined;
     this.settings = [
       {
         name: "withBorder",
@@ -47,16 +48,32 @@ class SimpleImage {
     this.addImg = document.createElement("div");
     this.addImg.classList.add("img-box");
 
+    const showcaseSearch = document.createElement("div");
+    showcaseSearch.classList.add("showcase-search");
+    const showcaseInput = document.createElement("input");
+    showcaseInput.placeholder = "Search for an image...";
+    showcaseInput.classList.add("showcase-input");
+    showcaseSearch.appendChild(showcaseInput);
+    const showcaseBtn = document.createElement("button");
+    showcaseSearch.appendChild(showcaseBtn);
+    showcaseBtn.classList.add("showcase-btn");
+    // showcaseBtn.innerHTML = "search";
+
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add("simple-image");
 
+    this.embedImg = document.createElement("div");
+    this.embedImg.classList.add("embed-img");
+
     this.box = document.createElement("div");
     this.box.classList.add("showcase-box");
+    this.box.appendChild(showcaseSearch);
     this.box.appendChild(this.wrapper);
 
     if (this.data && this.data.url) {
       this._createImage(this.data.url, this.data.caption);
-      return this.wrapper;
+      // return this.wrapper;
+      return this.embedImg;
     } /* need to add this functionality */
 
     // const input = document.createElement("input"); // clicking on the image tool in the toolbox will make visible the input
@@ -83,18 +100,36 @@ class SimpleImage {
     // embedImg.appendChild(addImg)
 
     const embedLink = document.createElement("div");
+    embedLink.classList.add("embed-link")
     const embedInput = document.createElement("input");
+    embedInput.classList.add('embed-input')
     const embedLinkBtn = document.createElement("button");
+    embedLinkBtn.classList.add('embedLink-btn')
     embedLinkBtn.innerHTML = "Embed Link";
     embedInput.placeholder = "pate the embed url";
     embedInput.value = this.data && this.data.url ? this.data.url : ""; // need to do this
     embedLink.appendChild(embedInput);
 
     embedInput.addEventListener("paste", (e) => {
-      this._createImage(e.clipboardData.getData("text"));
+      e.clipboardData.getData("text");
+      // this._createImage(e.clipboardData.getData("text"));
+    });
+
+    embedLinkBtn.addEventListener("click", () => {
+      const imgUrl = embedInput.value;
+      this._createImage(imgUrl);
+      container.appendChild(this.embedImg);
+
+      if (container.contains(this.addImg)) {
+        container.removeChild(this.addImg);
+      }
     });
 
     embedImgIcon.addEventListener("click", (e) => {
+      if (this.addImg.contains(this.box)) {
+        this.addImg.removeChild(this.box);
+      }
+
       embedLink.appendChild(embedInput);
       embedLink.appendChild(embedLinkBtn);
       this.addImg.appendChild(embedLink);
@@ -107,30 +142,53 @@ class SimpleImage {
     uploadIcons.appendChild(embedImgIcon);
     uploadIcons.appendChild(unsplashImgIcon);
 
+    let imagesFetched = false;
+    let imgUrlsArr = [];
     unsplashImgIcon.addEventListener("click", () => {
-      fetch(
-        `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          // imgShowcase.appendChild(data)
-          const imgUrls = data.results.map((result) => result.urls.regular);
+      if (!imagesFetched) {
+        imagesFetched = true;
+        if (this.addImg.contains(embedLink)) {
+          this.addImg.removeChild(embedLink);
+        }
+        // if(imgUrlsArr.length < 10){
+        fetch(
+          `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            // imgShowcase.appendChild(data)
+            const imgUrls = data.results.map((result) => result.urls.regular);
+            imgUrlsArr = imgUrlsArr.concat(imgUrls);
+            for (const imgUrl of imgUrls) {
+              const imgShowcase = document.createElement("img");
+              imgShowcase.setAttribute("src", imgUrl);
+              this.wrapper.appendChild(imgShowcase);
 
-
-          for (const imgUrl of imgUrls) {
-            const imgShowcase = document.createElement("img");
-            imgShowcase.setAttribute("src", imgUrl);
-            this.wrapper.appendChild(imgShowcase);
-
-            imgShowcase.classList.add("unsplash-img");
-            this.addImg.appendChild(this.box);
-          }
-          console.log(data, "success bro");
-        })
-        .catch((error) => {
-          console.error("Error fetching photos:", error);
-        });
+              imgShowcase.classList.add("unsplash-img");
+              this.addImg.appendChild(this.box);
+            }
+            console.log(data, "success bro");
+          })
+          .catch((error) => {
+            console.error("Error fetching photos:", error);
+          });
+      }
+      // }
     });
+
+
+    this.wrapper.addEventListener("click", (event) => {
+      const clickedImg = event.target;
+      if (clickedImg.classList.contains("unsplash-img")) {
+        const imgUrl = clickedImg.getAttribute("src");
+        this._unsplashCreateImg(imgUrl);
+      }
+      if (this.addImg.contains(this.box)) {
+        this.addImg.removeChild(this.box);
+      }
+
+    })
+
 
     this.addImg.appendChild(uploadIcons);
     // this.addImg.appendChild(uploadBtn);
@@ -143,18 +201,27 @@ class SimpleImage {
     return container;
   }
 
+  _unsplashCreateImg(url){
+    const image = document.createElement("img");
+    image.src = url;
+    console.log(url, "this is unsplash create img url");
+    this.embedImg.innerHTML = "";
+    this.embedImg.appendChild(image);
+  }
+
   _createImage(url, captionText) {
     const image = document.createElement("img");
     // const caption = document.createElement("input");
     const caption = document.createElement("div");
     image.src = url;
+    console.log(url, "hey bro here is url");
     caption.placeholder = "Caption...";
     caption.contentEditable = true;
     caption.value = captionText || "";
 
-    this.wrapper.innerHTML = "";
-    this.wrapper.appendChild(image);
-    this.wrapper.appendChild(caption);
+    this.embedImg.innerHTML = "";
+    this.embedImg.appendChild(image);
+    this.embedImg.appendChild(caption);
 
     this._acceptTuneView();
   }
@@ -218,7 +285,7 @@ class SimpleImage {
 
   _acceptTuneView() {
     this.settings.forEach((tune) => {
-      this.wrapper.classList.toggle(tune.name, !!this.data[tune.name]);
+      this.embedImg.classList.toggle(tune.name, !!this.data[tune.name]);
 
       if (tune.name === "stretched") {
         this.api.blocks.stretchBlock(
