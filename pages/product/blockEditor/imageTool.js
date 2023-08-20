@@ -1,4 +1,5 @@
 import PhotoSearch from "./unsplash";
+import { useGesture } from "@use-gesture/react";
 class SimpleImage {
   constructor({ data, api }) {
     // this.data = data;
@@ -32,6 +33,19 @@ class SimpleImage {
     ];
 
     this.api = api;
+
+    
+    this.isResizing = false;
+    this.image = undefined;
+    this.leftIcon = undefined;
+    this.rightIcon = undefined;
+
+    this.startX = 0;
+    this.startY = 0;
+    this.startWidth = 0;
+    this.startHeight = 0;
+    this.aspectRatio = 0;
+    this.originalWidth = 0;
   }
 
   static get toolbox() {
@@ -72,22 +86,8 @@ class SimpleImage {
 
     if (this.data && this.data.url) {
       this._createImage(this.data.url, this.data.caption);
-      // return this.wrapper;
       return this.embedImg;
-    } /* need to add this functionality */
-
-    // const input = document.createElement("input"); // clicking on the image tool in the toolbox will make visible the input
-    // input.placeholder = "Paste an image URL...";
-    // input.value = this.data && this.data.url ? this.data.url : "";
-    // this.wrapper.appendChild(input);
-
-    // input.addEventListener("paste", (event) => {
-    //   this._createImage(event.clipboardData.getData("text"));
-    // });
-
-    // const uploadBtn = document.createElement("button");
-    // uploadBtn.innerHTML = "Upload";
-    // uploadBtn.classList.add("uploadBtn");
+    } 
 
     const uploadIcons = document.createElement("div");
     uploadIcons.classList.add("upload-icons");
@@ -176,30 +176,77 @@ class SimpleImage {
       // }
     });
 
+    this.addImg.appendChild(uploadIcons);
+    // this.addImg.appendChild(uploadBtn);
+    
+    const container = document.createElement("div");
+    container.appendChild(this.addImg);
+    // container.appendChild(this.wrapper);
+    // container.appendChild(this.box);
 
     this.wrapper.addEventListener("click", (event) => {
       const clickedImg = event.target;
       if (clickedImg.classList.contains("unsplash-img")) {
         const imgUrl = clickedImg.getAttribute("src");
         this._unsplashCreateImg(imgUrl);
+        container.removeChild(this.addImg);
+        container.appendChild(this.embedImg);
       }
-      if (this.addImg.contains(this.box)) {
-        this.addImg.removeChild(this.box);
-      }
-
+      
     })
 
+    
 
-    this.addImg.appendChild(uploadIcons);
-    // this.addImg.appendChild(uploadBtn);
+    
+    
+    
 
-    const container = document.createElement("div");
-    container.appendChild(this.addImg);
-    // container.appendChild(this.wrapper);
-    // container.appendChild(this.box);
 
     return container;
   }
+
+
+  startResize(e) {
+    e.preventDefault();
+    this.isResizing = true;
+    this.startX = e.clientX;
+    // this.startY = e.clientY;
+    this.startWidth = this.image.clientWidth;
+    // this.startHeight = this.image.clientHeight;
+  }
+
+  handleResize(e) {
+    if (!this.isResizing) return;
+
+    const deltaX = e.clientX - this.startX;
+    // const deltaY = e.clientY - this.startY;
+
+    // const newWidth = this.startWidth + deltaX;
+    // const newHeight = this.startHeight + deltaY;
+    let newWidth = this.startWidth + deltaX;
+    newWidth = Math.max(this.originalWidth / 2, newWidth);
+
+    const newHeight = newWidth / this.aspectRatio;
+
+    this.image.style.width = `${newWidth}px`;
+    this.image.style.height = `${newHeight}px`;
+  }
+
+  stopResize() {
+    this.isResizing = false;
+  }
+
+  createResizeHandlesAndIcons() {
+    this.leftIcon = document.createElement("div");
+    this.rightIcon = document.createElement("div");
+    this.leftIcon.classList.add("resize-icon", "left-icon");
+    this.rightIcon.classList.add("resize-icon", "right-icon");
+
+    this.embedImg.appendChild(this.leftIcon);
+    this.embedImg.appendChild(this.rightIcon);
+  }
+
+
 
   _unsplashCreateImg(url){
     const image = document.createElement("img");
@@ -222,6 +269,18 @@ class SimpleImage {
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
     this.embedImg.appendChild(caption);
+
+    this.image = this.embedImg.querySelector("img");
+    this.originalWidth = this.image.clientWidth;
+    this.aspectRatio = this.image.clientWidth / this.image.clientHeight;
+    this.createResizeHandlesAndIcons(); 
+    // this.image.addEventListener("mousedown", this.startResize.bind(this)); //before the left and right icon used this 
+
+    this.leftIcon.addEventListener("mousedown", this.startResize.bind(this));
+    this.rightIcon.addEventListener("mousedown", this.startResize.bind(this));
+
+    window.addEventListener("mousemove", this.handleResize.bind(this));
+    window.addEventListener("mouseup", this.stopResize.bind(this));
 
     this._acceptTuneView();
   }

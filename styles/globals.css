@@ -159,11 +159,26 @@ body::-webkit-scrollbar-thumb{
 .linearBtn{
 @apply bg-gradient-to-r from-purple-500 to-pink-500
 hover:opacity-90 opacity-100
-
 }
 
 .embed-input{
 @apply p-1 outline-none rounded-sm mb-6  bg-editor-scrollbar bg-opacity-40 text-editor-text focus:ring-2 focus:ring-pink-400
+}
+
+.embed-img img{
+  @apply mx-auto object-cover max-h-[800px]
+}
+
+.resize-icon{
+@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat cursor-pointer z-10
+}
+
+.left-icon{
+  @apply left-0
+}
+
+.right-icon{
+  @apply right-0
 }
 
 .embedLink-btn{
