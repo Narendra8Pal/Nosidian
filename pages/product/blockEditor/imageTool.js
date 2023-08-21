@@ -196,6 +196,14 @@ class SimpleImage {
     })
 
     
+    
+
+    
+    
+    
+
+
+
 
     
     
@@ -204,6 +212,7 @@ class SimpleImage {
 
     return container;
   }
+
 
 
   startResize(e) {
@@ -218,7 +227,7 @@ class SimpleImage {
   handleResize(e) {
     if (!this.isResizing) return;
 
-    const deltaX = e.clientX - this.startX;
+    const deltaX = e.clientX - this.startX; // calculate the change in mouse position
     // const deltaY = e.clientY - this.startY;
 
     // const newWidth = this.startWidth + deltaX;
@@ -226,10 +235,35 @@ class SimpleImage {
     let newWidth = this.startWidth + deltaX;
     newWidth = Math.max(this.originalWidth / 2, newWidth);
 
+
+
     const newHeight = newWidth / this.aspectRatio;
+
+    if (deltaX < 0) {
+      newWidth = Math.min(this.originalWidth, newWidth);
+    }
 
     this.image.style.width = `${newWidth}px`;
     this.image.style.height = `${newHeight}px`;
+
+    const imgRect = this.image.getBoundingClientRect();
+    const imgWidth = imgRect.width;
+    const imgHeight = imgRect.height;
+  
+    const iconPosition = (imgWidth / 2) - (this.leftIcon.offsetWidth / 2);
+
+    // this.leftIcon.style.top = `${imgHeight / 2}px`;
+    // this.rightIcon.style.top = `${imgHeight / 2}px`;
+
+    const iconOffset = (imgWidth - newWidth) / 2;
+
+    this.leftIcon.style.left = `${iconOffset}px`;
+    this.rightIcon.style.right = `${iconOffset}px`;
+
+    document.body.style.userSelect = "none";
+
+    // this.leftIcon.style.left = `${iconPosition}px`;
+    // this.rightIcon.style.right = `${iconPosition}px`;
   }
 
   stopResize() {
@@ -237,13 +271,24 @@ class SimpleImage {
   }
 
   createResizeHandlesAndIcons() {
+    const leftIconImg = document.createElement('img')
+    let leftIconImgUrl = '/verticalLine.png'
+    leftIconImg.setAttribute("src",leftIconImgUrl )
     this.leftIcon = document.createElement("div");
+    this.leftIcon.appendChild(leftIconImg)
+    
+    const rightIconImg = document.createElement("img")
+    let rightIconImgUrl = '/verticalLine.png'
+    rightIconImg.setAttribute('src', rightIconImgUrl)
     this.rightIcon = document.createElement("div");
+    this.rightIcon.appendChild(rightIconImg)
+
     this.leftIcon.classList.add("resize-icon", "left-icon");
     this.rightIcon.classList.add("resize-icon", "right-icon");
 
     this.embedImg.appendChild(this.leftIcon);
     this.embedImg.appendChild(this.rightIcon);
+
   }
 
 
@@ -269,7 +314,7 @@ class SimpleImage {
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
     this.embedImg.appendChild(caption);
-
+    
     this.image = this.embedImg.querySelector("img");
     this.originalWidth = this.image.clientWidth;
     this.aspectRatio = this.image.clientWidth / this.image.clientHeight;

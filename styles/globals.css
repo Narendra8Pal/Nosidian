@@ -170,15 +170,15 @@ hover:opacity-90 opacity-100
 }
 
 .resize-icon{
-@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat cursor-pointer z-10
+@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat cursor-pointer z-10 cursor-col-resize
 }
 
 .left-icon{
-  @apply left-0
+  /* @apply left-0  */
 }
 
 .right-icon{
-  @apply right-0
+  /* @apply right-0 */
 }
 
 .embedLink-btn{
