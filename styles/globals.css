@@ -166,11 +166,15 @@ hover:opacity-90 opacity-100
 }
 
 .embed-img img{
-  @apply mx-auto object-cover max-h-[800px]
+  @apply mx-auto object-cover max-h-[800px] max-w-800 
+}
+
+.embed-img{
+  @apply mx-auto 
 }
 
 .resize-icon{
-@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat cursor-pointer z-10 cursor-col-resize
+@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat  z-10 cursor-col-resize
 }
 
 .left-icon{
@@ -180,6 +184,27 @@ hover:opacity-90 opacity-100
 .right-icon{
   /* @apply right-0 */
 }
+
+.resizer{
+  @apply  absolute right-0 bottom-0 cursor-nwse-resize mx-auto
+}
+
+.resizer::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0px;
+  width: 0px; 
+   height: 0px;
+  border-top: 15px solid transparent;
+  border-right: 15px solid #ffff;
+  transform: rotate(0deg);
+}
+
+.resizable{
+@apply border-white border mx-auto relative  max-w-800 max-h-[800px] min-h-[100px] min-w-[100px]  overflow-hidden 
+}
+
 
 .embedLink-btn{
 @apply linearBtn text-white w-1/2 mx-auto py-1 rounded-md font-semibold shadow-md

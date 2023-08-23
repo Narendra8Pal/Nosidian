@@ -1,7 +1,7 @@
 import PhotoSearch from "./unsplash";
 import { useGesture } from "@use-gesture/react";
 class SimpleImage {
-  constructor({ data, api }) {
+  constructor({ data, api, block }) {
     // this.data = data;
 
     this.data = {
@@ -34,7 +34,6 @@ class SimpleImage {
 
     this.api = api;
 
-    
     this.isResizing = false;
     this.image = undefined;
     this.leftIcon = undefined;
@@ -46,6 +45,7 @@ class SimpleImage {
     this.startHeight = 0;
     this.aspectRatio = 0;
     this.originalWidth = 0;
+    this.blockAPI = block
   }
 
   static get toolbox() {
@@ -87,7 +87,7 @@ class SimpleImage {
     if (this.data && this.data.url) {
       this._createImage(this.data.url, this.data.caption);
       return this.embedImg;
-    } 
+    }
 
     const uploadIcons = document.createElement("div");
     uploadIcons.classList.add("upload-icons");
@@ -100,11 +100,11 @@ class SimpleImage {
     // embedImg.appendChild(addImg)
 
     const embedLink = document.createElement("div");
-    embedLink.classList.add("embed-link")
+    embedLink.classList.add("embed-link");
     const embedInput = document.createElement("input");
-    embedInput.classList.add('embed-input')
+    embedInput.classList.add("embed-input");
     const embedLinkBtn = document.createElement("button");
-    embedLinkBtn.classList.add('embedLink-btn')
+    embedLinkBtn.classList.add("embedLink-btn");
     embedLinkBtn.innerHTML = "Embed Link";
     embedInput.placeholder = "pate the embed url";
     embedInput.value = this.data && this.data.url ? this.data.url : ""; // need to do this
@@ -178,7 +178,7 @@ class SimpleImage {
 
     this.addImg.appendChild(uploadIcons);
     // this.addImg.appendChild(uploadBtn);
-    
+
     const container = document.createElement("div");
     container.appendChild(this.addImg);
     // container.appendChild(this.wrapper);
@@ -192,108 +192,153 @@ class SimpleImage {
         container.removeChild(this.addImg);
         container.appendChild(this.embedImg);
       }
+    });
+
+    let  resizableElements = {};
+    
+    this.embedImg.addEventListener("click", (event) => {
+      const clickedImg = event.target;
+      console.log("event embed triggered bro");
+
+      if (clickedImg.tagName === "IMG") {
+        if (!resizableElements[clickedImg.id]) {        
+          const resizableDiv = document.createElement("div");
+          resizableDiv.className = "resizable";
+          const resizer = document.createElement("div");
+          resizer.className = "resizer";
+
+          const imgWidth = clickedImg.style.width;
+          const imgHeight = clickedImg.style.height;
+
+          clickedImg.style.height = "100%";
+          clickedImg.style.width = "100%";
+
+          resizableDiv.style.width = imgWidth;
+          resizableDiv.style.height = imgHeight;
+
+          resizableDiv.appendChild(clickedImg); // Clone the clicked image
+          resizableDiv.appendChild(resizer);
+
+          this.embedImg.appendChild(resizableDiv);
+
+          initResizing(resizableDiv);
+          resizableElements[clickedImg.id] = resizableDiv;
+        } else {
+          console.log("Resizable element already exists for this image.");
+        }
+      }
+    });
+
+document.addEventListener("click", (event) => {
+  const clickedElement = event.target;
+
+  if (!clickedElement.closest(".resizable")) {
+    for (const id in resizableElements) {
+      const resizableDiv = resizableElements[id];
+      const img = resizableDiv.querySelector("img");
+
+      const width = resizableDiv.style.width;
+      const height = resizableDiv.style.height;
       
-    })
+      img.style.width = width;
+      img.style.height = height;
 
-    
-    
-
-    
-    
-    
-
-
+      this.embedImg.appendChild(img);
+      resizableDiv.remove();
+      delete resizableElements[id];
+    }
+  }
+});
 
 
-    
-    
-    
+//     // Add a click event listener to the document
+// // Add a click event listener to the document
+// document.addEventListener("click", (event) => {
+//   const clickedElement = event.target;
 
+//   // Check if the clicked element is not part of a resizable div
+//   if (!clickedElement.closest(".resizable")) {
+//     // Remove all resizable elements and their images
+//     for (const id in resizableElements) {
+//       const resizableDiv = resizableElements[id];
+//       resizableDiv.remove();
+//     }
+//     // Clear the resizable elements object
+//     resizableElements = {};
+//   }
+// });
+
+
+
+    function initResizing(resizableDiv) {
+      let startX, startY, startWidth, startHeight;
+
+      function initDrag(e) {
+        startX = e.clientX;
+        startY = e.clientY;
+        startWidth = parseInt(
+          document.defaultView.getComputedStyle(resizableDiv).width,
+          10
+        );
+        startHeight = parseInt(
+          document.defaultView.getComputedStyle(resizableDiv).height,
+          10
+        );
+        document.documentElement.addEventListener("mousemove", doDrag, false);
+        document.documentElement.addEventListener("mouseup", stopDrag, false);
+      }
+
+      // function doDrag(e) {
+      //   resizableDiv.style.width = (startWidth + e.clientX - startX) + 'px';
+      //   resizableDiv.style.height = (startHeight + e.clientY - startY) + 'px';
+      // }
+
+      function doDrag(e) {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+
+        const newWidth = startWidth + deltaX;
+        const newHeight = startHeight + deltaY;
+
+        resizableDiv.style.width = newWidth + "px";
+        resizableDiv.style.height = newHeight + "px";
+
+        // if (e.type === "mouseup") {
+        //   console.log("mouse got up baby")
+        //   // Detach the image from the resizable div
+        //   const detachedImage = resizableDiv.querySelector("img");
+        //   // resizableDiv.removeChild(detachedImage);
+      
+        //   // Append the image to the embedImg container
+        //   this.embedImg.appendChild(detachedImage);
+      
+        //   // Remove the resizable div
+        //   resizableDiv.remove();
+        // }
+      }
+
+      function stopDrag() {
+        document.documentElement.removeEventListener(
+          "mousemove",
+          doDrag,
+          false
+        );
+        document.documentElement.removeEventListener(
+          "mouseup",
+          stopDrag,
+          false
+        );
+      }
+
+      // Attach the drag initialization to the resizer element
+      const resizer = resizableDiv.querySelector(".resizer");
+      resizer.addEventListener("mousedown", initDrag, false);
+    }
 
     return container;
   }
 
-
-
-  startResize(e) {
-    e.preventDefault();
-    this.isResizing = true;
-    this.startX = e.clientX;
-    // this.startY = e.clientY;
-    this.startWidth = this.image.clientWidth;
-    // this.startHeight = this.image.clientHeight;
-  }
-
-  handleResize(e) {
-    if (!this.isResizing) return;
-
-    const deltaX = e.clientX - this.startX; // calculate the change in mouse position
-    // const deltaY = e.clientY - this.startY;
-
-    // const newWidth = this.startWidth + deltaX;
-    // const newHeight = this.startHeight + deltaY;
-    let newWidth = this.startWidth + deltaX;
-    newWidth = Math.max(this.originalWidth / 2, newWidth);
-
-
-
-    const newHeight = newWidth / this.aspectRatio;
-
-    if (deltaX < 0) {
-      newWidth = Math.min(this.originalWidth, newWidth);
-    }
-
-    this.image.style.width = `${newWidth}px`;
-    this.image.style.height = `${newHeight}px`;
-
-    const imgRect = this.image.getBoundingClientRect();
-    const imgWidth = imgRect.width;
-    const imgHeight = imgRect.height;
-  
-    const iconPosition = (imgWidth / 2) - (this.leftIcon.offsetWidth / 2);
-
-    // this.leftIcon.style.top = `${imgHeight / 2}px`;
-    // this.rightIcon.style.top = `${imgHeight / 2}px`;
-
-    const iconOffset = (imgWidth - newWidth) / 2;
-
-    this.leftIcon.style.left = `${iconOffset}px`;
-    this.rightIcon.style.right = `${iconOffset}px`;
-
-    document.body.style.userSelect = "none";
-
-    // this.leftIcon.style.left = `${iconPosition}px`;
-    // this.rightIcon.style.right = `${iconPosition}px`;
-  }
-
-  stopResize() {
-    this.isResizing = false;
-  }
-
-  createResizeHandlesAndIcons() {
-    const leftIconImg = document.createElement('img')
-    let leftIconImgUrl = '/verticalLine.png'
-    leftIconImg.setAttribute("src",leftIconImgUrl )
-    this.leftIcon = document.createElement("div");
-    this.leftIcon.appendChild(leftIconImg)
-    
-    const rightIconImg = document.createElement("img")
-    let rightIconImgUrl = '/verticalLine.png'
-    rightIconImg.setAttribute('src', rightIconImgUrl)
-    this.rightIcon = document.createElement("div");
-    this.rightIcon.appendChild(rightIconImg)
-
-    this.leftIcon.classList.add("resize-icon", "left-icon");
-    this.rightIcon.classList.add("resize-icon", "right-icon");
-
-    this.embedImg.appendChild(this.leftIcon);
-    this.embedImg.appendChild(this.rightIcon);
-
-  }
-
-
-
-  _unsplashCreateImg(url){
+  _unsplashCreateImg(url) {
     const image = document.createElement("img");
     image.src = url;
     console.log(url, "this is unsplash create img url");
@@ -314,19 +359,6 @@ class SimpleImage {
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
     this.embedImg.appendChild(caption);
-    
-    this.image = this.embedImg.querySelector("img");
-    this.originalWidth = this.image.clientWidth;
-    this.aspectRatio = this.image.clientWidth / this.image.clientHeight;
-    this.createResizeHandlesAndIcons(); 
-    // this.image.addEventListener("mousedown", this.startResize.bind(this)); //before the left and right icon used this 
-
-    this.leftIcon.addEventListener("mousedown", this.startResize.bind(this));
-    this.rightIcon.addEventListener("mousedown", this.startResize.bind(this));
-
-    window.addEventListener("mousemove", this.handleResize.bind(this));
-    window.addEventListener("mouseup", this.stopResize.bind(this));
-
     this._acceptTuneView();
   }
 
@@ -391,8 +423,14 @@ class SimpleImage {
     this.settings.forEach((tune) => {
       this.embedImg.classList.toggle(tune.name, !!this.data[tune.name]);
 
+      // if (tune.name === "stretched") {
+      //   this.api.blocks.stretchBlock(
+      //     this.api.blocks.getCurrentBlockIndex(),
+      //     !this.data.stretched
+      //   );
+      // }
       if (tune.name === "stretched") {
-        this.api.blocks.stretchBlock(
+        this.blockAPI.stretched(
           this.api.blocks.getCurrentBlockIndex(),
           !this.data.stretched
         );
