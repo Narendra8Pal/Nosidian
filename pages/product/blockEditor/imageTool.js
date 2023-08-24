@@ -45,7 +45,7 @@ class SimpleImage {
     this.startHeight = 0;
     this.aspectRatio = 0;
     this.originalWidth = 0;
-    this.blockAPI = block
+    this.blockAPI = block;
   }
 
   static get toolbox() {
@@ -194,14 +194,14 @@ class SimpleImage {
       }
     });
 
-    let  resizableElements = {};
-    
+    let resizableElements = {};
+
     this.embedImg.addEventListener("click", (event) => {
       const clickedImg = event.target;
-      console.log("event embed triggered bro");
+      // console.log("event embed triggered bro");
 
       if (clickedImg.tagName === "IMG") {
-        if (!resizableElements[clickedImg.id]) {        
+        if (!resizableElements[clickedImg.id]) {
           const resizableDiv = document.createElement("div");
           resizableDiv.className = "resizable";
           const resizer = document.createElement("div");
@@ -223,52 +223,30 @@ class SimpleImage {
 
           initResizing(resizableDiv);
           resizableElements[clickedImg.id] = resizableDiv;
-        } else {
-          console.log("Resizable element already exists for this image.");
         }
       }
     });
 
-document.addEventListener("click", (event) => {
-  const clickedElement = event.target;
+    document.addEventListener("click", (event) => {
+      const clickedElement = event.target;
 
-  if (!clickedElement.closest(".resizable")) {
-    for (const id in resizableElements) {
-      const resizableDiv = resizableElements[id];
-      const img = resizableDiv.querySelector("img");
+      if (!clickedElement.closest(".resizable")) {
+        for (const id in resizableElements) {
+          const resizableDiv = resizableElements[id];
+          const img = resizableDiv.querySelector("img");
 
-      const width = resizableDiv.style.width;
-      const height = resizableDiv.style.height;
-      
-      img.style.width = width;
-      img.style.height = height;
+          const width = resizableDiv.style.width;
+          const height = resizableDiv.style.height;
 
-      this.embedImg.appendChild(img);
-      resizableDiv.remove();
-      delete resizableElements[id];
-    }
-  }
-});
+          img.style.width = width;
+          img.style.height = height;
 
-
-//     // Add a click event listener to the document
-// // Add a click event listener to the document
-// document.addEventListener("click", (event) => {
-//   const clickedElement = event.target;
-
-//   // Check if the clicked element is not part of a resizable div
-//   if (!clickedElement.closest(".resizable")) {
-//     // Remove all resizable elements and their images
-//     for (const id in resizableElements) {
-//       const resizableDiv = resizableElements[id];
-//       resizableDiv.remove();
-//     }
-//     // Clear the resizable elements object
-//     resizableElements = {};
-//   }
-// });
-
-
+          this.embedImg.appendChild(img);
+          resizableDiv.remove();
+          delete resizableElements[id];
+        }
+      }
+    });
 
     function initResizing(resizableDiv) {
       let startX, startY, startWidth, startHeight;
@@ -288,11 +266,6 @@ document.addEventListener("click", (event) => {
         document.documentElement.addEventListener("mouseup", stopDrag, false);
       }
 
-      // function doDrag(e) {
-      //   resizableDiv.style.width = (startWidth + e.clientX - startX) + 'px';
-      //   resizableDiv.style.height = (startHeight + e.clientY - startY) + 'px';
-      // }
-
       function doDrag(e) {
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
@@ -302,19 +275,6 @@ document.addEventListener("click", (event) => {
 
         resizableDiv.style.width = newWidth + "px";
         resizableDiv.style.height = newHeight + "px";
-
-        // if (e.type === "mouseup") {
-        //   console.log("mouse got up baby")
-        //   // Detach the image from the resizable div
-        //   const detachedImage = resizableDiv.querySelector("img");
-        //   // resizableDiv.removeChild(detachedImage);
-      
-        //   // Append the image to the embedImg container
-        //   this.embedImg.appendChild(detachedImage);
-      
-        //   // Remove the resizable div
-        //   resizableDiv.remove();
-        // }
       }
 
       function stopDrag() {
@@ -350,8 +310,8 @@ document.addEventListener("click", (event) => {
     const image = document.createElement("img");
     // const caption = document.createElement("input");
     const caption = document.createElement("div");
+    caption.classList.add("caption")
     image.src = url;
-    console.log(url, "hey bro here is url");
     caption.placeholder = "Caption...";
     caption.contentEditable = true;
     caption.value = captionText || "";
@@ -423,20 +383,31 @@ document.addEventListener("click", (event) => {
     this.settings.forEach((tune) => {
       this.embedImg.classList.toggle(tune.name, !!this.data[tune.name]);
 
-      // if (tune.name === "stretched") {
-      //   this.api.blocks.stretchBlock(
-      //     this.api.blocks.getCurrentBlockIndex(),
-      //     !this.data.stretched
-      //   );
-      // }
       if (tune.name === "stretched") {
-        this.blockAPI.stretched(
+        this.api.blocks.stretchBlock(
           this.api.blocks.getCurrentBlockIndex(),
           !this.data.stretched
         );
       }
     });
   }
+
+  // _acceptTuneView() {
+  //   this.settings.forEach((tune) => {
+  //     if (tune.name === "stretched") {
+  //       const currentIndex = this.api.blocks.getCurrentBlockIndex();
+  //       const block = this.api.blocks.getBlockByIndex(currentIndex);
+  //       if (block && block.type === "image") {
+  //         this.api.blocks.updateBlock(currentIndex, {
+  //           data: {
+  //             ...block.data,
+  //             stretched: !this.data.stretched,
+  //           },
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 }
 
 export default SimpleImage;

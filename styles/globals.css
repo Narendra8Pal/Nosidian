@@ -19,8 +19,22 @@ body::-webkit-scrollbar-thumb{
   @apply bg-home-gray;
 }
 
-.cdx-block {
+.cdx-block{
   @apply text-lg text-editor-text;
+}
+
+.ce-header{
+  @apply text-editor-text text-lg
+}
+
+.ce-block__content h1{
+  @apply text-3xl font-bold
+}
+.ce-block__content h2{
+  @apply text-2xl font-bold
+}
+.ce-block__content h3{
+  @apply text-xl font-bold
 }
 
 .codex-editor__redactor {
@@ -177,14 +191,6 @@ hover:opacity-90 opacity-100
 @apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat  z-10 cursor-col-resize
 }
 
-.left-icon{
-  /* @apply left-0  */
-}
-
-.right-icon{
-  /* @apply right-0 */
-}
-
 .resizer{
   @apply  absolute right-0 bottom-0 cursor-nwse-resize mx-auto
 }
@@ -205,6 +211,26 @@ hover:opacity-90 opacity-100
 @apply border-white border mx-auto relative  max-w-800 max-h-[800px] min-h-[100px] min-w-[100px]  overflow-hidden 
 }
 
+
+.caption{
+ @apply text-white bg-editor-imgShowcase p-3 border-pink-400 border rounded 
+}
+
+.ce-code__textarea.cdx-input{
+  @apply bg-home-left-pane rounded-lg border-none text-editor-text
+}
+
+/* .ce-code__textarea.cdx-input::-webkit-scrollbar{
+  @apply w-1.5
+}
+
+.ce-code__textarea.cdx-input::-webkit-scrollbar-thumb{
+  @apply bg-white  rounded-md
+} */
+
+/* .ce-block__content.cdx-block::placeholder{
+  @apply text-white 
+} */
 
 .embedLink-btn{
 @apply linearBtn text-white w-1/2 mx-auto py-1 rounded-md font-semibold shadow-md
@@ -235,16 +261,16 @@ hover:opacity-90 opacity-100
 }
 
 /* ? this is for the render setting menu  */
-.simple-image.withBorder img {
+.embed-img.withBorder img {
   border: 1px solid #e8e8eb;
 }
 
-.simple-image.withBackground {
+.embed-img.withBackground {
   background: #eff2f5;
   padding: 10px;
 }
 
-.simple-image.withBackground img {
+.embed-img.withBackground img {
   display: block;
   max-width: 60%;
   margin: 0 auto 15px;

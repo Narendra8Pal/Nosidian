@@ -17,18 +17,28 @@ import ImageTool from "@editorjs/image";
 import Delimiter from "@editorjs/delimiter";
 import DragDrop from "editorjs-drag-drop";
 import InlineImage from "editorjs-inline-image";
+import CodeTool from "@editorjs/code"
 
-const BlockEditor = ({ onSave }) => {
+const BlockEditor = ({ onSave, onReady}) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
-
+  
   useEffect(() => {
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = new EditorJS({
         holder: editorRef.current,
+        
+    // onReady: () => {
+    //   onReady(editorInstanceRef.current); // Call onReady prop with the editor instance
+    // },
         tools: {
           header: {
             class: Header,
+            config: {
+              placeholder: 'Enter a header',
+              levels: [1, 2, 3],
+              // defaultLevel: 3
+            },
             inlineToolbar: ["link"],
           },
           list: {
@@ -43,7 +53,7 @@ const BlockEditor = ({ onSave }) => {
             class: Checklist,
             inlineToolbar: true,
           },
-
+          code: CodeTool,
           quote: Quote,
 
           // image: {
@@ -75,7 +85,7 @@ const BlockEditor = ({ onSave }) => {
             },
           ],
           version: "2.27.2",
-        },
+        },        
       });
     }
 
@@ -89,11 +99,25 @@ const BlockEditor = ({ onSave }) => {
 
   const [output, setOutput] = useState("");
 
-  const handleSaveBtn = () => {
-    editorInstanceRef.current.save().then((savedData) => {
+  const handleSaveBtn = async () => {
+    try {
+      const savedData = await editorInstanceRef.current.save();
+      onSave(savedData)
+      console.log(savedData, 'in blockEditor')
+      
+        onReady(editorInstanceRef.current); // Call onReady prop with the editor instance
+
       setOutput(JSON.stringify(savedData, null, 4));
-    });
+    } catch (error) {
+      console.error('Error saving document', error);
+    }
   };
+
+  // const handleSaveBtn = () => {
+  //   editorInstanceRef.current.save().then((savedData) => {
+  //     setOutput(JSON.stringify(savedData, null, 4));
+  //   });
+  // };
 
   return (
     <>
