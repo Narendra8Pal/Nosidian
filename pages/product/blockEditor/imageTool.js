@@ -298,12 +298,20 @@ class SimpleImage {
     return container;
   }
 
-  _unsplashCreateImg(url) {
+  _unsplashCreateImg(url, captionText) {
     const image = document.createElement("img");
+    const caption = document.createElement("div")
+    caption.classList.add('caption')
     image.src = url;
-    console.log(url, "this is unsplash create img url");
+    caption.placeholder = "Caption..."
+    caption.contentEditable = true;
+    caption.value = captionText || "";
+
+    // console.log(url, "this is unsplash create img url");
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
+    this.embedImg.appendChild(caption)
+    this._acceptTuneView();
   }
 
   _createImage(url, captionText) {

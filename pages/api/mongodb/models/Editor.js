@@ -14,6 +14,6 @@ const documentSchema = new Schema({
   blocks: [EditorSchema],
 });
 
-const Editor = mongoose.model("Document", documentSchema);
+const Editor  = mongoose.models.Document || mongoose.model('Document', documentSchema);
 
-module.exports = Editor;
+export default Editor;

@@ -23,6 +23,9 @@ const BlockEditor = ({ onSave, onReady}) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
   
+  const [output, setOutput] = useState("");
+  const [fetchedData, setFetchedData] = useState([]);
+
   useEffect(() => {
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = new EditorJS({
@@ -73,19 +76,28 @@ const BlockEditor = ({ onSave, onReady}) => {
 
           delimiter: Delimiter,
         },
+        // data: {
+        //   time: 1691858563980,
+        //   blocks: [
+        //     {
+        //       id: "ojkFaQODhe",
+        //       type: "image",
+        //       data: {
+        //         url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcTk0_tLLzT8w2DC5UbKXOO1Gop4jZsQqUS0UusrEo1HXjxWxjq8fDibmOL0GvS9gU6gHNPlxIT0mo3e92w&psig=AOvVaw37hfhiOXZGpWCasoUfqnSU&ust=1692015251013000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiUppHO2YADFQAAAAAdAAAAABAE",
+        //       },
+        //     },
+        //   ],
+        //   version: "2.27.2",
+        // },  
+
         data: {
-          time: 1691858563980,
-          blocks: [
-            {
-              id: "ojkFaQODhe",
-              type: "image",
-              data: {
-                url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcTk0_tLLzT8w2DC5UbKXOO1Gop4jZsQqUS0UusrEo1HXjxWxjq8fDibmOL0GvS9gU6gHNPlxIT0mo3e92w&psig=AOvVaw37hfhiOXZGpWCasoUfqnSU&ust=1692015251013000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiUppHO2YADFQAAAAAdAAAAABAE",
-              },
-            },
-          ],
-          version: "2.27.2",
-        },        
+          blocks: fetchedData.blocks || [],
+          // blocks: fetchedData.map(document => ({
+          //   type: 'paragraph', 
+          //   data: document.blocks.map,
+          // })),
+        },
+        
       });
     }
 
@@ -97,7 +109,25 @@ const BlockEditor = ({ onSave, onReady}) => {
     };
   }, [onSave]);
 
-  const [output, setOutput] = useState("");
+
+  useEffect(() => {
+    // Fetch data from your API endpoint here
+    async function fetchAndSetData() {
+      try {
+        const response = await fetch("/api/mongodb/controllers/EditorData", {
+          method: "GET",
+        });
+        const jsonData = await response.json();
+        setFetchedData(jsonData);
+        console.log(fetchedData.blocks, 'u looking for')
+        console.log(jsonData)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchAndSetData();
+  }, []);
+
 
   const handleSaveBtn = async () => {
     try {
@@ -124,7 +154,19 @@ const BlockEditor = ({ onSave, onReady}) => {
       <img src="/coverPage.png" className={styles.coverPage} alt="" />
 
       <h1 className={styles.heading}>Add ons</h1>
-      <div ref={editorRef} className="" />
+      <div ref={editorRef} className="">
+      {/* {fetchedData.map((document, index) => (
+    <div key={index}>
+      {document.blocks.map((block, blockIndex) => (
+        <div key={blockIndex}>
+          {block.type === 'paragraph' && <p>{block.data.text}</p>}
+          {block.type === 'header' && <h2>{block.data.text}</h2>}
+          {block.type === 'italic' && <i>{block.data.text}</i>}
+        </div>
+      ))}
+    </div>
+  ))} */}
+        </div>
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
       </button>

@@ -17,8 +17,17 @@ export default async function handler(req, res) {
       } catch (error) {
         res.status(500).json({ error: 'An error occurred while saving the document' });
       }
-    } else {
-      res.status(405).json({ error: 'Method not allowed' });
+    } else if(req.method === 'GET') {
+      if (req.method === "GET") {
+        try {
+          const documents = await Editor.find().exec();
+          res.status(200).json(documents);
+        } catch (error) {
+          res.status(500).json({ error: "An error occurred while fetching the data" });
+        }
+      } else {
+        res.status(405).json({ error: "Method not allowed" });
+      }
     }
   }
   
