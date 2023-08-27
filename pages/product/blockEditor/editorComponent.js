@@ -42,6 +42,35 @@ const EditorComponent = () => {
     }
   };
 
+  const handleUpdateToServer = async (data) => {
+    if (data) {
+      try {
+        const jsonDataPromise = await data;
+        const jsonData = await jsonDataPromise;
+
+        // Send updated data to the backend
+        const response = await fetch("/api/mongodb/controllers/EditorData", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: jsonData.id, 
+            updatedData: {
+              time: Date.now(),
+              blocks: jsonData.blocks,
+            },
+          }),
+        });
+
+        const responseData = await response.json();
+        console.log("Response from server:", responseData);
+      } catch (error) {
+        console.error("Error saving document", error);
+      }
+    }
+  };
+
   useEffect(() => {
     async function fetchAndSetData() {
       try {
@@ -63,7 +92,25 @@ const EditorComponent = () => {
     fetchAndSetData();
   }, []);
   
+  const handleChange = () => {
+    if (editorInstanceRef.current) {
+      editorInstanceRef.current.save().then((savedData) => {
+        setInitialData(savedData);
+      });
+    }
+  };
 
+  useEffect(() => {
+    if (editorInstanceRef.current) {
+      editorInstanceRef.current.on("change", handleChange);
+    }
+
+    return () => {
+      if (editorInstanceRef.current) {
+        editorInstanceRef.current.off("change", handleChange);
+      }
+    };
+  }, []);
 
   const handleReady = (editorInstance) => {
     // new DragDrop(editor);
@@ -87,6 +134,7 @@ const EditorComponent = () => {
             onReady={handleReady}
             fetchedData={fetchedData}
             initialData={initialData}
+            handleUpdateToServer={handleUpdateToServer}
             />
             )}
         </div>

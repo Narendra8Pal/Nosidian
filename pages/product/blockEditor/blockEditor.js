@@ -19,7 +19,7 @@ import DragDrop from "editorjs-drag-drop";
 import InlineImage from "editorjs-inline-image";
 import CodeTool from "@editorjs/code";
 
-const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
+const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateToServer }) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
 
@@ -81,41 +81,6 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
 
           delimiter: Delimiter,
         },
-        // data: {
-        //   time: 1691858563980,
-        //   blocks: [
-        //     {
-        //       id: "ojkFaQODhe",
-        //       type: "image",
-        //       data: {
-        //         url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcTk0_tLLzT8w2DC5UbKXOO1Gop4jZsQqUS0UusrEo1HXjxWxjq8fDibmOL0GvS9gU6gHNPlxIT0mo3e92w&psig=AOvVaw37hfhiOXZGpWCasoUfqnSU&ust=1692015251013000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiUppHO2YADFQAAAAAdAAAAABAE",
-        //       },
-        //     },
-        //   ],
-        //   version: "2.27.2",
-        // },
-
-        // data: {
-        //   blocks: fetchedData.blocks || [],
-        //   // blocks: fetchedData.map(document => ({
-        //   //   type: 'paragraph',
-        //   //   data: document.blocks.map,
-        //   // })),
-        // },
-
-        // data: {
-        //   time: Date.now(),
-        //   blocks: fetchedData.flatMap((document) =>
-        //     document.blocks.map((block) => ({
-        //       data: {
-        //         text: block.data.text,
-        //       },
-        //       id: block.id,
-        //       type: block.type,
-        //       _id: block._id,
-        //     }))
-        //   ),
-        // },
 
         data: {
           time: Date.now(),
@@ -126,6 +91,7 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
                 level: block.data.level,
                 url: block.data.url,
                 caption: block.data.caption,
+                alignment:block.data.alignment,
                 withBorder: block.data.withBorder,
                 withBackground: block.data.withBackground,
                 stretched: block.data.stretched,
@@ -137,10 +103,10 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
                           text: item.text,
                           checked: item.checked,
                         };
-                      } else if (typeof block === "string") {
-                        return { block };
+                      } else if (typeof item === "string") {
+                        return item;
                       } else {
-                        return null; // Handle any other cases as needed
+                        return null;
                       }
                     })
                   : [],
@@ -184,6 +150,17 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
     }
   };
 
+  const handleUpdateBtn = async () => {
+    try {
+      const updateData = await editorInstanceRef.current.save();
+      handleUpdateToServer(updateData)
+    } catch (error) {
+      console.error("Error saving document", error);
+    }
+  }
+
+  
+
   // const handleSaveBtn = () => {
   //   editorInstanceRef.current.save().then((savedData) => {
   //     setOutput(JSON.stringify(savedData, null, 4));
@@ -195,22 +172,11 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
       <img src="/coverPage.png" className={styles.coverPage} alt="" />
 
       <h1 className={styles.heading}>Add ons</h1>
-      <div ref={editorRef} className="">
-        {/* {fetchedData.map((document, index) => (
-    <div key={index}>
-      {document.blocks.map((block, blockIndex) => (
-        <div key={blockIndex}>
-          {block.type === 'paragraph' && <p>{block.data.text}</p>}
-          {block.type === 'header' && <h2>{block.data.text}</h2>}
-          {block.type === 'italic' && <i>{block.data.text}</i>}
-        </div>
-      ))}
-    </div>
-  ))} */}
-      </div>
+      <div ref={editorRef} className=""/>
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
       </button>
+      <button onClick={handleUpdateBtn}>Update</button>
       <pre id="output" className="text-white">
         {output}
       </pre>
