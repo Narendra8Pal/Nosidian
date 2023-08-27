@@ -17,32 +17,34 @@ import ImageTool from "@editorjs/image";
 import Delimiter from "@editorjs/delimiter";
 import DragDrop from "editorjs-drag-drop";
 import InlineImage from "editorjs-inline-image";
-import CodeTool from "@editorjs/code"
+import CodeTool from "@editorjs/code";
 
-const BlockEditor = ({ onSave, onReady}) => {
+const BlockEditor = ({ onSave, onReady, initialData, fetchedData }) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
-  
+
   const [output, setOutput] = useState("");
-  const [fetchedData, setFetchedData] = useState([]);
+  // const [fetchedData, setFetchedData] = useState([]);
+  const [editorData, setEditorData] = useState(initialData);
 
   useEffect(() => {
+    console.log(fetchedData, "fetch data state");
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = new EditorJS({
         holder: editorRef.current,
-        
-    // onReady: () => {
-    //   onReady(editorInstanceRef.current); // Call onReady prop with the editor instance
-    // },
+
+        // onReady: () => {
+        //   onReady(editorInstanceRef.current); // Call onReady prop with the editor instance
+        // },
         tools: {
           header: {
             class: Header,
             config: {
-              placeholder: 'Enter a header',
+              placeholder: "Enter a header",
               levels: [1, 2, 3],
               // defaultLevel: 3
             },
-            inlineToolbar: ["link"],
+            inlineToolbar: ["link", "italic"],
           },
           list: {
             class: List,
@@ -57,7 +59,10 @@ const BlockEditor = ({ onSave, onReady}) => {
             inlineToolbar: true,
           },
           code: CodeTool,
-          quote: Quote,
+          quote: {
+            class: Quote,
+            inlineToolbar: true,
+          },
 
           // image: {
           //           class: ImageTool,
@@ -88,16 +93,72 @@ const BlockEditor = ({ onSave, onReady}) => {
         //     },
         //   ],
         //   version: "2.27.2",
-        // },  
+        // },
+
+        // data: {
+        //   blocks: fetchedData.blocks || [],
+        //   // blocks: fetchedData.map(document => ({
+        //   //   type: 'paragraph',
+        //   //   data: document.blocks.map,
+        //   // })),
+        // },
+
+        // data: {
+        //   time: Date.now(),
+        //   blocks: fetchedData.flatMap((document) =>
+        //     document.blocks.map((block) => ({
+        //       data: {
+        //         text: block.data.text,
+        //       },
+        //       id: block.id,
+        //       type: block.type,
+        //       _id: block._id,
+        //     }))
+        //   ),
+        // },
 
         data: {
-          blocks: fetchedData.blocks || [],
-          // blocks: fetchedData.map(document => ({
-          //   type: 'paragraph', 
-          //   data: document.blocks.map,
-          // })),
+          time: Date.now(),
+          blocks: initialData.flatMap((document) =>
+            document.blocks.map((block) => ({
+              data: {
+                text: block.data.text,
+                level: block.data.level,
+                url: block.data.url,
+                caption: block.data.caption,
+                withBorder: block.data.withBorder,
+                withBackground: block.data.withBackground,
+                stretched: block.data.stretched,
+                style: block.data.style,
+                items: Array.isArray(block.data.items)
+                  ? block.data.items.map((item) => {
+                      if (typeof item === "object") {
+                        return {
+                          text: item.text,
+                          checked: item.checked,
+                        };
+                      } else if (typeof block === "string") {
+                        return { block };
+                      } else {
+                        return null; // Handle any other cases as needed
+                      }
+                    })
+                  : [],
+                type: block.data.type,
+                html: block.data.html,
+                code: block.data.code,
+              },
+              id: block.id,
+              type: block.type,
+              _id: block._id,
+            }))
+          ),
         },
-        
+
+        onChange: (newData) => {
+          setEditorData(newData);
+          console.log("changed something inside the block");
+        },
       });
     }
 
@@ -107,39 +168,19 @@ const BlockEditor = ({ onSave, onReady}) => {
         editorInstanceRef.current = null;
       }
     };
-  }, [onSave]);
-
-
-  useEffect(() => {
-    // Fetch data from your API endpoint here
-    async function fetchAndSetData() {
-      try {
-        const response = await fetch("/api/mongodb/controllers/EditorData", {
-          method: "GET",
-        });
-        const jsonData = await response.json();
-        setFetchedData(jsonData);
-        console.log(fetchedData.blocks, 'u looking for')
-        console.log(jsonData)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-    fetchAndSetData();
-  }, []);
-
+  }, [onSave, fetchedData, initialData]);
 
   const handleSaveBtn = async () => {
     try {
       const savedData = await editorInstanceRef.current.save();
-      onSave(savedData)
-      console.log(savedData, 'in blockEditor')
-      
-        onReady(editorInstanceRef.current); // Call onReady prop with the editor instance
+      onSave(savedData);
+      console.log(savedData, "in blockEditor");
+      console.log(savedData.blocks[0].data);
+      onReady(editorInstanceRef.current);
 
       setOutput(JSON.stringify(savedData, null, 4));
     } catch (error) {
-      console.error('Error saving document', error);
+      console.error("Error saving document", error);
     }
   };
 
@@ -155,7 +196,7 @@ const BlockEditor = ({ onSave, onReady}) => {
 
       <h1 className={styles.heading}>Add ons</h1>
       <div ref={editorRef} className="">
-      {/* {fetchedData.map((document, index) => (
+        {/* {fetchedData.map((document, index) => (
     <div key={index}>
       {document.blocks.map((block, blockIndex) => (
         <div key={blockIndex}>
@@ -166,7 +207,7 @@ const BlockEditor = ({ onSave, onReady}) => {
       ))}
     </div>
   ))} */}
-        </div>
+      </div>
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
       </button>

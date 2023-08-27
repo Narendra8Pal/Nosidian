@@ -11,32 +11,10 @@ const EditorWidget = dynamic(import("./blockEditor.js"), { ssr: false }); // it 
 const EditorComponent = () => {
   // const [editor, setEditor] = useState(null);
   const editorInstanceRef = useRef(null);
-const [allData, setAllData] = useState("")
 
-  // const handleSaveToServer = async (data) => {
-  //   // Handle saving data to the server
-  //   // also you can send the data to the server from here
-  //   if (editorInstanceRef.current) {
-  //     console.log(editorInstanceRef, "this is editcomponent")
-  //     try {
-  //       const jsonData = await editorInstanceRef.current.save();
-  //       const response = await fetch("/api/mongodb/controllers/EditorData", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(jsonData),
-  //       }); 
-
-  //       const dataJson = await response.json();
-  //       console.log("Response from server:", dataJson);
-  //     } catch {
-  //       console.error("Error saving document", error);
-  //     }
-  //   }
-
-  //   console.log("EditorJS data:", data);
-  // };
+  const [fetchedData, setFetchedData] = useState([]);
+  const [initialData, setInitialData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
@@ -62,9 +40,28 @@ const [allData, setAllData] = useState("")
         console.error("Error saving document", error);
       }
     }
-  
-
   };
+
+  useEffect(() => {
+    async function fetchAndSetData() {
+      try {
+        const response = await fetch("/api/mongodb/controllers/EditorData", {
+          method: "GET",
+        });
+        const jsonData = await response.json();
+        setFetchedData(jsonData);
+        // console.log(fetchedData[0].blocks[0].data.text, "fetch data state zoomed in")
+        setInitialData(jsonData)
+        setIsLoading(false)
+        console.log(jsonData, " json data");
+        console.log(fetchedData, 'fetchedata is working')
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false)
+      }
+    }
+    fetchAndSetData();
+  }, []);
   
 
 
@@ -81,11 +78,17 @@ const [allData, setAllData] = useState("")
           <Home />
         </div>
         <div className="w-4/5">
-          <EditorWidget
+          {isLoading ? (
+            <p>loading...</p>
+          ) : (
+            <EditorWidget
             // style={{ marginTop: "20px" }}
             onSave={handleSaveToServer}
             onReady={handleReady}
-          />
+            fetchedData={fetchedData}
+            initialData={initialData}
+            />
+            )}
         </div>
       </div>
     </>

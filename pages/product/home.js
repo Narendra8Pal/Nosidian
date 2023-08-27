@@ -95,7 +95,7 @@ const home = () => {
       });
       const data = await res.json();
       setFileList(data);
-      console.log(data, "coming from fetchData");
+      // console.log(data, "coming from fetchData");
     } catch (error) {
       console.log("Error in fetchData useEffect:", error);
     }
