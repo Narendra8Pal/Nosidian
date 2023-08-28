@@ -52,5 +52,18 @@ export default async function handler(req, res) {
         return res.status(500).json({ message: "Internal server error" });
       }
     }
+  } else {
+    if (req.method === "DELETE") {
+      try {
+        const { id } = req.body;
+        const removeEditorFile = await Editor.deleteOne({ _id: id });
+        return res.status(200).json(removeEditorFile);
+      } catch (error) {
+        console.log("Error deleting the Editor data:", err);
+        return res
+          .status(500)
+          .json({ message: "Error in deleting the editor data in server" });
+      }
+    }
   }
 }

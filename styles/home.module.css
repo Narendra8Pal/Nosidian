@@ -45,3 +45,27 @@
 .selected {
   @apply bg-opacity-30 bg-home-gray;
 }
+
+.defaultPage{
+  @apply w-2/5 text-white flex justify-center mx-auto h-screen my-auto items-center
+}
+
+.defaultBox{
+  @apply bg-home-left-pane shadow-md h-1/2 w-full rounded-md 
+}
+
+.layouts{
+  @apply flex flex-row space-x-2 h-1/2 w-1/2 mx-auto items-center 
+}
+
+.canvasBox{
+  @apply h-3/4 w-2/4 bg-editor-imgShowcase bg-opacity-80  flex flex-col hover:bg-body-normal hover:text-editor-text rounded-md 
+}
+
+.flowBox{
+  @apply flex flex-col h-3/4 w-2/4 bg-editor-imgShowcase bg-opacity-80 hover:bg-body-normal hover:text-editor-text rounded-md 
+}
+
+.layoutsIcons{
+  @apply w-11 h-11 gap-4 items-center mx-auto my-auto
+}

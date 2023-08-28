@@ -19,7 +19,13 @@ import DragDrop from "editorjs-drag-drop";
 import InlineImage from "editorjs-inline-image";
 import CodeTool from "@editorjs/code";
 
-const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateToServer }) => {
+const BlockEditor = ({
+  onSave,
+  onReady,
+  initialData,
+  fetchedData,
+  handleUpdateToServer,
+}) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
 
@@ -91,7 +97,7 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateT
                 level: block.data.level,
                 url: block.data.url,
                 caption: block.data.caption,
-                alignment:block.data.alignment,
+                alignment: block.data.alignment,
                 withBorder: block.data.withBorder,
                 withBackground: block.data.withBackground,
                 stretched: block.data.stretched,
@@ -136,6 +142,13 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateT
     };
   }, [onSave, fetchedData, initialData]);
 
+  // after creating the filename empty block will be shown
+  // purpose: to get the id of doc
+  useEffect(() => {
+    const emptyString = ""
+    onSave(emptyString);
+  }, []);
+
   const handleSaveBtn = async () => {
     try {
       const savedData = await editorInstanceRef.current.save();
@@ -153,13 +166,14 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateT
   const handleUpdateBtn = async () => {
     try {
       const updateData = await editorInstanceRef.current.save();
-      handleUpdateToServer(updateData)
+      handleUpdateToServer(updateData);
+      handleChange(editorInstanceRef.current);
     } catch (error) {
       console.error("Error saving document", error);
     }
-  }
+  };
 
-  
+  const handleDeleteBtn = async () => {};
 
   // const handleSaveBtn = () => {
   //   editorInstanceRef.current.save().then((savedData) => {
@@ -172,7 +186,7 @@ const BlockEditor = ({ onSave, onReady, initialData, fetchedData , handleUpdateT
       <img src="/coverPage.png" className={styles.coverPage} alt="" />
 
       <h1 className={styles.heading}>Add ons</h1>
-      <div ref={editorRef} className=""/>
+      <div ref={editorRef} className="" />
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
       </button>

@@ -261,7 +261,7 @@ const home = () => {
             </p>
 
             <div className={ModelStyles.twoBtns}>
-              <button onClick={handleDelete} className={ModelStyles.closeBtn}>
+              <button onClick={handleDelete} className={ModelStyles.closeBtn}> {/*handleDelete handles the usestate hook*/}
                 cancel
               </button>
               <button
@@ -340,6 +340,25 @@ const home = () => {
                   )}
                 </div>
               ))}
+        </div>
+      </div>
+
+      {/* default page to show before the layout*/}
+      <div className={styles.defaultPage}>
+        <div className={styles.defaultBox}>
+      <div className={styles.layouts}>
+        <div className={styles.canvasBox}>
+<img src="/createCanvas.png" alt="" srcset="" className={styles.layoutsIcons} />
+<p>enjoy making mind maps</p>
+        </div>
+        <div className={styles.flowBox}>
+<img src="/flow.png" alt="" srcset="" className={styles.layoutsIcons}/>
+<p>enjoy making blocks</p>
+        </div>
+
+      </div>
+      <p className="">this is the default page</p>
+
         </div>
       </div>
     </>

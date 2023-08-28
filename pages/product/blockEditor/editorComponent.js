@@ -1,6 +1,6 @@
-// REACT, IMPORTS 
+// REACT, IMPORTS
 import React from "react";
-import {useState, useEffect, useRef} from "react"
+import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
 // LIBRARIES
@@ -14,8 +14,9 @@ const EditorComponent = () => {
 
   const [fetchedData, setFetchedData] = useState([]);
   const [initialData, setInitialData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [editorDataId, setEditorDataId]  = useState("")
+  
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
     // also you can send the data to the server from here
@@ -23,9 +24,9 @@ const EditorComponent = () => {
       try {
         const jsonDataPromise = await data; // Call .save() on the instance
         const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
-  
-        console.log(jsonData, 'this is json data save server');
-  
+
+        console.log(jsonData, "this is json data save server");
+
         const response = await fetch("/api/mongodb/controllers/EditorData", {
           method: "POST",
           headers: {
@@ -33,7 +34,7 @@ const EditorComponent = () => {
           },
           body: JSON.stringify(jsonData),
         });
-  
+
         const dataWhy = await response.json();
         console.log("Response from server:", dataWhy);
       } catch (error) {
@@ -47,19 +48,19 @@ const EditorComponent = () => {
       try {
         const jsonDataPromise = await data;
         const jsonData = await jsonDataPromise;
-
-        // Send updated data to the backend
+        console.log(jsonData, "the jsonData is here");
         const response = await fetch("/api/mongodb/controllers/EditorData", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: jsonData.id, 
-            updatedData: {
-              time: Date.now(),
-              blocks: jsonData.blocks,
-            },
+            id: jsonData.id,
+            // updatedData: {
+            //   time: Date.now(),
+            //   blocks: jsonData.blocks,
+            // },
+            jsonData: jsonData,
           }),
         });
 
@@ -68,6 +69,14 @@ const EditorComponent = () => {
       } catch (error) {
         console.error("Error saving document", error);
       }
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (id) {
+      try {
+        const editorFileId = await id;
+      } catch (error) {}
     }
   };
 
@@ -80,36 +89,16 @@ const EditorComponent = () => {
         const jsonData = await response.json();
         setFetchedData(jsonData);
         // console.log(fetchedData[0].blocks[0].data.text, "fetch data state zoomed in")
-        setInitialData(jsonData)
-        setIsLoading(false)
+        setInitialData(jsonData);
+        setIsLoading(false);
         console.log(jsonData, " json data");
-        console.log(fetchedData, 'fetchedata is working')
+        console.log(fetchedData, "fetchedata is working");
       } catch (error) {
         console.error("Error fetching data:", error);
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
     fetchAndSetData();
-  }, []);
-  
-  const handleChange = () => {
-    if (editorInstanceRef.current) {
-      editorInstanceRef.current.save().then((savedData) => {
-        setInitialData(savedData);
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (editorInstanceRef.current) {
-      editorInstanceRef.current.on("change", handleChange);
-    }
-
-    return () => {
-      if (editorInstanceRef.current) {
-        editorInstanceRef.current.off("change", handleChange);
-      }
-    };
   }, []);
 
   const handleReady = (editorInstance) => {
@@ -129,14 +118,14 @@ const EditorComponent = () => {
             <p>loading...</p>
           ) : (
             <EditorWidget
-            // style={{ marginTop: "20px" }}
-            onSave={handleSaveToServer}
-            onReady={handleReady}
-            fetchedData={fetchedData}
-            initialData={initialData}
-            handleUpdateToServer={handleUpdateToServer}
+              // style={{ marginTop: "20px" }}
+              onSave={handleSaveToServer}
+              onReady={handleReady}
+              fetchedData={fetchedData}
+              initialData={initialData}
+              handleUpdateToServer={handleUpdateToServer}
             />
-            )}
+          )}
         </div>
       </div>
     </>
