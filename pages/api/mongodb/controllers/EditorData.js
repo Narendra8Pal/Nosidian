@@ -3,13 +3,11 @@ import Editor from "@/pages/api/mongodb/models/Editor";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const jsonData = req.body; // JSON data from frontend
-
-      // Create a new document using your Mongoose model and save it
+      const jsonData = req.body; 
       const newDocument = new Editor({
-        // Populate the fields of your Document model here based on jsonData
-        time: Date.now(), // Example: Set the time to the current timestamp
-        blocks: jsonData.blocks, // Example: Save blocks from jsonData
+        filename: jsonData.filename,
+        time: Date.now(), 
+        blocks: jsonData.blocks, 
       });
 
       await newDocument.save();

@@ -8,7 +8,6 @@ handleTitleInputChange,
 createFile,
 }) => {
 
-    
   return (
     <div>
         <div className={styles.darkBG} onClick={() => setIsOpen(false)} />

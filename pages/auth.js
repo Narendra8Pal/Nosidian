@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 //styles, files
 import styles from "@/styles/auth.module.css";
-import { useUser } from "./product/userContext.js";
+// import { useUser } from "./product/userContext.js";
+
 // libraries
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +20,7 @@ const auth = () => {
 
   const router = useRouter();
 
-  const { updateUser } = useUser();
+  // const { updateUser } = useUser();
 
   const handleSignUp = async (e) => {
     e.preventDefault();

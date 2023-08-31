@@ -1,12 +1,13 @@
 //NEXT, REACT
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Head from "next/head";
 //styles, files
 import styles from "@/styles/home.module.css";
 import ModelStyles from "@/styles/modal.module.css";
 import Modal from "../components/Modal";
-import { useUser } from "./userContext.js";
+// import { useUser } from "./userContext.js";
+import { FilesConnect, useFilename } from "./userContext.js";
 //libraries
 import { ToastContainer, toast } from "react-toastify";
 
@@ -23,8 +24,10 @@ const home = () => {
   const [layout, setLayout] = useState("");
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [deleteFileId, setDeleteFileId] = useState("");
-  const { userId } = useUser();
+  const [removeDefaultPg, setRemoveDefaultPg] = useState(false);
 
+  // const { userId } = useUser();
+  const {filenameContext, setFilenameContext} = useContext(FilesConnect)
   // const openModal = (e) => {
   //   setIsOpen(true);
   // };
@@ -43,9 +46,11 @@ const home = () => {
 
   const handleTitleInputChange = (e) => {
     setFileName(e.target.value);
+    setFilenameContext(e.target.value); // passing it to blockEditor &editorComponent
   };
-
+  
   const createFile = async () => {
+    setRemoveDefaultPg(true);
     if (fileName !== "") {
       const reqBody = {
         fileName: fileName.trim(),
@@ -76,6 +81,7 @@ const home = () => {
         setIsOpen(!isOpen);
         setFileName("");
         fetchData();
+        console.log(filenameContext, "filename context")
         console.log(fileList, "this list from createfile func");
       } catch (error) {
         console.log(error, "err in try catch shiva");
@@ -256,12 +262,14 @@ const home = () => {
           <div className={ModelStyles.modal}>
             <h1 className={ModelStyles.modalHeader}>Caution</h1>
             <p>
-              are you sure you want to delete the file? This step cannot be
+              are you sure you want to delete the file {filenameContext}? This step cannot be
               undone.
             </p>
 
             <div className={ModelStyles.twoBtns}>
-              <button onClick={handleDelete} className={ModelStyles.closeBtn}> {/*handleDelete handles the usestate hook*/}
+              <button onClick={handleDelete} className={ModelStyles.closeBtn}>
+                {" "}
+                {/*handleDelete handles the usestate hook*/}
                 cancel
               </button>
               <button
@@ -344,23 +352,38 @@ const home = () => {
       </div>
 
       {/* default page to show before the layout*/}
-      <div className={styles.defaultPage}>
-        <div className={styles.defaultBox}>
-      <div className={styles.layouts}>
-        <div className={styles.canvasBox}>
-<img src="/createCanvas.png" alt="" srcset="" className={styles.layoutsIcons} />
-<p>enjoy making mind maps</p>
+      {removeDefaultPg === false && (
+        <div className={styles.defaultPage}>
+          <div className={styles.defaultBox}>
+            <div className={styles.layouts}>
+              <div className={styles.canvasBox}>
+                <div className={styles.canvasImg}>
+                  <img
+                    src="/createCanvas.png"
+                    alt=""
+                    className={styles.layoutsIcons}
+                  />
+                </div>
+                <p>enjoy making mind maps</p>
+              </div>
+              <div className={styles.flowBox}>
+                <div className={styles.flowImg}>
+                  <img
+                    src="/flow.png"
+                    alt=""
+                    className={styles.layoutsIcons}
+                  />
+                </div>
+                <p>enjoy making blocks</p>
+              </div>
+            </div>
+            <p className={styles.layoutsPara}>
+              Explore all the available tools , create a canvas or a block
+              editor file and get going
+            </p>
+          </div>
         </div>
-        <div className={styles.flowBox}>
-<img src="/flow.png" alt="" srcset="" className={styles.layoutsIcons}/>
-<p>enjoy making blocks</p>
-        </div>
-
-      </div>
-      <p className="">this is the default page</p>
-
-        </div>
-      </div>
+      )}
     </>
   );
 };

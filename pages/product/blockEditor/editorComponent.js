@@ -1,7 +1,10 @@
 // REACT, IMPORTS
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
+import { FilenameProvider } from "@/pages/product/userContext.js";
+// import { useFilename } from "@/pages/product/userContext.js";
+import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
 
 // LIBRARIES
 import Home from "@/pages/product/home.js";
@@ -11,28 +14,36 @@ const EditorWidget = dynamic(import("./blockEditor.js"), { ssr: false }); // it 
 const EditorComponent = () => {
   // const [editor, setEditor] = useState(null);
   const editorInstanceRef = useRef(null);
+  // const {filename}  = useFilename;
+  const { filenameContext } = useContext(FilesConnect);
 
   const [fetchedData, setFetchedData] = useState([]);
   const [initialData, setInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [editorDataId, setEditorDataId]  = useState("")
-  
+  const [editorDataId, setEditorDataId] = useState("");
+
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
     // also you can send the data to the server from here
     if (data) {
       try {
-        const jsonDataPromise = await data; // Call .save() on the instance
-        const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
+        // const jsonDataPromise = await data; // Call .save() on the instance
+        // const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
 
-        console.log(jsonData, "this is json data save server");
+        // console.log(jsonData, "this is json data save server");
+        console.log(filenameContext, "in filenameContext");
+        const reqBody = {
+          filename: filenameContext,
+          time: data.time,
+          blocks: data.blocks,
+        };
 
         const response = await fetch("/api/mongodb/controllers/EditorData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(jsonData),
+          body: JSON.stringify(reqBody),
         });
 
         const dataWhy = await response.json();
@@ -109,6 +120,7 @@ const EditorComponent = () => {
 
   return (
     <>
+      {/* <FilenameProvider> */}
       <div className="flex">
         <div className="w-1/5">
           <Home />
@@ -128,6 +140,7 @@ const EditorComponent = () => {
           )}
         </div>
       </div>
+      {/* </FilenameProvider> */}
     </>
   );
 };

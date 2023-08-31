@@ -3,5 +3,5 @@
 }
 
 .heading{
-@apply mt-32 ml-363px mr-auto text-4xl font-bold text-editor-text max-w-800 
+@apply mt-32 ml-363px mr-auto text-4xl font-bold text-editor-text max-w-800  border-none outline-none
 }

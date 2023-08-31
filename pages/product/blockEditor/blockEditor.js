@@ -1,7 +1,8 @@
 // REACT, STYLES, FILES
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "@/styles/editor.module.css";
 import SimpleImage from "./imageTool";
+import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
 
 // library
 import EditorJS from "@editorjs/editorjs";
@@ -28,6 +29,7 @@ const BlockEditor = ({
 }) => {
   const editorRef = useRef(null);
   const editorInstanceRef = useRef(null);
+  const { filenameContext } = useContext(FilesConnect);
 
   const [output, setOutput] = useState("");
   // const [fetchedData, setFetchedData] = useState([]);
@@ -35,6 +37,7 @@ const BlockEditor = ({
 
   useEffect(() => {
     console.log(fetchedData, "fetch data state");
+    console.log(filenameContext, "filename in editor useeff");
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = new EditorJS({
         holder: editorRef.current,
@@ -145,7 +148,7 @@ const BlockEditor = ({
   // after creating the filename empty block will be shown
   // purpose: to get the id of doc
   useEffect(() => {
-    const emptyString = ""
+    const emptyString = "";
     onSave(emptyString);
   }, []);
 
@@ -185,7 +188,9 @@ const BlockEditor = ({
     <>
       <img src="/coverPage.png" className={styles.coverPage} alt="" />
 
-      <h1 className={styles.heading}>Add ons</h1>
+      <h1 className={styles.heading} contentEditable={true}>
+        {filenameContext}
+      </h1>
       <div ref={editorRef} className="" />
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save

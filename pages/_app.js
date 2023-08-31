@@ -1,11 +1,10 @@
 import '@/styles/globals.css'
-import { UserProvider } from './product/userContext'
+import { FilenameProvider } from './product/userContext'
 
 export default function App({ Component, pageProps }) {
   return (
-<UserProvider>
+    <FilenameProvider>
   <Component {...pageProps} />
-</UserProvider>
-
+    </FilenameProvider>
   )
 }

@@ -10,6 +10,7 @@ const EditorSchema = new Schema({
 
 const documentSchema = new Schema({
   id: String,
+  filename: String,
   time: Number,
   blocks: [EditorSchema],
 });
