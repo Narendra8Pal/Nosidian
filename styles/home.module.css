@@ -23,7 +23,7 @@
 }
 
 .mainPane {
-  @apply flex flex-col h-full mt-5 ml-14;
+  @apply flex flex-col h-full mt-5 overflow-auto ml-14;
 }
 
 .showPane {
@@ -42,42 +42,54 @@
   @apply flex flex-row px-6 py-1 mx-3 rounded-md cursor-pointer my-2px hover:bg-home-gray hover:bg-opacity-30;
 }
 
+.nameBoxEmpty{
+@apply pb-10
+}
+
+.mainPane::-webkit-scrollbar {
+  @apply w-1.5;
+}
+
+.mainPane::-webkit-scrollbar-thumb {
+  @apply rounded-md bg-home-gray;
+}
+
 .selected {
   @apply bg-opacity-30 bg-home-gray;
 }
 
-.defaultPage{
-  @apply w-2/5 text-editor-text flex justify-center mx-auto h-screen my-auto items-center
+.defaultPage {
+  @apply flex items-center justify-center w-2/5 h-screen mx-auto my-auto text-editor-text;
 }
 
-.defaultBox{
-  @apply bg-home-left-pane bg-opacity-90 shadow-md h-1/2 w-full rounded-md 
+.defaultBox {
+  @apply w-full rounded-md shadow-md bg-home-left-pane bg-opacity-90 h-1/2;
 }
 
-.layouts{
-  @apply flex space-x-2 h-1/2 items-center mx-24 justify-between
+.layouts {
+  @apply flex items-center justify-between mx-24 space-x-2 h-1/2;
 }
 
-.flowImg{
-@apply bg-body-normal 
+.flowImg {
+  @apply bg-body-normal;
 }
 
-.canvasImg{
-  @apply bg-body-normal 
+.canvasImg {
+  @apply bg-body-normal;
 }
 
-.canvasBox{
-  @apply h-full w-2/6 bg-editor-imgShowcase bg-opacity-80  flex flex-col hover:border-body-normal hover:text-editor-text rounded-md hover:border-2 
+.canvasBox {
+  @apply flex flex-col w-2/6 h-full rounded-md bg-editor-imgShowcase bg-opacity-80 hover:border-body-normal hover:text-editor-text hover:border-2;
 }
 
-.flowBox{
-  @apply h-full w-2/6 bg-editor-imgShowcase bg-opacity-80 hover:border-body-normal hover:border-2 hover:text-editor-text rounded-md  
+.flowBox {
+  @apply w-2/6 h-full rounded-md bg-editor-imgShowcase bg-opacity-80 hover:border-body-normal hover:border-2 hover:text-editor-text;
 }
 
-.layoutsIcons{
-  @apply w-11 h-11 gap-4 items-center mx-auto my-auto 
+.layoutsIcons {
+  @apply items-center gap-4 mx-auto my-auto w-11 h-11;
 }
 
-.layoutsPara{
+.layoutsPara {
   /* @apply mb-2 */
 }

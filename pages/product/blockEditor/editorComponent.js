@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { FilenameProvider } from "@/pages/product/userContext.js";
 // import { useFilename } from "@/pages/product/userContext.js";
 import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
+import { useRouter } from "next/router";
 
 // LIBRARIES
 import Home from "@/pages/product/home.js";
@@ -16,11 +17,26 @@ const EditorComponent = () => {
   const editorInstanceRef = useRef(null);
   // const {filename}  = useFilename;
   const { filenameContext } = useContext(FilesConnect);
+  const router = useRouter();
+  const { id } = router.query;
 
   const [fetchedData, setFetchedData] = useState([]);
   const [initialData, setInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editorDataId, setEditorDataId] = useState("");
+  const [fileTitle, setFileTitle] = useState([]);
+  // useEffect(() => {
+  //   if (id) {
+  //     fetch(`/api/mongodb/controllers/EditorData/${id}`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log('Fetched data through id:', data);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching data:', error);
+  //       });
+  //   }
+  // }, [id]);
 
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
@@ -34,8 +50,8 @@ const EditorComponent = () => {
         console.log(filenameContext, "in filenameContext");
         const reqBody = {
           filename: filenameContext,
-          time: data.time,
-          blocks: data.blocks,
+          // time: data.time,
+          // blocks: data.blocks,
         };
 
         const response = await fetch("/api/mongodb/controllers/EditorData", {
@@ -59,19 +75,20 @@ const EditorComponent = () => {
       try {
         const jsonDataPromise = await data;
         const jsonData = await jsonDataPromise;
-        console.log(jsonData, "the jsonData is here");
+        console.log(id, "query id")
+        console.log(jsonData, "the jsonData to catch up id");
         const response = await fetch("/api/mongodb/controllers/EditorData", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: jsonData.id,
-            // updatedData: {
-            //   time: Date.now(),
-            //   blocks: jsonData.blocks,
-            // },
-            jsonData: jsonData,
+            filename: filenameContext,
+            updatedData: {
+              time: Date.now(),
+              blocks: jsonData.blocks[0],
+            },
+            // jsonData: jsonData,
           }),
         });
 
@@ -101,9 +118,10 @@ const EditorComponent = () => {
         setFetchedData(jsonData);
         // console.log(fetchedData[0].blocks[0].data.text, "fetch data state zoomed in")
         setInitialData(jsonData);
+        console.log(jsonData, 'this is for setinitialData')
         setIsLoading(false);
-        console.log(jsonData, " json data");
-        console.log(fetchedData, "fetchedata is working");
+        console.log(jsonData, " json data of editor");
+        // console.log(fetchedData, "fetchedata is working");
       } catch (error) {
         console.error("Error fetching data:", error);
         setIsLoading(false);
@@ -112,11 +130,36 @@ const EditorComponent = () => {
     fetchAndSetData();
   }, []);
 
+  useEffect(() => {
+    async function fetchFileListData() {
+      try {
+        const res = await fetch("/api/mongodb/controllers/DashFiles", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        setFileTitle(data);
+        console.log(data, "filename data in editor");
+      } catch (error) {
+        console.log("Error in fetchData useEffect:", error);
+      }
+    }
+    fetchFileListData();
+  }, []);
+
   const handleReady = (editorInstance) => {
     // new DragDrop(editor);
     // setEditor(editorInstanceRef);
     editorInstanceRef.current = editorInstance;
   };
+
+  // const filteredData = initialData.filter(
+  //   (item) => item.filename === filenameContext
+  // );
+
+
 
   return (
     <>
@@ -126,18 +169,31 @@ const EditorComponent = () => {
           <Home />
         </div>
         <div className="w-4/5">
-          {isLoading ? (
-            <p>loading...</p>
-          ) : (
-            <EditorWidget
-              // style={{ marginTop: "20px" }}
-              onSave={handleSaveToServer}
-              onReady={handleReady}
-              fetchedData={fetchedData}
-              initialData={initialData}
-              handleUpdateToServer={handleUpdateToServer}
-            />
-          )}
+          {/* {filteredData.map((data) => (
+            <div key={data.filename}> */}
+
+{initialData &&
+  initialData
+    .filter((item) => item.blocks.filename === filenameContext)
+    .map((item) => (
+      <div key={item.id}>
+        {isLoading ? (
+          <p>loading...</p>
+        ) : (
+          <EditorWidget
+            // style={{ marginTop: "20px" }}
+            onSave={handleSaveToServer}
+            onReady={handleReady}
+            fetchedData={fetchedData}
+            initialData={initialData}
+            handleUpdateToServer={handleUpdateToServer}
+          />
+        )}
+      </div>
+        ))}
+
+            {/* </div>
+          ))} */}
         </div>
       </div>
       {/* </FilenameProvider> */}

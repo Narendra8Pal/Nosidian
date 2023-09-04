@@ -3,11 +3,11 @@ import Editor from "@/pages/api/mongodb/models/Editor";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const jsonData = req.body; 
+      const jsonData = req.body;
       const newDocument = new Editor({
         filename: jsonData.filename,
-        time: Date.now(), 
-        blocks: jsonData.blocks, 
+        time: Date.now(),
+        blocks: jsonData.blocks,
       });
 
       await newDocument.save();
@@ -33,9 +33,9 @@ export default async function handler(req, res) {
   } else if (req.method === "PUT") {
     if (req.method === "PUT") {
       try {
-        const { id, updatedData } = req.body;
-        const updatedDocument = await EditorData.findByIdAndUpdate(
-          id,
+        const { filename, updatedData } = req.body;
+        const updatedDocument = await Editor.findOneAndUpdate(
+          { filename: filename },
           updatedData,
           { new: true }
         );

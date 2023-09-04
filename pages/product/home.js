@@ -2,6 +2,7 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 //styles, files
 import styles from "@/styles/home.module.css";
 import ModelStyles from "@/styles/modal.module.css";
@@ -25,9 +26,13 @@ const home = () => {
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [deleteFileId, setDeleteFileId] = useState("");
   const [removeDefaultPg, setRemoveDefaultPg] = useState(false);
+  const [fileNameId, setFileNameId] = useState("");
+  const [createdFileNameId, setCreatedFileNameId] = useState("");
 
   // const { userId } = useUser();
-  const {filenameContext, setFilenameContext} = useContext(FilesConnect)
+  const { filenameContext, setFilenameContext } = useContext(FilesConnect);
+  const router = useRouter();
+
   // const openModal = (e) => {
   //   setIsOpen(true);
   // };
@@ -42,13 +47,36 @@ const home = () => {
 
   const handleSelectedFileName = (fileId) => {
     setSelectedFileId(fileId);
+    // router.push("/product/blockEditor/editorComponent");
+    router.push({
+      pathname: "/product/blockEditor/editorComponent",
+      query: { id: fileId },
+    });
+    setFileNameId(fileId);
   };
+
+  // useEffect(() => {
+  //   setSelectedFileId(fileNameId);
+  //   console.log(fileNameId, "useEffect working")
+  // }, [router.asPath]);
+
+  // useEffect(() =>  {
+  //   console.log(selectedFileId, "selected fileid");
+  //   fileList.map((file) => {
+  //     const fileName_Id = file._Id
+  //     setFileNameId(fileName_Id)
+  //     console.log(fileNameId, "fileid ")
+  //   })
+  //   if(selectedFileId === fileNameId){
+  //     router.push("/product/blockEditor/editorComponent");
+  //   }
+  // }, [handleSelectedFileName]);
 
   const handleTitleInputChange = (e) => {
     setFileName(e.target.value);
     setFilenameContext(e.target.value); // passing it to blockEditor &editorComponent
   };
-  
+
   const createFile = async () => {
     setRemoveDefaultPg(true);
     if (fileName !== "") {
@@ -69,6 +97,7 @@ const home = () => {
         const fileData = await res.json();
         console.log("fetchData:", fileData);
         console.log("req body:", reqBody);
+        setCreatedFileNameId(fileData._id);
         // setFileList((prevFileList) => [
         //   ...prevFileList,
         //   {
@@ -76,12 +105,10 @@ const home = () => {
         //     fileName: reqBody.fileName,
         //   },
         // ]);
-
-        console.log("you did it thanks shiva");
         setIsOpen(!isOpen);
         setFileName("");
         fetchData();
-        console.log(filenameContext, "filename context")
+        console.log(filenameContext, "filename context");
         console.log(fileList, "this list from createfile func");
       } catch (error) {
         console.log(error, "err in try catch shiva");
@@ -90,6 +117,16 @@ const home = () => {
       alert("err in create file shiva");
     }
   };
+
+  useEffect(() => {
+    console.log(createdFileNameId, "useeffect fileid");
+    if (createdFileNameId) {
+      router.push({
+        pathname: "/product/blockEditor/editorComponent",
+        query: { id: createdFileNameId },
+      });
+    }
+  }, [createdFileNameId]);
 
   const fetchData = async () => {
     try {
@@ -262,8 +299,8 @@ const home = () => {
           <div className={ModelStyles.modal}>
             <h1 className={ModelStyles.modalHeader}>Caution</h1>
             <p>
-              are you sure you want to delete the file {filenameContext}? This step cannot be
-              undone.
+              are you sure you want to delete the file {filenameContext}? This
+              step cannot be undone.
             </p>
 
             <div className={ModelStyles.twoBtns}>
@@ -348,6 +385,7 @@ const home = () => {
                   )}
                 </div>
               ))}
+          <div className={styles.nameBoxEmpty}></div>
         </div>
       </div>
 
@@ -368,11 +406,7 @@ const home = () => {
               </div>
               <div className={styles.flowBox}>
                 <div className={styles.flowImg}>
-                  <img
-                    src="/flow.png"
-                    alt=""
-                    className={styles.layoutsIcons}
-                  />
+                  <img src="/flow.png" alt="" className={styles.layoutsIcons} />
                 </div>
                 <p>enjoy making blocks</p>
               </div>

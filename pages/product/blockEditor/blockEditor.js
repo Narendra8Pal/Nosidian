@@ -31,7 +31,6 @@ const BlockEditor = ({
   const editorInstanceRef = useRef(null);
   const { filenameContext } = useContext(FilesConnect);
 
-  const [output, setOutput] = useState("");
   // const [fetchedData, setFetchedData] = useState([]);
   const [editorData, setEditorData] = useState(initialData);
 
@@ -159,8 +158,6 @@ const BlockEditor = ({
       console.log(savedData, "in blockEditor");
       console.log(savedData.blocks[0].data);
       onReady(editorInstanceRef.current);
-
-      setOutput(JSON.stringify(savedData, null, 4));
     } catch (error) {
       console.error("Error saving document", error);
     }
@@ -170,7 +167,7 @@ const BlockEditor = ({
     try {
       const updateData = await editorInstanceRef.current.save();
       handleUpdateToServer(updateData);
-      handleChange(editorInstanceRef.current);
+      // handleChange(editorInstanceRef.current);
     } catch (error) {
       console.error("Error saving document", error);
     }
@@ -178,27 +175,27 @@ const BlockEditor = ({
 
   const handleDeleteBtn = async () => {};
 
-  // const handleSaveBtn = () => {
-  //   editorInstanceRef.current.save().then((savedData) => {
-  //     setOutput(JSON.stringify(savedData, null, 4));
-  //   });
-  // };
+  // const filteredData = editorData.filter(
+  //   (item) => item.filename === filenameContext
+  // );
 
   return (
     <>
-      <img src="/coverPage.png" className={styles.coverPage} alt="" />
+    {/* {
+      filteredData.map((data) => (
+        <div key={data.filename}>
+        </div>
+          ))} */}
+            <img src="/coverPage.png" className={styles.coverPage} alt="" />
 
-      <h1 className={styles.heading} contentEditable={true}>
-        {filenameContext}
-      </h1>
-      <div ref={editorRef} className="" />
+            <h1 className={styles.heading} contentEditable={true}>
+              {filenameContext}
+            </h1>
+            <div ref={editorRef} className="" />
       <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
       </button>
       <button onClick={handleUpdateBtn}>Update</button>
-      <pre id="output" className="text-white">
-        {output}
-      </pre>
     </>
   );
 };
