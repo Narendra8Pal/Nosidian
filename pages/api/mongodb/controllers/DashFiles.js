@@ -11,7 +11,7 @@ export default async function handler(req, res) {
           .json({ message: "Ooops! provided file title already exist" });
       }
 
-      const newFile = new FileList({ fileName, userId, layout});
+      const newFile = new FileList({ fileName, userId, layout });
       await newFile.save();
       return res.status(201).json({
         _id: newFile._id,

@@ -46,6 +46,7 @@ const home = () => {
   // };
 
   const handleSelectedFileName = (fileId) => {
+    setHoveredId(fileId);
     setSelectedFileId(fileId);
     // router.push("/product/blockEditor/editorComponent");
     router.push({
@@ -74,7 +75,7 @@ const home = () => {
 
   const handleTitleInputChange = (e) => {
     setFileName(e.target.value);
-    setFilenameContext(e.target.value); // passing it to blockEditor &editorComponent
+    //setFilenameContext(e.target.value); // passing it to blockEditor &editorComponent
   };
 
   const createFile = async () => {
@@ -108,6 +109,7 @@ const home = () => {
         setIsOpen(!isOpen);
         setFileName("");
         fetchData();
+        setFilenameContext(fileName); // in inputchange it was visible under the modal
         console.log(filenameContext, "filename context");
         console.log(fileList, "this list from createfile func");
       } catch (error) {
@@ -118,6 +120,7 @@ const home = () => {
     }
   };
 
+  // useeffect for adding "id" do the pathname after file is created
   useEffect(() => {
     console.log(createdFileNameId, "useeffect fileid");
     if (createdFileNameId) {
@@ -138,7 +141,7 @@ const home = () => {
       });
       const data = await res.json();
       setFileList(data);
-      // console.log(data, "coming from fetchData");
+      console.log(data, "coming from fetchData");
     } catch (error) {
       console.log("Error in fetchData useEffect:", error);
     }
@@ -361,8 +364,8 @@ const home = () => {
                       : ""
                   }`}
                   key={files._id}
-                  onMouseEnter={() => setHoveredId(files._id)}
-                  onMouseLeave={() => setHoveredId(null)}
+                  // onMouseEnter={() => setHoveredId(files._id)}
+                  // onMouseLeave={() => setHoveredId(null)}
                   onClick={() => handleSelectedFileName(files._id)}
                 >
                   <div className={styles.mainContent}>

@@ -4,6 +4,12 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const jsonData = req.body;
+      // const existingFileTitle = await Editor.findOne({jsonData});
+      // if(existingFileTitle){
+      //   return res
+      //   .status(400)
+      //   .json({message: "Oops! provided file title already exist"});
+      // }
       const newDocument = new Editor({
         filename: jsonData.filename,
         time: Date.now(),

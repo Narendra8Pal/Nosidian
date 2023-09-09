@@ -6,6 +6,7 @@ import { FilenameProvider } from "@/pages/product/userContext.js";
 // import { useFilename } from "@/pages/product/userContext.js";
 import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
 import { useRouter } from "next/router";
+import styles from "@/styles/editor.module.css";
 
 // LIBRARIES
 import Home from "@/pages/product/home.js";
@@ -25,23 +26,29 @@ const EditorComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [editorDataId, setEditorDataId] = useState("");
   const [fileTitle, setFileTitle] = useState([]);
-  // useEffect(() => {
-  //   if (id) {
-  //     fetch(`/api/mongodb/controllers/EditorData/${id}`)
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         console.log('Fetched data through id:', data);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching data:', error);
-  //       });
-  //   }
-  // }, [id]);
+  const [showFilteredData, setShowFilteredData] = useState(false);
+  const [isDataChanged, setIsDataChanged] = useState(false)
+  const [fileListData, setFileListData] = useState('')
+
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/mongodb/controllers/FileNameId/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Fetched data through id:', data);
+          setFileListData(data.fileName)
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+    console.log('is id useEffect working ?')
+  }, [id]);
 
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
     // also you can send the data to the server from here
-    if (data) {
+    if (filenameContext !== "") {
       try {
         // const jsonDataPromise = await data; // Call .save() on the instance
         // const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
@@ -61,9 +68,11 @@ const EditorComponent = () => {
           },
           body: JSON.stringify(reqBody),
         });
-
         const dataWhy = await response.json();
         console.log("Response from server:", dataWhy);
+        console.log("you r about to setIsDataChanged to true")
+        setIsDataChanged(true);
+        // setShowFilteredData(true);
       } catch (error) {
         console.error("Error saving document", error);
       }
@@ -75,7 +84,7 @@ const EditorComponent = () => {
       try {
         const jsonDataPromise = await data;
         const jsonData = await jsonDataPromise;
-        console.log(id, "query id")
+        console.log(id, "query id");
         console.log(jsonData, "the jsonData to catch up id");
         const response = await fetch("/api/mongodb/controllers/EditorData", {
           method: "PUT",
@@ -85,10 +94,9 @@ const EditorComponent = () => {
           body: JSON.stringify({
             filename: filenameContext,
             updatedData: {
-              time: Date.now(),
-              blocks: jsonData.blocks[0],
+              time: jsonData.time,
+              blocks: jsonData.blocks,
             },
-            // jsonData: jsonData,
           }),
         });
 
@@ -116,19 +124,19 @@ const EditorComponent = () => {
         });
         const jsonData = await response.json();
         setFetchedData(jsonData);
-        // console.log(fetchedData[0].blocks[0].data.text, "fetch data state zoomed in")
         setInitialData(jsonData);
-        console.log(jsonData, 'this is for setinitialData')
+        console.log("you have entered the fetchandsetData useEffect")
+        console.log(jsonData, "this is for setinitialData AGAIN");
         setIsLoading(false);
-        console.log(jsonData, " json data of editor");
+        // console.log(jsonData, "json data of editor");
         // console.log(fetchedData, "fetchedata is working");
       } catch (error) {
         console.error("Error fetching data:", error);
         setIsLoading(false);
       }
     }
-    fetchAndSetData();
-  }, []);
+      fetchAndSetData();
+  }, [isDataChanged]);
 
   useEffect(() => {
     async function fetchFileListData() {
@@ -140,8 +148,8 @@ const EditorComponent = () => {
           },
         });
         const data = await res.json();
-        setFileTitle(data);
-        console.log(data, "filename data in editor");
+        // setFileTitle(data);
+        console.log(data, "filename dahsfiles data in editor");
       } catch (error) {
         console.log("Error in fetchData useEffect:", error);
       }
@@ -155,11 +163,8 @@ const EditorComponent = () => {
     editorInstanceRef.current = editorInstance;
   };
 
-  // const filteredData = initialData.filter(
-  //   (item) => item.filename === filenameContext
-  // );
-
-
+  const filteredData = initialData.map((item) => item.filename)
+  // .filter((filename) => filename === filenameContext);
 
   return (
     <>
@@ -169,31 +174,51 @@ const EditorComponent = () => {
           <Home />
         </div>
         <div className="w-4/5">
-          {/* {filteredData.map((data) => (
-            <div key={data.filename}> */}
+    
+          {console.log(filteredData, "filteredData is this")}
+          {console.log(filenameContext, "filename context")}
+          {/* {console.log(
+            initialData
+            .map((item) => item.filename)
+            .filter((filename) => filename === filenameContext),
+            "initialData mapped and now filtering"
+          )} */}
 
-{initialData &&
-  initialData
-    .filter((item) => item.blocks.filename === filenameContext)
-    .map((item) => (
-      <div key={item.id}>
-        {isLoading ? (
-          <p>loading...</p>
-        ) : (
-          <EditorWidget
-            // style={{ marginTop: "20px" }}
-            onSave={handleSaveToServer}
-            onReady={handleReady}
-            fetchedData={fetchedData}
-            initialData={initialData}
-            handleUpdateToServer={handleUpdateToServer}
-          />
-        )}
-      </div>
-        ))}
+          <img src="/coverPage.png" className={styles.coverPage} />
 
-            {/* </div>
-          ))} */}
+          <h1 className={styles.heading} contentEditable={true}>
+            {filenameContext}
+          </h1>
+
+          <button
+            id="save-btn"
+            onClick={handleSaveToServer}
+            className="text-white"
+          >
+            Save
+          </button>
+
+          {
+            initialData
+              .filter((item) => item.filename === filenameContext)
+              .map((filteredItem) => (
+                <div key={filteredItem.filename}>
+                  {isLoading ? (
+                    <p>loading...</p>
+                  ) : (
+                    <EditorWidget
+                      // style={{ marginTop: "20px" }}
+                      // onSave={handleSaveToServer}
+                      onReady={handleReady}
+                      fetchedData={fetchedData}
+                      initialData={initialData}
+                      handleUpdateToServer={handleUpdateToServer}
+                    />
+                  )}
+                </div>
+              ))
+              }
+
         </div>
       </div>
       {/* </FilenameProvider> */}

@@ -31,9 +31,7 @@ const BlockEditor = ({
   const editorInstanceRef = useRef(null);
   const { filenameContext } = useContext(FilesConnect);
 
-  // const [fetchedData, setFetchedData] = useState([]);
-  const [editorData, setEditorData] = useState(initialData);
-
+  
   useEffect(() => {
     console.log(fetchedData, "fetch data state");
     console.log(filenameContext, "filename in editor useeff");
@@ -92,47 +90,62 @@ const BlockEditor = ({
 
         data: {
           time: Date.now(),
-          blocks: initialData.flatMap((document) =>
-            document.blocks.map((block) => ({
-              data: {
-                text: block.data.text,
-                level: block.data.level,
-                url: block.data.url,
-                caption: block.data.caption,
-                alignment: block.data.alignment,
-                withBorder: block.data.withBorder,
-                withBackground: block.data.withBackground,
-                stretched: block.data.stretched,
-                style: block.data.style,
-                items: Array.isArray(block.data.items)
-                  ? block.data.items.map((item) => {
-                      if (typeof item === "object") {
-                        return {
-                          text: item.text,
-                          checked: item.checked,
-                        };
-                      } else if (typeof item === "string") {
-                        return item;
-                      } else {
-                        return null;
-                      }
-                    })
-                  : [],
-                type: block.data.type,
-                html: block.data.html,
-                code: block.data.code,
-              },
-              id: block.id,
-              type: block.type,
-              _id: block._id,
-            }))
-          ),
+          blocks: initialData.flatMap((document) => {
+            if (document.filename === filenameContext) {
+              return document.blocks.map((block) => ({
+                data: {
+                  time: Date.now(),
+                  blocks: initialData.flatMap((document) =>
+                    document.blocks.map((block) => ({
+                      data: {
+                        text: block.data.text,
+                        level: block.data.level,
+                        url: block.data.url,
+                        caption: block.data.caption,
+                        alignment: block.data.alignment,
+                        withBorder: block.data.withBorder,
+                        withBackground: block.data.withBackground,
+                        stretched: block.data.stretched,
+                        style: block.data.style,
+                        items: Array.isArray(block.data.items)
+                          ? block.data.items.map((item) => {
+                              if (typeof item === "object") {
+                                return {
+                                  text: item.text,
+                                  checked: item.checked,
+                                };
+                              } else if (typeof item === "string") {
+                                return item;
+                              } else {
+                                return null;
+                              }
+                            })
+                          : [],
+                        type: block.data.type,
+                        html: block.data.html,
+                        code: block.data.code,
+                      },
+                      id: block.id,
+                      type: block.type,
+                      _id: block._id,
+                    }))
+                  ),
+                },
+                id: block.id,
+                type: block.type,
+                _id: block._id,
+              }));
+            } else {
+              return [];
+            }
+          }),
         },
 
-        onChange: (newData) => {
-          setEditorData(newData);
-          console.log("changed something inside the block");
-        },
+        // ? don't need it right now 
+        // onChange: (newData) => {
+        //   setEditorData(newData);
+        //   console.log("changed something inside the block");
+        // },
       });
     }
 
@@ -142,26 +155,19 @@ const BlockEditor = ({
         editorInstanceRef.current = null;
       }
     };
-  }, [onSave, fetchedData, initialData]);
+  }, [onSave, fetchedData, initialData, filenameContext]);
 
-  // after creating the filename empty block will be shown
-  // purpose: to get the id of doc
-  useEffect(() => {
-    const emptyString = "";
-    onSave(emptyString);
-  }, []);
-
-  const handleSaveBtn = async () => {
-    try {
-      const savedData = await editorInstanceRef.current.save();
-      onSave(savedData);
-      console.log(savedData, "in blockEditor");
-      console.log(savedData.blocks[0].data);
-      onReady(editorInstanceRef.current);
-    } catch (error) {
-      console.error("Error saving document", error);
-    }
-  };
+  // const handleSaveBtn = async () => {
+  //   try {
+  //     const savedData = await editorInstanceRef.current.save();
+  //     onSave(savedData);
+  //     console.log(savedData, "in blockEditor");
+  //     // console.log(savedData.blocks[0].data);
+  //     onReady(editorInstanceRef.current);
+  //   } catch (error) {
+  //     console.error("Error saving document", error);
+  //   }
+  // };
 
   const handleUpdateBtn = async () => {
     try {
@@ -173,28 +179,17 @@ const BlockEditor = ({
     }
   };
 
-  const handleDeleteBtn = async () => {};
-
-  // const filteredData = editorData.filter(
-  //   (item) => item.filename === filenameContext
-  // );
-
   return (
     <>
-    {/* {
-      filteredData.map((data) => (
-        <div key={data.filename}>
-        </div>
-          ))} */}
-            <img src="/coverPage.png" className={styles.coverPage} alt="" />
+      {/* <img src="/coverPage.png" className={styles.coverPage} alt="" /> */}
 
-            <h1 className={styles.heading} contentEditable={true}>
+      {/* <h1 className={styles.heading} contentEditable={true}>
               {filenameContext}
-            </h1>
-            <div ref={editorRef} className="" />
-      <button id="save-btn" onClick={handleSaveBtn} className="text-white">
+            </h1> */}
+      <div ref={editorRef} className="" />
+      {/* <button id="save-btn" onClick={handleSaveBtn} className="text-white">
         Save
-      </button>
+      </button> */}
       <button onClick={handleUpdateBtn}>Update</button>
     </>
   );
