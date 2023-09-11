@@ -17,7 +17,10 @@ const EditorComponent = () => {
   // const [editor, setEditor] = useState(null);
   const editorInstanceRef = useRef(null);
   // const {filename}  = useFilename;
-  const { filenameContext } = useContext(FilesConnect);
+  const { filenameContext,setFilenameContext } = useContext(FilesConnect);
+  const { updateEditorFilename , setUpdateEditorFilename} = useContext(FilesConnect);
+  const { deleteEditorFilename, setDeleteEditorFilename} = useContext(FilesConnect);
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -28,23 +31,25 @@ const EditorComponent = () => {
   const [fileTitle, setFileTitle] = useState([]);
   const [showFilteredData, setShowFilteredData] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false)
-  const [fileListData, setFileListData] = useState('')
-
+  const [isIdChanged, setIsIdChanged] = useState(false)
+  const [filenameToUpdate, setFilenameToUpdate] = useState("")
+  const [deleteEditorFileId, setDeleteEditorFileId] = useState("")
+  
   useEffect(() => {
     if (id) {
-      fetch(`/api/mongodb/controllers/FileNameId/${id}`)
+      fetch(`/api/mongodb/controllers/FileNameId?id=${id}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log('Fetched data through id:', data);
-          setFileListData(data.fileName)
+          console.log('FETCHED DATA THROUGH ID:', data);
+          setFilenameContext(data.fileName)
+          setFilenameToUpdate(data.fileName)
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
         });
     }
-    console.log('is id useEffect working ?')
   }, [id]);
-
+          
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
     // also you can send the data to the server from here
@@ -102,20 +107,67 @@ const EditorComponent = () => {
 
         const responseData = await response.json();
         console.log("Response from server:", responseData);
+        setIsDataChanged(true);
       } catch (error) {
         console.error("Error saving document", error);
       }
     }
   };
 
-  const handleDelete = async (id) => {
-    if (id) {
-      try {
-        const editorFileId = await id;
-      } catch (error) {}
-    }
-  };
+  useEffect(() => {
+    const handleUpdateToEditor = async () => {
+        const reqBody = {
+          filename: filenameToUpdate,
+          updatedFileName: filenameContext
+        }
+        try {
+          const response = await fetch("/api/mongodb/controllers/FileNameId", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(reqBody),
+          });
+  
+          const responseData = await response.json();
+          console.log("Response from server:", responseData);
+          setIsDataChanged(true);
+          setUpdateEditorFilename(false)
+        } catch (error) {
+          console.error("Error saving document", error);
+        }
+    };
+    handleUpdateToEditor();
+  },[updateEditorFilename])
 
+  useEffect(() => {
+const handleDeleteEditor = async () => {
+  await handleDelete();
+  console.log(id, "chekcout this id for delete")
+  const reqBody = {
+    _id: deleteEditorFileId, // filelists id will not work
+  };
+  try {
+    await fetch("/api/mongodb/controllers/EditorData", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    const updatedFileList = initialData.filter(
+      (file) => file._id !== deleteEditorFileId
+    );
+    setInitialData(updatedFileList);
+    setDeleteEditorFilename(false)
+  } catch (err) {
+    console.log("Error in handleDelete:", err);
+  }
+}
+handleDeleteEditor();
+  }, [deleteEditorFilename])
+  
   useEffect(() => {
     async function fetchAndSetData() {
       try {
@@ -128,6 +180,7 @@ const EditorComponent = () => {
         console.log("you have entered the fetchandsetData useEffect")
         console.log(jsonData, "this is for setinitialData AGAIN");
         setIsLoading(false);
+        setIsDataChanged(false)
         // console.log(jsonData, "json data of editor");
         // console.log(fetchedData, "fetchedata is working");
       } catch (error) {
@@ -135,9 +188,17 @@ const EditorComponent = () => {
         setIsLoading(false);
       }
     }
-      fetchAndSetData();
+    fetchAndSetData();
   }, [isDataChanged]);
-
+  
+    const handleDelete = async () => {
+  initialData
+  .filter((files) => files.filename === filenameToUpdate)
+  .map((filteredFiles) => {
+    setDeleteEditorFileId(filteredFiles._id)
+  })
+    };
+  
   useEffect(() => {
     async function fetchFileListData() {
       try {

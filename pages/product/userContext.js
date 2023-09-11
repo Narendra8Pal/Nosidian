@@ -25,10 +25,16 @@ export const FilesConnect = createContext();
 
 export function FilenameProvider({ children }) {
   const [filenameContext, setFilenameContext] = useState('');
-  
+  const [updateEditorFilename, setUpdateEditorFilename] = useState(false)
+  const [deleteEditorFilename, setDeleteEditorFilename] = useState(false)
+
   const contextValue = {
     filenameContext,
     setFilenameContext,
+    updateEditorFilename,
+    setUpdateEditorFilename,
+    deleteEditorFilename,
+    setDeleteEditorFilename
   };
 
   return (

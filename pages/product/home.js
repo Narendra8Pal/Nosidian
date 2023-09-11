@@ -28,9 +28,13 @@ const home = () => {
   const [removeDefaultPg, setRemoveDefaultPg] = useState(false);
   const [fileNameId, setFileNameId] = useState("");
   const [createdFileNameId, setCreatedFileNameId] = useState("");
+  const [updateServerFilename, setUpdateServerFilename] = useState("")
 
   // const { userId } = useUser();
   const { filenameContext, setFilenameContext } = useContext(FilesConnect);
+  const { setUpdateEditorFilename } = useContext(FilesConnect);
+  const { setDeleteEditorFilename} = useContext(FilesConnect);
+
   const router = useRouter();
 
   // const openModal = (e) => {
@@ -50,7 +54,7 @@ const home = () => {
     setSelectedFileId(fileId);
     // router.push("/product/blockEditor/editorComponent");
     router.push({
-      pathname: "/product/blockEditor/editorComponent",
+      pathname: `/product/blockEditor/editorComponent`,
       query: { id: fileId },
     });
     setFileNameId(fileId);
@@ -125,7 +129,7 @@ const home = () => {
     console.log(createdFileNameId, "useeffect fileid");
     if (createdFileNameId) {
       router.push({
-        pathname: "/product/blockEditor/editorComponent",
+        pathname: `/product/blockEditor/editorComponent`,
         query: { id: createdFileNameId },
       });
     }
@@ -193,6 +197,9 @@ const home = () => {
         body: JSON.stringify(reqBody),
       });
       setIsEditing(false);
+      setUpdateEditorFilename(true)
+      setFilenameContext(reqBody.updatedFileName);
+      // setUpdateServerFilename(reqBody.updatedFileName)
       fetchData();
     } catch (error) {
       console.log(error, "error in updating the file name in client");
@@ -226,6 +233,7 @@ const home = () => {
         (file) => file._id !== deleteFileId
       );
       setFileList(updatedFileList);
+      setDeleteEditorFilename(true)
       setIsDelete(false);
       console.log("File deleted successfully");
     } catch (err) {

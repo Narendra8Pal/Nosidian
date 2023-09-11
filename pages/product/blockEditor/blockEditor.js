@@ -31,7 +31,6 @@ const BlockEditor = ({
   const editorInstanceRef = useRef(null);
   const { filenameContext } = useContext(FilesConnect);
 
-  
   useEffect(() => {
     console.log(fetchedData, "fetch data state");
     console.log(filenameContext, "filename in editor useeff");
@@ -88,60 +87,103 @@ const BlockEditor = ({
           delimiter: Delimiter,
         },
 
+        // data: {
+        //   time: Date.now(),
+        //   blocks: initialData.flatMap((document) => {
+        //     if (document.filename === filenameContext) {
+        //       return document.blocks.map((block) => ({
+        //         data: {
+        //           time: Date.now(),
+        //           blocks: initialData.flatMap((document) =>
+        //             document.blocks.map((block) => ({
+        //               data: {
+        //                 text: block.data.text,
+        //                 level: block.data.level,
+        //                 url: block.data.url,
+        //                 caption: block.data.caption,
+        //                 alignment: block.data.alignment,
+        //                 withBorder: block.data.withBorder,
+        //                 withBackground: block.data.withBackground,
+        //                 stretched: block.data.stretched,
+        //                 style: block.data.style,
+        //                 items: Array.isArray(block.data.items)
+        //                   ? block.data.items.map((item) => {
+        //                       if (typeof item === "object") {
+        //                         return {
+        //                           text: item.text,
+        //                           checked: item.checked,
+        //                         };
+        //                       } else if (typeof item === "string") {
+        //                         return item;
+        //                       } else {
+        //                         return null;
+        //                       }
+        //                     })
+        //                   : [],
+        //                 type: block.data.type,
+        //                 html: block.data.html,
+        //                 code: block.data.code,
+        //               },
+        //               id: block.id,
+        //               type: block.type,
+        //               _id: block._id,
+        //             }))
+        //           ),
+        //         },
+        //         id: block.id,
+        //         type: block.type,
+        //         _id: block._id,
+        //       }));
+        //     } else {
+        //       {console.log('bro filname does not equals')}
+        //       {console.log(filenameContext, document.filename ,' filenameContext and document.filename')}
+        //       return [];
+        //     }
+        //   }),
+        // },
+
         data: {
           time: Date.now(),
-          blocks: initialData.flatMap((document) => {
-            if (document.filename === filenameContext) {
-              return document.blocks.map((block) => ({
+          blocks: initialData
+            .filter((document) => document.filename === filenameContext)
+            .flatMap((document) =>
+              document.blocks.map((block) => ({
                 data: {
-                  time: Date.now(),
-                  blocks: initialData.flatMap((document) =>
-                    document.blocks.map((block) => ({
-                      data: {
-                        text: block.data.text,
-                        level: block.data.level,
-                        url: block.data.url,
-                        caption: block.data.caption,
-                        alignment: block.data.alignment,
-                        withBorder: block.data.withBorder,
-                        withBackground: block.data.withBackground,
-                        stretched: block.data.stretched,
-                        style: block.data.style,
-                        items: Array.isArray(block.data.items)
-                          ? block.data.items.map((item) => {
-                              if (typeof item === "object") {
-                                return {
-                                  text: item.text,
-                                  checked: item.checked,
-                                };
-                              } else if (typeof item === "string") {
-                                return item;
-                              } else {
-                                return null;
-                              }
-                            })
-                          : [],
-                        type: block.data.type,
-                        html: block.data.html,
-                        code: block.data.code,
-                      },
-                      id: block.id,
-                      type: block.type,
-                      _id: block._id,
-                    }))
-                  ),
+                  text: block.data.text,
+                  level: block.data.level,
+                  url: block.data.url,
+                  caption: block.data.caption,
+                  alignment: block.data.alignment,
+                  withBorder: block.data.withBorder,
+                  withBackground: block.data.withBackground,
+                  stretched: block.data.stretched,
+                  style: block.data.style,
+                  items: Array.isArray(block.data.items)
+                    ? block.data.items.map((item) => {
+                        if (typeof item === "object") {
+                          return {
+                            text: item.text,
+                            checked: item.checked,
+                          };
+                        } else if (typeof item === "string") {
+                          return item;
+                        } else {
+                          return null;
+                        }
+                      })
+                    : [],
+                  type: block.data.type,
+                  html: block.data.html,
+                  code: block.data.code,
                 },
                 id: block.id,
                 type: block.type,
                 _id: block._id,
-              }));
-            } else {
-              return [];
-            }
-          }),
+              }))
+            ),
         },
 
-        // ? don't need it right now 
+        // ? don't need it right now
         // onChange: (newData) => {
         //   setEditorData(newData);
         //   console.log("changed something inside the block");
