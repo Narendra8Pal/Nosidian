@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
 import { FilenameProvider } from "@/pages/product/userContext.js";
-// import { useFilename } from "@/pages/product/userContext.js";
 import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
 import { useRouter } from "next/router";
 import styles from "@/styles/editor.module.css";
@@ -14,12 +13,17 @@ import Home from "@/pages/product/home.js";
 const EditorWidget = dynamic(import("./blockEditor.js"), { ssr: false }); // it will be executed on the client side after the initial page load (working with DOM)
 
 const EditorComponent = () => {
-  // const [editor, setEditor] = useState(null);
   const editorInstanceRef = useRef(null);
-  // const {filename}  = useFilename;
-  const { filenameContext,setFilenameContext } = useContext(FilesConnect);
-  const { updateEditorFilename , setUpdateEditorFilename} = useContext(FilesConnect);
-  const { deleteEditorFilename, setDeleteEditorFilename} = useContext(FilesConnect);
+  const {
+    filenameContext,
+    setFilenameContext,
+    updateEditorFilename,
+    setUpdateEditorFilename,
+    deleteEditorFilename,
+    setDeleteEditorFilename,
+    setSelectedEditorFileId,
+    setEditorIdFetched
+  } = useContext(FilesConnect);
 
   const router = useRouter();
   const { id } = router.query;
@@ -30,26 +34,26 @@ const EditorComponent = () => {
   const [editorDataId, setEditorDataId] = useState("");
   const [fileTitle, setFileTitle] = useState([]);
   const [showFilteredData, setShowFilteredData] = useState(false);
-  const [isDataChanged, setIsDataChanged] = useState(false)
-  const [isIdChanged, setIsIdChanged] = useState(false)
-  const [filenameToUpdate, setFilenameToUpdate] = useState("")
-  const [deleteEditorFileId, setDeleteEditorFileId] = useState("")
-  
+  const [isDataChanged, setIsDataChanged] = useState(false);
+  const [filenameToUpdate, setFilenameToUpdate] = useState("");
+  const [deleteEditorFileId, setDeleteEditorFileId] = useState("");
+
   useEffect(() => {
     if (id) {
-      fetch(`/api/mongodb/controllers/FileNameId?id=${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_FILE_NAME_ID}?id=${id}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log('FETCHED DATA THROUGH ID:', data);
-          setFilenameContext(data.fileName)
-          setFilenameToUpdate(data.fileName)
+          setFilenameContext(data.fileName);
+          setFilenameToUpdate(data.fileName);
         })
         .catch((error) => {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
         });
+        setSelectedEditorFileId(id)
+        setEditorIdFetched(true)
     }
   }, [id]);
-          
+
   const handleSaveToServer = async (data) => {
     // Handle saving data to the server
     // also you can send the data to the server from here
@@ -62,11 +66,9 @@ const EditorComponent = () => {
         console.log(filenameContext, "in filenameContext");
         const reqBody = {
           filename: filenameContext,
-          // time: data.time,
-          // blocks: data.blocks,
         };
 
-        const response = await fetch("/api/mongodb/controllers/EditorData", {
+        const response = await fetch(process.env.NEXT_PUBLIC_EDITOR_DATA, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +77,7 @@ const EditorComponent = () => {
         });
         const dataWhy = await response.json();
         console.log("Response from server:", dataWhy);
-        console.log("you r about to setIsDataChanged to true")
+        console.log("you r about to setIsDataChanged to true");
         setIsDataChanged(true);
         // setShowFilteredData(true);
       } catch (error) {
@@ -91,7 +93,7 @@ const EditorComponent = () => {
         const jsonData = await jsonDataPromise;
         console.log(id, "query id");
         console.log(jsonData, "the jsonData to catch up id");
-        const response = await fetch("/api/mongodb/controllers/EditorData", {
+        const response = await fetch(process.env.NEXT_PUBLIC_EDITOR_DATA, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -116,73 +118,76 @@ const EditorComponent = () => {
 
   useEffect(() => {
     const handleUpdateToEditor = async () => {
-        const reqBody = {
-          filename: filenameToUpdate,
-          updatedFileName: filenameContext
-        }
-        try {
-          const response = await fetch("/api/mongodb/controllers/FileNameId", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(reqBody),
-          });
-  
-          const responseData = await response.json();
-          console.log("Response from server:", responseData);
-          setIsDataChanged(true);
-          setUpdateEditorFilename(false)
-        } catch (error) {
-          console.error("Error saving document", error);
-        }
+      const reqBody = {
+        filename: filenameToUpdate,
+        updatedFileName: filenameContext,
+      };
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_FILE_NAME_ID, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        });
+
+        const responseData = await response.json();
+        console.log("Response from server:", responseData);
+        setIsDataChanged(true);
+        setUpdateEditorFilename(false);
+      } catch (error) {
+        console.error("Error saving document", error);
+      }
     };
     handleUpdateToEditor();
-  },[updateEditorFilename])
+  }, [updateEditorFilename]);
 
   useEffect(() => {
-const handleDeleteEditor = async () => {
-  await handleDelete();
-  console.log(id, "chekcout this id for delete")
-  const reqBody = {
-    _id: deleteEditorFileId, // filelists id will not work
-  };
-  try {
-    await fetch("/api/mongodb/controllers/EditorData", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const handleDeleteEditor = async () => {
+      await handleDelete();
+      console.log(deleteEditorFileId, "it is deleteEditorFileId");
+      const reqBody = {
+        _id: deleteEditorFileId,
+      };
+      try {
+        await fetch(process.env.NEXT_PUBLIC_EDITOR_DATA, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        });
 
-    const updatedFileList = initialData.filter(
-      (file) => file._id !== deleteEditorFileId
-    );
-    setInitialData(updatedFileList);
-    setDeleteEditorFilename(false)
-  } catch (err) {
-    console.log("Error in handleDelete:", err);
-  }
-}
-handleDeleteEditor();
-  }, [deleteEditorFilename])
-  
+        const updatedFileList = initialData.filter(
+          (file) => file._id !== deleteEditorFileId
+        );
+        if (updatedFileList.length === initialData.length - 1) {
+          router.push({
+            pathname: `/product/home`,
+          });
+        }
+        setInitialData(updatedFileList);
+        setDeleteEditorFilename(false);
+      } catch (err) {
+        console.log("Error in handleDelete:", err);
+      }
+    };
+    handleDeleteEditor();
+  }, [deleteEditorFilename]);
+
   useEffect(() => {
     async function fetchAndSetData() {
       try {
-        const response = await fetch("/api/mongodb/controllers/EditorData", {
+        const response = await fetch(process.env.NEXT_PUBLIC_EDITOR_DATA, {
           method: "GET",
         });
         const jsonData = await response.json();
         setFetchedData(jsonData);
         setInitialData(jsonData);
-        console.log("you have entered the fetchandsetData useEffect")
+        console.log("you have entered the fetchandsetData useEffect");
         console.log(jsonData, "this is for setinitialData AGAIN");
         setIsLoading(false);
-        setIsDataChanged(false)
-        // console.log(jsonData, "json data of editor");
-        // console.log(fetchedData, "fetchedata is working");
+        setIsDataChanged(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setIsLoading(false);
@@ -190,19 +195,19 @@ handleDeleteEditor();
     }
     fetchAndSetData();
   }, [isDataChanged]);
-  
-    const handleDelete = async () => {
-  initialData
-  .filter((files) => files.filename === filenameToUpdate)
-  .map((filteredFiles) => {
-    setDeleteEditorFileId(filteredFiles._id)
-  })
-    };
-  
+
+  const handleDelete = async () => {
+    initialData
+      .filter((files) => files.filename === filenameToUpdate)
+      .map((filteredFiles) => {
+        setDeleteEditorFileId(filteredFiles._id);
+      });
+  };
+
   useEffect(() => {
     async function fetchFileListData() {
       try {
-        const res = await fetch("/api/mongodb/controllers/DashFiles", {
+        const res = await fetch(process.env.NEXT_PUBLIC_DASH_FILES, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -224,9 +229,6 @@ handleDeleteEditor();
     editorInstanceRef.current = editorInstance;
   };
 
-  const filteredData = initialData.map((item) => item.filename)
-  // .filter((filename) => filename === filenameContext);
-
   return (
     <>
       {/* <FilenameProvider> */}
@@ -235,16 +237,6 @@ handleDeleteEditor();
           <Home />
         </div>
         <div className="w-4/5">
-    
-          {console.log(filteredData, "filteredData is this")}
-          {console.log(filenameContext, "filename context")}
-          {/* {console.log(
-            initialData
-            .map((item) => item.filename)
-            .filter((filename) => filename === filenameContext),
-            "initialData mapped and now filtering"
-          )} */}
-
           <img src="/coverPage.png" className={styles.coverPage} />
 
           <h1 className={styles.heading} contentEditable={true}>
@@ -259,27 +251,24 @@ handleDeleteEditor();
             Save
           </button>
 
-          {
-            initialData
-              .filter((item) => item.filename === filenameContext)
-              .map((filteredItem) => (
-                <div key={filteredItem.filename}>
-                  {isLoading ? (
-                    <p>loading...</p>
-                  ) : (
-                    <EditorWidget
-                      // style={{ marginTop: "20px" }}
-                      // onSave={handleSaveToServer}
-                      onReady={handleReady}
-                      fetchedData={fetchedData}
-                      initialData={initialData}
-                      handleUpdateToServer={handleUpdateToServer}
-                    />
-                  )}
-                </div>
-              ))
-              }
-
+          {initialData
+            .filter((item) => item.filename === filenameContext)
+            .map((filteredItem) => (
+              <div key={filteredItem.filename}>
+                {isLoading ? (
+                  <p>loading...</p>
+                ) : (
+                  <EditorWidget
+                    // style={{ marginTop: "20px" }}
+                    // onSave={handleSaveToServer}
+                    onReady={handleReady}
+                    fetchedData={fetchedData}
+                    initialData={initialData}
+                    handleUpdateToServer={handleUpdateToServer}
+                  />
+                )}
+              </div>
+            ))}
         </div>
       </div>
       {/* </FilenameProvider> */}

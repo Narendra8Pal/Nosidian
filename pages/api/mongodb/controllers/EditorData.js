@@ -3,17 +3,15 @@ import Editor from "@/pages/api/mongodb/models/Editor";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const jsonData = req.body;
-      // const existingFileTitle = await Editor.findOne({jsonData});
-      // if(existingFileTitle){
-      //   return res
-      //   .status(400)
-      //   .json({message: "Oops! provided file title already exist"});
-      // }
+      const {filename} = req.body;
+      const existingFileTitle = await Editor.findOne({filename});
+      if(existingFileTitle){
+        return res
+        .status(400)
+        .json({message: "Oops! provided file title already exist"});
+      }
       const newDocument = new Editor({
-        filename: jsonData.filename,
-        time: Date.now(),
-        blocks: jsonData.blocks,
+        filename: filename,
       });
 
       await newDocument.save();
@@ -59,8 +57,8 @@ export default async function handler(req, res) {
   } else {
     if (req.method === "DELETE") {
       try {
-        const { id } = req.body;
-        const removeEditorFile = await Editor.deleteOne({ _id: id });
+        const { _id } = req.body;
+        const removeEditorFile = await Editor.deleteOne({ _id: _id });
         return res.status(200).json(removeEditorFile);
       } catch (error) {
         console.log("Error deleting the Editor data:", err);

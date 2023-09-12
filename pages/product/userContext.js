@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-
 // const UserContext = createContext();
 
 // export const UserProvider = ({ children }) => {
@@ -27,6 +26,8 @@ export function FilenameProvider({ children }) {
   const [filenameContext, setFilenameContext] = useState('');
   const [updateEditorFilename, setUpdateEditorFilename] = useState(false)
   const [deleteEditorFilename, setDeleteEditorFilename] = useState(false)
+  const [selectedEditorFileId, setSelectedEditorFileId] = useState("")
+  const [editorIdFetched, setEditorIdFetched] = useState(false)
 
   const contextValue = {
     filenameContext,
@@ -34,8 +35,13 @@ export function FilenameProvider({ children }) {
     updateEditorFilename,
     setUpdateEditorFilename,
     deleteEditorFilename,
-    setDeleteEditorFilename
+    setDeleteEditorFilename,
+    selectedEditorFileId,
+    setSelectedEditorFileId,
+    editorIdFetched,
+    setEditorIdFetched
   };
+
 
   return (
     <FilesConnect.Provider value={contextValue}>

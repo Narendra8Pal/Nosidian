@@ -26,15 +26,18 @@ const home = () => {
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [deleteFileId, setDeleteFileId] = useState("");
   const [removeDefaultPg, setRemoveDefaultPg] = useState(false);
-  const [fileNameId, setFileNameId] = useState("");
   const [createdFileNameId, setCreatedFileNameId] = useState("");
-  const [updateServerFilename, setUpdateServerFilename] = useState("")
+  const [updateServerFilename, setUpdateServerFilename] = useState("");
 
-  // const { userId } = useUser();
-  const { filenameContext, setFilenameContext } = useContext(FilesConnect);
-  const { setUpdateEditorFilename } = useContext(FilesConnect);
-  const { setDeleteEditorFilename} = useContext(FilesConnect);
-
+  const {
+    filenameContext,
+    setFilenameContext,
+    setUpdateEditorFilename,
+    setDeleteEditorFilename,
+    selectedEditorFileId,
+    editorIdFetched,
+    setEditorIdFetched,
+  } = useContext(FilesConnect);
   const router = useRouter();
 
   // const openModal = (e) => {
@@ -52,13 +55,29 @@ const home = () => {
   const handleSelectedFileName = (fileId) => {
     setHoveredId(fileId);
     setSelectedFileId(fileId);
-    // router.push("/product/blockEditor/editorComponent");
     router.push({
       pathname: `/product/blockEditor/editorComponent`,
       query: { id: fileId },
     });
-    setFileNameId(fileId);
   };
+
+  useEffect(() => {
+    const fetchingEditorFileId = () => {
+      if (selectedEditorFileId) {
+        setHoveredId(selectedEditorFileId)
+        setSelectedFileId(selectedEditorFileId);
+      }
+      setEditorIdFetched(false);
+    };
+    fetchingEditorFileId();
+  }, [selectedFileId, editorIdFetched]);
+
+  // useEffect(() => {
+  //   console.log(selectedEditorFileId, 'SELECTED EDITOR FILE ID')
+  //   if(selectedEditorFileId){
+  //     setSelectedFileId(selectedEditorFileId)
+  //   }
+  // },[handleSelectedFileName])
 
   // useEffect(() => {
   //   setSelectedFileId(fileNameId);
@@ -91,7 +110,7 @@ const home = () => {
         layout: layout,
       };
       try {
-        const res = await fetch("/api/mongodb/controllers/DashFiles", {
+        const res = await fetch(process.env.NEXT_PUBLIC_DASH_FILES, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -137,7 +156,7 @@ const home = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/mongodb/controllers/DashFiles", {
+      const res = await fetch(process.env.NEXT_PUBLIC_DASH_FILES, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -189,7 +208,7 @@ const home = () => {
       updatedFileName: currentFileName.fileName,
     };
     try {
-      await fetch("/api/mongodb/controllers/DashFiles", {
+      await fetch(process.env.NEXT_PUBLIC_DASH_FILES, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +216,7 @@ const home = () => {
         body: JSON.stringify(reqBody),
       });
       setIsEditing(false);
-      setUpdateEditorFilename(true)
+      setUpdateEditorFilename(true);
       setFilenameContext(reqBody.updatedFileName);
       // setUpdateServerFilename(reqBody.updatedFileName)
       fetchData();
@@ -221,7 +240,7 @@ const home = () => {
       _id: deleteFileId,
     };
     try {
-      await fetch("/api/mongodb/controllers/DashFiles", {
+      await fetch(process.env.NEXT_PUBLIC_DASH_FILES, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -233,7 +252,7 @@ const home = () => {
         (file) => file._id !== deleteFileId
       );
       setFileList(updatedFileList);
-      setDeleteEditorFilename(true)
+      setDeleteEditorFilename(true);
       setIsDelete(false);
       console.log("File deleted successfully");
     } catch (err) {
