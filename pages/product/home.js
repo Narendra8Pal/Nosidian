@@ -25,8 +25,9 @@ const home = () => {
   const [layout, setLayout] = useState("");
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [deleteFileId, setDeleteFileId] = useState("");
-  const [removeDefaultPg, setRemoveDefaultPg] = useState(false);
+  const [showDefaultPg, setShowDefaultPg] = useState(true);
   const [createdFileNameId, setCreatedFileNameId] = useState("");
+  const [createdFileNameLayout, setCreatedFileNameLayout] = useState("");
   const [updateServerFilename, setUpdateServerFilename] = useState("");
 
   const {
@@ -52,13 +53,21 @@ const home = () => {
   //   setIsEditing(true);
   // };
 
-  const handleSelectedFileName = (fileId) => {
+  const handleSelectedFileName = (fileId, layout) => {
     setHoveredId(fileId);
     setSelectedFileId(fileId);
-    router.push({
-      pathname: `/product/blockEditor/editorComponent`,
-      query: { id: fileId },
-    });
+    if(layout === "block"){
+      router.push({
+        pathname: `/product/blockEditor/editorComponent`,
+        query: { id: fileId },
+      });
+      }
+      else if(layout === "canvas"){
+        router.push({
+          pathname: `/product/canvas/canvas`,
+          query: { id: fileId },
+        });
+    }
   };
 
   useEffect(() => {
@@ -72,37 +81,13 @@ const home = () => {
     fetchingEditorFileId();
   }, [selectedFileId, editorIdFetched]);
 
-  // useEffect(() => {
-  //   console.log(selectedEditorFileId, 'SELECTED EDITOR FILE ID')
-  //   if(selectedEditorFileId){
-  //     setSelectedFileId(selectedEditorFileId)
-  //   }
-  // },[handleSelectedFileName])
-
-  // useEffect(() => {
-  //   setSelectedFileId(fileNameId);
-  //   console.log(fileNameId, "useEffect working")
-  // }, [router.asPath]);
-
-  // useEffect(() =>  {
-  //   console.log(selectedFileId, "selected fileid");
-  //   fileList.map((file) => {
-  //     const fileName_Id = file._Id
-  //     setFileNameId(fileName_Id)
-  //     console.log(fileNameId, "fileid ")
-  //   })
-  //   if(selectedFileId === fileNameId){
-  //     router.push("/product/blockEditor/editorComponent");
-  //   }
-  // }, [handleSelectedFileName]);
-
   const handleTitleInputChange = (e) => {
     setFileName(e.target.value);
     //setFilenameContext(e.target.value); // passing it to blockEditor &editorComponent
   };
 
   const createFile = async () => {
-    setRemoveDefaultPg(true);
+    setShowDefaultPg(false);
     if (fileName !== "") {
       const reqBody = {
         fileName: fileName.trim(),
@@ -120,8 +105,9 @@ const home = () => {
 
         const fileData = await res.json();
         console.log("fetchData:", fileData);
-        console.log("req body:", reqBody);
+        // console.log("req body:", reqBody);
         setCreatedFileNameId(fileData._id);
+        setCreatedFileNameLayout(fileData.layout);
         // setFileList((prevFileList) => [
         //   ...prevFileList,
         //   {
@@ -132,11 +118,11 @@ const home = () => {
         setIsOpen(!isOpen);
         setFileName("");
         fetchData();
-        setFilenameContext(fileName); // in inputchange it was visible under the modal
-        console.log(filenameContext, "filename context");
-        console.log(fileList, "this list from createfile func");
+        setFilenameContext(fileName); // in inputchange it was (filename) visible under the modal
+        // console.log(filenameContext, "filename context");
+        // console.log(fileList, "this list from createfile func");
       } catch (error) {
-        console.log(error, "err in try catch shiva");
+        // console.log(error, "err in try catch shiva");
       }
     } else {
       alert("err in create file shiva");
@@ -145,12 +131,19 @@ const home = () => {
 
   // useeffect for adding "id" do the pathname after file is created
   useEffect(() => {
-    console.log(createdFileNameId, "useeffect fileid");
-    if (createdFileNameId) {
+    // console.log(createdFileNameId, "useeffect fileid");
+    if (createdFileNameId && createdFileNameLayout == "block") {
       router.push({
         pathname: `/product/blockEditor/editorComponent`,
         query: { id: createdFileNameId },
       });
+    }
+
+    else if(createdFileNameId && createdFileNameLayout == "canvas"){
+      router.push({
+        pathname: `/product/canvas/canvas`,
+        query: {id: createdFileNameId },
+      });    
     }
   }, [createdFileNameId]);
 
@@ -164,9 +157,9 @@ const home = () => {
       });
       const data = await res.json();
       setFileList(data);
-      console.log(data, "coming from fetchData");
+      // console.log(data, "coming from fetchData");
     } catch (error) {
-      console.log("Error in fetchData useEffect:", error);
+      // console.log("Error in fetchData useEffect:", error);
     }
   };
 
@@ -221,7 +214,7 @@ const home = () => {
       // setUpdateServerFilename(reqBody.updatedFileName)
       fetchData();
     } catch (error) {
-      console.log(error, "error in updating the file name in client");
+      // console.log(error, "error in updating the file name in client");
     }
   };
 
@@ -254,9 +247,9 @@ const home = () => {
       setFileList(updatedFileList);
       setDeleteEditorFilename(true);
       setIsDelete(false);
-      console.log("File deleted successfully");
+      // console.log("File deleted successfully");
     } catch (err) {
-      console.log("Error in handleDelete:", err);
+      // console.log("Error in handleDelete:", err);
     }
   };
 
@@ -393,7 +386,7 @@ const home = () => {
                   key={files._id}
                   // onMouseEnter={() => setHoveredId(files._id)}
                   // onMouseLeave={() => setHoveredId(null)}
-                  onClick={() => handleSelectedFileName(files._id)}
+                  onClick={() => handleSelectedFileName(files._id, files.layout)}
                 >
                   <div className={styles.mainContent}>
                     <p>{files.fileName}</p>
@@ -420,7 +413,7 @@ const home = () => {
       </div>
 
       {/* default page to show before the layout*/}
-      {removeDefaultPg === false && (
+      {/* {showDefaultPg && (
         <div className={styles.defaultPage}>
           <div className={styles.defaultBox}>
             <div className={styles.layouts}>
@@ -447,7 +440,7 @@ const home = () => {
             </p>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 };

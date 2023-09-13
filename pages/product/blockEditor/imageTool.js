@@ -56,22 +56,22 @@ class SimpleImage {
   }
 
   render() {
-    const query = "apple";
     const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-
+    
     this.addImg = document.createElement("div");
     this.addImg.classList.add("img-box");
-
+    
     const showcaseSearch = document.createElement("div");
     showcaseSearch.classList.add("showcase-search");
     const showcaseInput = document.createElement("input");
+    const query = "cars";
     showcaseInput.placeholder = "Search for an image...";
     showcaseInput.classList.add("showcase-input");
     showcaseSearch.appendChild(showcaseInput);
     const showcaseBtn = document.createElement("button");
     showcaseSearch.appendChild(showcaseBtn);
     showcaseBtn.classList.add("showcase-btn");
-    // showcaseBtn.innerHTML = "search";
+    showcaseBtn.innerHTML = "search";
 
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add("simple-image");
@@ -116,13 +116,12 @@ class SimpleImage {
     });
 
     embedLinkBtn.addEventListener("click", () => {
-      const imgUrl = embedInput.value;
-      this._createImage(imgUrl);
-      container.appendChild(this.embedImg);
-
       if (container.contains(this.addImg)) {
         container.removeChild(this.addImg);
       }
+      const imgUrl = embedInput.value;
+      this._createImage(imgUrl);
+      container.appendChild(this.embedImg);
     });
 
     embedImgIcon.addEventListener("click", (e) => {
@@ -145,7 +144,7 @@ class SimpleImage {
     let imagesFetched = false;
     let imgUrlsArr = [];
     unsplashImgIcon.addEventListener("click", () => {
-      if (!imagesFetched) {
+      // if (!imagesFetched) {
         imagesFetched = true;
         if (this.addImg.contains(embedLink)) {
           this.addImg.removeChild(embedLink);
@@ -172,7 +171,7 @@ class SimpleImage {
           .catch((error) => {
             console.error("Error fetching photos:", error);
           });
-      }
+      // }
       // }
     });
 

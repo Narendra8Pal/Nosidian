@@ -63,7 +63,7 @@ const EditorComponent = () => {
         // const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
 
         // console.log(jsonData, "this is json data save server");
-        console.log(filenameContext, "in filenameContext");
+        // console.log(filenameContext, "in filenameContext");
         const reqBody = {
           filename: filenameContext,
         };
@@ -76,8 +76,8 @@ const EditorComponent = () => {
           body: JSON.stringify(reqBody),
         });
         const dataWhy = await response.json();
-        console.log("Response from server:", dataWhy);
-        console.log("you r about to setIsDataChanged to true");
+        // console.log("Response from server:", dataWhy);
+        // console.log("you r about to setIsDataChanged to true");
         setIsDataChanged(true);
         // setShowFilteredData(true);
       } catch (error) {
@@ -91,8 +91,8 @@ const EditorComponent = () => {
       try {
         const jsonDataPromise = await data;
         const jsonData = await jsonDataPromise;
-        console.log(id, "query id");
-        console.log(jsonData, "the jsonData to catch up id");
+        // console.log(id, "query id");
+        // console.log(jsonData, "the jsonData to catch up id");
         const response = await fetch(process.env.NEXT_PUBLIC_EDITOR_DATA, {
           method: "PUT",
           headers: {
@@ -108,7 +108,7 @@ const EditorComponent = () => {
         });
 
         const responseData = await response.json();
-        console.log("Response from server:", responseData);
+        // console.log("Response from server:", responseData);
         setIsDataChanged(true);
       } catch (error) {
         console.error("Error saving document", error);
@@ -132,7 +132,7 @@ const EditorComponent = () => {
         });
 
         const responseData = await response.json();
-        console.log("Response from server:", responseData);
+        // console.log("Response from server:", responseData);
         setIsDataChanged(true);
         setUpdateEditorFilename(false);
       } catch (error) {
@@ -145,7 +145,7 @@ const EditorComponent = () => {
   useEffect(() => {
     const handleDeleteEditor = async () => {
       await handleDelete();
-      console.log(deleteEditorFileId, "it is deleteEditorFileId");
+      // console.log(deleteEditorFileId, "it is deleteEditorFileId");
       const reqBody = {
         _id: deleteEditorFileId,
       };
@@ -169,7 +169,7 @@ const EditorComponent = () => {
         setInitialData(updatedFileList);
         setDeleteEditorFilename(false);
       } catch (err) {
-        console.log("Error in handleDelete:", err);
+        // console.log("Error in handleDelete:", err);
       }
     };
     handleDeleteEditor();
@@ -184,8 +184,8 @@ const EditorComponent = () => {
         const jsonData = await response.json();
         setFetchedData(jsonData);
         setInitialData(jsonData);
-        console.log("you have entered the fetchandsetData useEffect");
-        console.log(jsonData, "this is for setinitialData AGAIN");
+        // console.log("you have entered the fetchandsetData useEffect");
+        // console.log(jsonData, "this is for setinitialData AGAIN");
         setIsLoading(false);
         setIsDataChanged(false);
       } catch (error) {
@@ -215,9 +215,9 @@ const EditorComponent = () => {
         });
         const data = await res.json();
         // setFileTitle(data);
-        console.log(data, "filename dahsfiles data in editor");
+        // console.log(data, "filename dahsfiles data in editor");
       } catch (error) {
-        console.log("Error in fetchData useEffect:", error);
+        // console.log("Error in fetchData useEffect:", error);
       }
     }
     fetchFileListData();
@@ -256,7 +256,7 @@ const EditorComponent = () => {
             .map((filteredItem) => (
               <div key={filteredItem.filename}>
                 {isLoading ? (
-                  <p>loading...</p>
+                  <p className="flex text-white">loading...</p>
                 ) : (
                   <EditorWidget
                     // style={{ marginTop: "20px" }}

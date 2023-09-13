@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === "GET") {
     try {
-      const fileList = await FileList.find({}, "fileName userId");
+      const fileList = await FileList.find({}, "fileName userId layout");
       return res.status(200).json(fileList);
     } catch (err) {
       console.log("Error retrieving file list:", err);
