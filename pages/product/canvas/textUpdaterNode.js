@@ -1,19 +1,35 @@
 // REACT, files, styles
-import {  useState, useContext, useEffect} from "react";
-import {useCallback, memo} from "react"
-import { Handle, Position, NodeResizer, NodeResizeControl } from "reactflow";
+import { useState, useContext, useEffect, useRef } from "react";
+import { useCallback, memo } from "react";
+import {
+  Handle,
+  Position,
+  NodeResizer,
+  NodeResizeControl,
+  useNodeId,
+} from "reactflow";
 import CanvasStyles from "@/styles/canvas.module.css";
 import { userContext } from "./canvas.js";
+import { v4 as uuidv4 } from "uuid";
 
-function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
+function TextUpdaterNode({ nodesId, nodes, isConnectable, onCreateEdge }) {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [nodeSize, setNodeSize] = useState({ width: 300, height: 60 });
   const [bottomLineHovered, setBottomLineHovered] = useState(false);
   const [topLineHovered, setTopLineHovered] = useState(false);
   const [leftLineHovered, setLeftLineHovered] = useState(false);
   const [rightLineHovered, setRightLineHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [handleType, setHandleType] = useState("target");
+  const [topLineNodeId, setTopLineNodeId] = useState("");
+  const [leftLineNodeId, setLeftLineNodeId] = useState("");
+  const [bottomLineNodeId, setBottomLineNodeId] = useState("");
+  const [rightLineNodeId, setRightLineNodeId] = useState("");
 
-  const onChange = useCallback((evt) => {
+  const nodeRef = useRef(null);
+  const nodeId = useNodeId();
+
+  const onChange = useCallback((e) => {
     // console.log(evt.target.value);
   }, []);
 
@@ -23,6 +39,7 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
 
   const onInputBlur = useCallback(() => {
     setIsInputFocused(false);
+    // setIsActive(false)
   }, []);
 
   const onNodeResize = useCallback(() => {
@@ -36,11 +53,125 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
   //   return null;
   // }
 
-  const onConnect = (params) => {
-    if (params.source !== params.target) {
-      onCreateEdge(params.source, params.target);
+  const handleDoubleClick = () => {
+    setIsActive(true);
+    console.log(nodeId, "NODE ID DOO CLICK");
+  };
+
+  const handleClickOutside = (e) => {
+    if (nodeRef.current && !nodeRef.current.contains(e.target)) {
+      setIsActive(false);
+      // console.log(nodeRef.current,"clickon on node id")
     }
   };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  // const sourceHandleId = uuidv4();
+  // const targetHandleId = uuidv4();
+
+  const onSourceConnect = (params) => {
+    const { source, sourceHandle } = params;
+    // Handle source connections here, using nodeId and sourceHandle
+    // console.log(`Source connected from ${source} to ${nodeId} using handle ${sourceHandle}`);
+  };
+
+  const onTargetConnect = (params) => {
+    const { target, targetHandle } = params;
+    // Handle target connections here, using nodeId and targetHandle
+    console.log(
+      `Target connected from ${nodeId} NODE ID HERE to ${target} using handle ${targetHandle}`
+    );
+  };
+
+  // const handleNodeHover = () => {
+  //   // console.log(nodeId,'node id of a node hovered')
+  //   if (topLineNodeId === nodeId) {
+  //     setHandleType("source");
+  //     console.log("handle type set to source bro");
+  //   }
+  // };
+
+  const handleTLMouseEnter = () => {
+    setTopLineHovered(true);
+    setTopLineNodeId(nodeId);
+    console.log("handle mouse TL enter ", nodeId);
+  };
+
+  const handleBLMouseEnter = () => {
+    setBottomLineHovered(true);
+    setBottomLineNodeId(nodeId);
+    console.log("handle mouse BL enter ", nodeId);
+  };
+
+  const handleLLMouseEnter = () => {
+    setLeftLineHovered(true);
+    setLeftLineNodeId(nodeId);
+    console.log("handle mouse LL enter ", nodeId);
+  };
+
+  const handleRLMouseEnter = () => {
+    setRightLineHovered(true);
+    setRightLineNodeId(nodeId);
+    console.log("handle mouse RL enter ", nodeId);
+  };
+
+  const handleTLMouseLeave = () => {
+    setTopLineHovered(false);
+  };
+
+  const handleLLMouseLeave = () => {
+    setLeftLineHovered(false);
+  };
+
+  const handleBLMouseLeave = () => {
+    setBottomLineHovered(false);
+  };
+
+  const handleRLMouseLeave = () => {
+    setRightLineHovered(false);
+  };
+
+  const toggleHandleType = () => {
+    // setHandleType((prevType) => (prevType === "source" ? "target" : "source"));
+    // console.log(handleType);
+    if (topLineHovered) {
+      setHandleType(nodeId === topLineNodeId ? "source" : "target");
+    } else if (leftLineHovered) {
+      setHandleType(nodeId === leftLineNodeId ? "source" : "target");
+    } else if (bottomLineHovered) {
+      setHandleType(nodeId === bottomLineNodeId ? "source" : "target");
+    } else if (rightLineHovered) {
+      setHandleType(nodeId === rightLineNodeId ? "source" : "target");
+    }
+  };
+
+  useEffect(() => {
+    toggleHandleType();
+  }, [
+    // handleBLMouseEnter,
+    handleTLMouseEnter,
+    handleLLMouseEnter,
+    handleRLMouseEnter,
+  ]);
+
+  useEffect(() => {
+    setHandleType("target");
+  }, [
+    handleTLMouseLeave,
+    handleBLMouseLeave,
+    handleRLMouseLeave,
+    handleLLMouseLeave,
+  ]);
+
+  // useEffect(() => {
+  //   toggleHandleType();
+  // }, [nodeRef]);
 
   return (
     <div
@@ -49,8 +180,9 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
     >
       <div>
         <Handle
-          type="source"
-          id="1"
+          type={handleType}
+          // id="handle-top"
+          id={`${nodeId}-handle-top`}
           position={Position.Top}
           isConnectable={true}
           style={{
@@ -60,11 +192,14 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: topLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={onConnect}
+          onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
         />
         <Handle
-          type="source"
-          id="1"
+          type={handleType}
+          // id="handle-left"
+          id={`${nodeId}-handle-left`}
           position={Position.Left}
           isConnectable={true}
           style={{
@@ -74,11 +209,15 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: leftLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={onConnect}
+          // onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+          onConnect={(params) => console.log("handle onConnect", params)}
         />
-        <Handle
+        {/* <Handle
           type="source"
-          id="1"
+          // id="handle-right"
+          id={`${nodeId}-handle-right`}
           position={Position.Right}
           isConnectable={true}
           style={{
@@ -88,11 +227,14 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: rightLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+
         />
         <Handle
           type="source"
-          id="1"
+          // id="handle-bottom"
+          id={`${nodeId}-handle-bottom`}
           position={Position.Bottom}
           isConnectable={true}
           style={{
@@ -102,13 +244,15 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: bottomLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
         />
-
+        
         <Handle
           // id={`${nodes.id}-top`}
           type="target"
-          id="2"
+          // id="handle-top"
+          id={`${nodeId}-handle-top`}
           position={Position.Top}
           isConnectable={true}
           style={{
@@ -118,12 +262,15 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: topLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={onConnect}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+          onConnect={(params) => console.log('handle onConnect', params)}
         />
         <Handle
-          // id={`${nodes.id}-left`}
+          // id={`${nodesId}-left`}
           type="target"
-          id="2"
+          // id="handle-left"
+          id={`${nodeId}-handle-left`}
           position={Position.Left}
           isConnectable={true}
           style={{
@@ -133,12 +280,16 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: leftLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
-        />
+          // onConnect={onConnect}
+          // onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+          onConnect={(params) => console.log('handle onConnect', params)}
+        /> */}
         <Handle
           // id={`${nodes.id}-right`}
-          type="target"
-          id="2"
+          type={handleType}
+          // id="handle-right"
+          id={`${nodeId}-handle-right`}
           position={Position.Right}
           isConnectable={true}
           style={{
@@ -148,15 +299,18 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: rightLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={onConnect}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+          onConnect={(params) => console.log("handle onConnect", params)}
         />
 
         <Handle
           // id={`${nodes.id}-bottom`}
-          type="target"
-          id="2"
+          type={handleType}
+          // id="handle-bottom"
+          id={`${nodeId}-handle-bottom`}
           position={Position.Bottom}
-          isConnectable={false}
+          isConnectable={true}
           style={{
             background: "#7649e6",
             border: "none",
@@ -164,22 +318,31 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
             width: "15px",
             opacity: bottomLineHovered ? 1 : 0,
           }}
-          onConnect={onConnect}
+          // onConnect={onConnect}
+          // onConnect={(params) => console.log("handle onConnect", params)}
+          // onConnect={handleType === 'source' ? onSourceConnect : onTargetConnect}
+          onConnect={(params) => console.log("handle onConnect", params)}
         />
       </div>
 
       <div className={CanvasStyles.nodeBox}>
         <textarea
-          id="text"
+          id={uuidv4()}
           name="text"
           // value={nodes.label}
           onChange={onChange}
           onBlur={onInputBlur}
+          onDoubleClick={handleDoubleClick}
+          ref={nodeRef}
+          readOnly={!isActive}
+          className={isActive ? "nodrag" : ""}
         ></textarea>
 
         <div
-          onMouseEnter={() => setTopLineHovered(true)}
-          onMouseLeave={() => setTopLineHovered(false)}
+          // onMouseEnter={() => setTopLineHovered(true)}
+          // onMouseLeave={() => setTopLineHovered(false)}
+          onMouseEnter={handleTLMouseEnter}
+          onMouseLeave={handleTLMouseLeave}
         >
           <NodeResizeControl
             isVisible={true}
@@ -193,8 +356,8 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
         </div>
 
         <div
-          onMouseEnter={() => setBottomLineHovered(true)}
-          onMouseLeave={() => setBottomLineHovered(false)}
+          onMouseEnter={handleBLMouseEnter}
+          onMouseLeave={handleBLMouseLeave}
         >
           <NodeResizeControl
             isVisible={true}
@@ -208,8 +371,8 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
         </div>
 
         <div
-          onMouseEnter={() => setLeftLineHovered(true)}
-          onMouseLeave={() => setLeftLineHovered(false)}
+          onMouseEnter={handleLLMouseEnter}
+          onMouseLeave={handleLLMouseLeave}
         >
           <NodeResizeControl
             isVisible={true}
@@ -223,8 +386,8 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
         </div>
 
         <div
-          onMouseEnter={() => setRightLineHovered(true)}
-          onMouseLeave={() => setRightLineHovered(false)}
+          onMouseEnter={handleRLMouseEnter}
+          onMouseLeave={handleRLMouseLeave}
         >
           <NodeResizeControl
             isVisible={true}
@@ -241,4 +404,4 @@ function TextUpdaterNode({ nodes, isConnectable,  onCreateEdge }) {
   );
 }
 
-export default memo (TextUpdaterNode);
+export default memo(TextUpdaterNode);

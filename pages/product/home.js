@@ -58,13 +58,13 @@ const home = () => {
     setSelectedFileId(fileId);
     if(layout === "block"){
       router.push({
-        pathname: `/product/blockEditor/editorComponent`,
+        pathname: process.env.NEXT_PUBLIC_EDITOR_COMPONENT,
         query: { id: fileId },
       });
       }
       else if(layout === "canvas"){
         router.push({
-          pathname: `/product/canvas/canvas`,
+          pathname: process.env.NEXT_PUBLIC_CANVAS,
           query: { id: fileId },
         });
     }
@@ -380,8 +380,6 @@ const home = () => {
                     selectedFileId === files._id
                       ? styles.selected
                       : hoveredId === files._id
-                      ? styles.hovered
-                      : ""
                   }`}
                   key={files._id}
                   // onMouseEnter={() => setHoveredId(files._id)}

@@ -1,5 +1,5 @@
 .iconsBox {
-  @apply px-6 py-4 text-white border rounded-md cursor-pointer bg-home-left-pane border-home-gray hover:bg-body-normal;
+  @apply px-6 py-4 text-white border rounded-md shadow-md cursor-pointer bg-home-left-pane border-home-gray hover:bg-body-normal shadow-black;
 }
 
 .controls {
