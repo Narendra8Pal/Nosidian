@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import  {useNodeId} from "reactflow";
 // const UserContext = createContext();
 
 // export const UserProvider = ({ children }) => {
@@ -28,6 +29,14 @@ export function FilenameProvider({ children }) {
   const [deleteEditorFilename, setDeleteEditorFilename] = useState(false)
   const [selectedEditorFileId, setSelectedEditorFileId] = useState("")
   const [editorIdFetched, setEditorIdFetched] = useState(false)
+  const [nodesContext, setNodesContext ] = useState([])
+
+  const nodeId = useNodeId();
+
+  const onDeleteNode = () => {
+    setNodesContext(nodesContext.filter((node) => node.id !== nodeId ));
+    console.log(nodesContext, 'delete works');
+  };
 
   const contextValue = {
     filenameContext,
@@ -39,7 +48,10 @@ export function FilenameProvider({ children }) {
     selectedEditorFileId,
     setSelectedEditorFileId,
     editorIdFetched,
-    setEditorIdFetched
+    setEditorIdFetched,
+    nodesContext,
+    setNodesContext,
+    onDeleteNode
   };
 
 

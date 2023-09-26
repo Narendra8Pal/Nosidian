@@ -2,9 +2,9 @@
 import Home from "../home";
 import canvasStyles from "@/styles/canvas.module.css";
 import CanvasStyles from "@/styles/canvas.module.css";
-import CustomNode from "./customNode";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useContext } from "react";
 import TextUpdaterNode from "./textUpdaterNode.js";
+import { FilesConnect } from "../userContext";
 
 // LIBRARIES
 import "reactflow/dist/style.css";
@@ -23,13 +23,14 @@ import ReactFlow, {
   applyEdgeChanges,
   NodeToolbar,
   updateEdge,
-  ConnectionMode
+  ConnectionMode,
 } from "reactflow";
 import Draggable, { DraggableCore } from "react-draggable";
 import { useDrag } from "@use-gesture/react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-const userContext = createContext();
+// const userContext = createContext();
+
 
 const proOptions = { hideAttribution: true };
 const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used inside the component
@@ -37,8 +38,10 @@ const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used 
 const canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [nodesId, setNodesId] = useState([])
-
+  const [nodesId, setNodesId] = useState([]);
+  
+  const {setNodesContext, onDeleteNode} = useContext(FilesConnect);
+  
   // const onConnect = (params) => {
   //   if (params.source !== params.target) {
   //     const newEdge = {
@@ -49,7 +52,7 @@ const canvas = () => {
   //     setEdges((prevEdges) => addEdge(newEdge, prevEdges));
   //   }
   // };
-  
+
   // const onConnect = (params) => {
   //   const {source, target, sourceHandle} = params;
   //   const newEdge = {
@@ -72,38 +75,39 @@ const canvas = () => {
     [setNodes]
   );
 
-  // to change an edge 
+  // to change an edge
   const onEdgesChange = useCallback(
-  (changes) => setEdges((edges) => applyEdgeChanges(changes, edges)),
-  [setEdges]
+    (changes) => setEdges((edges) => applyEdgeChanges(changes, edges)),
+    [setEdges]
   );
 
-  // onedgeupdate helps when edge is updated by dragging it to another handle 
+  // onedgeupdate helps when edge is updated by dragging it to another handle
   const onEdgeUpdate = useCallback(
     (oldEdge, newConnection) =>
       setEdges((els) => updateEdge(oldEdge, newConnection, els)),
     []
   );
 
-const generateUniqueId = () => {
-  // const uniqueId = uuidv4();
-  // console.log(uniqueId)
-  uuidv4();
-}
-// const sourceTopId = generateUniqueId();
-// const sourceLeftId = generateUniqueId();
+  const generateUniqueId = () => {
+    // const uniqueId = uuidv4();
+    // console.log(uniqueId)
+    uuidv4();
+  };
+  // const sourceTopId = generateUniqueId();
+  // const sourceLeftId = generateUniqueId();
 
   const handleCreateNode = () => {
     const newNode = {
       id: `${nodes.length + 1}`,
       position: { x: 450, y: 450 },
-      // data: { value: "" },
+      data: { value: "", toolbarPosition: Position.Top },
       type: "textUpdater",
       zIndex: 1000,
       isConnectable: true,
     };
     setNodes((prevNodes) => [...prevNodes, newNode]);
-    setNodesId(newNode.id)
+    setNodesContext((prevNodes) => [...prevNodes, newNode]);
+    setNodesId(newNode.id);
     console.log(newNode.id, "handlecreatenode node id");
   };
 
@@ -111,7 +115,7 @@ const generateUniqueId = () => {
     const newEdge = {
       id: `${edges.length + 1}`,
       source: nodesId,
-      sourceHandle: 'a',
+      sourceHandle: "a",
       target: 2,
     };
     // setEdges((prevEdges) => [...prevEdges, newEdge]);
@@ -123,7 +127,9 @@ const generateUniqueId = () => {
   //   [setEdges]
   // );
 
-
+  // const onDeleteNode = () => {
+  //   setNodes(nodes.filter((node) => !nodesId.includes(node.id)));
+  // };
 
   return (
     <>
@@ -138,9 +144,10 @@ const generateUniqueId = () => {
             onEdgesChange={onEdgesChange}
             onEdgeUpdate={onEdgeUpdate}
             onConnect={onConnect}
-            nodeTypes={nodeTypes} 
+            nodeTypes={nodeTypes}
             proOptions={proOptions}
             deleteKeyCode={null}
+            // onDeleteNode={onDeleteNode}
             // fitView
             // connectionMode={ConnectionMode.Loose}
           >
@@ -161,8 +168,6 @@ const generateUniqueId = () => {
               style={{ backgroundColor: "#1a1916" }}
             />
             <Background variant="" gap={12} size={1} />
-
-  
           </ReactFlow>
         </div>
       </ReactFlowProvider>
