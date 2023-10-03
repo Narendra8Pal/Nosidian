@@ -1,8 +1,7 @@
 //styles, files, REACT
 import Home from "../home";
 import canvasStyles from "@/styles/canvas.module.css";
-import CanvasStyles from "@/styles/canvas.module.css";
-import { useState, useMemo, useContext } from "react";
+import { useState, useMemo, useContext, useEffect } from "react";
 import TextUpdaterNode from "./textUpdaterNode.js";
 import { FilesConnect } from "../userContext";
 
@@ -31,7 +30,6 @@ import { v4 as uuidv4 } from "uuid";
 
 // const userContext = createContext();
 
-
 const proOptions = { hideAttribution: true };
 const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used inside the component
 
@@ -39,9 +37,16 @@ const canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [nodesId, setNodesId] = useState([]);
-  
-  const {setNodesContext, onDeleteNode} = useContext(FilesConnect);
-  
+
+  const {
+    nodesContext,
+    setNodesContext,
+    deleteNodesContext,
+    onDeleteNode,
+    updateNodes,
+    setUpdateNodes,
+  } = useContext(FilesConnect);
+
   // const onConnect = (params) => {
   //   if (params.source !== params.target) {
   //     const newEdge = {
@@ -111,6 +116,13 @@ const canvas = () => {
     console.log(newNode.id, "handlecreatenode node id");
   };
 
+    useEffect(() => {
+      setNodes(deleteNodesContext);
+      console.log(deleteNodesContext, 'deletenodecontext in useeffect')
+      setUpdateNodes(false);
+      console.log("set update nodes set to false");
+    }, [updateNodes]);
+  
   const handleCreateEdge = (sourceNodeId, targetNodeId) => {
     const newEdge = {
       id: `${edges.length + 1}`,

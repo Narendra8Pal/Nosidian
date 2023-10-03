@@ -22,14 +22,18 @@ function TextUpdaterNode() {
   const [leftLineHovered, setLeftLineHovered] = useState(false);
   const [rightLineHovered, setRightLineHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [text,setText] = useState("")
 
   const nodeRef = useRef(null);
   const nodeId = useNodeId();
   // const {nodesContext, setNodesContext} = useContext(FilesConnect)
-  const {onDeleteNode} = useContext(FilesConnect)
+  const { onDeleteNode, setNodeIdContext } = useContext(FilesConnect);
 
   const onChange = useCallback((e) => {
     // console.log(evt.target.value);
+    const newText = e.target.value;
+    setText(newText);
+    
   }, []);
 
   const onInputDoubleClick = useCallback(() => {
@@ -38,7 +42,7 @@ function TextUpdaterNode() {
 
   const onInputBlur = useCallback(() => {
     setIsInputFocused(false);
-    // setIsActive(false)
+    // setIsActive(false)'
   }, []);
 
   const onNodeResize = useCallback(() => {
@@ -48,6 +52,7 @@ function TextUpdaterNode() {
   const handleDoubleClick = () => {
     setIsActive(true);
     console.log(nodeId, "NODE ID DOO CLICK");
+    setNodeIdContext(nodeId);
   };
 
   const handleClickOutside = (e) => {
@@ -74,9 +79,16 @@ function TextUpdaterNode() {
       className="nowheel"
       style={{ width: nodeSize.width, height: nodeSize.height }}
     >
-            <NodeToolbar>
-              <button onClick={onDeleteNode}>delete</button>
-            </NodeToolbar>
+      <NodeToolbar>
+        <div className={CanvasStyles.nodeIconsBox}>
+          <img
+            src="/nodeDelete.png"
+            alt=""
+            onClick={onDeleteNode}
+            className={CanvasStyles.iconsHover}
+          />
+        </div>
+      </NodeToolbar>
       <div>
         <Handle
           type="source"
@@ -143,6 +155,7 @@ function TextUpdaterNode() {
           id={uuidv4()}
           name="text"
           // value={nodes.label}
+          value={text} // for adding the text data to backend
           onChange={onChange}
           onBlur={onInputBlur}
           onDoubleClick={handleDoubleClick}

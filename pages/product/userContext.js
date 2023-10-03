@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import  {useNodeId} from "reactflow";
+// import  {useNodeId} from "reactflow";
 // const UserContext = createContext();
 
 // export const UserProvider = ({ children }) => {
@@ -30,12 +30,18 @@ export function FilenameProvider({ children }) {
   const [selectedEditorFileId, setSelectedEditorFileId] = useState("")
   const [editorIdFetched, setEditorIdFetched] = useState(false)
   const [nodesContext, setNodesContext ] = useState([])
+  const [deleteNodesContext, setDeleteNodesContext ] = useState([])
+  const [updateNodes, setUpdateNodes] = useState(false)
+  const [nodeIdContext, setNodeIdContext] = useState("")
 
-  const nodeId = useNodeId();
+  // const nodeId = useNodeId();
 
   const onDeleteNode = () => {
-    setNodesContext(nodesContext.filter((node) => node.id !== nodeId ));
-    console.log(nodesContext, 'delete works');
+    console.log(nodeIdContext,'node id')
+    console.log(nodesContext, 'nodes context this is')
+    setDeleteNodesContext(nodesContext.filter((node) => node.id !== nodeIdContext));
+    console.log(nodesContext, 'delete works setupdate node is going to be true');
+    setUpdateNodes(true)
   };
 
   const contextValue = {
@@ -51,7 +57,11 @@ export function FilenameProvider({ children }) {
     setEditorIdFetched,
     nodesContext,
     setNodesContext,
-    onDeleteNode
+    onDeleteNode,
+    updateNodes,
+    setUpdateNodes,
+    deleteNodesContext,
+    setNodeIdContext
   };
 
 
