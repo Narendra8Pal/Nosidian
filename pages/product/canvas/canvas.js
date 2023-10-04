@@ -27,6 +27,7 @@ import ReactFlow, {
 import Draggable, { DraggableCore } from "react-draggable";
 import { useDrag } from "@use-gesture/react";
 import { v4 as uuidv4 } from "uuid";
+import { Send_Flowers } from "next/font/google";
 
 // const userContext = createContext();
 
@@ -37,6 +38,7 @@ const canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [nodesId, setNodesId] = useState([]);
+  const [rfInstance, setRfInstance] = useState(null)
 
   const {
     nodesContext,
@@ -101,28 +103,66 @@ const canvas = () => {
   // const sourceTopId = generateUniqueId();
   // const sourceLeftId = generateUniqueId();
 
-  const handleCreateNode = () => {
-    const newNode = {
-      id: `${nodes.length + 1}`,
-      position: { x: 450, y: 450 },
-      data: { value: "", toolbarPosition: Position.Top },
-      type: "textUpdater",
-      zIndex: 1000,
-      isConnectable: true,
-    };
-    setNodes((prevNodes) => [...prevNodes, newNode]);
-    setNodesContext((prevNodes) => [...prevNodes, newNode]);
-    setNodesId(newNode.id);
-    console.log(newNode.id, "handlecreatenode node id");
+  const handleCreateNode = async () => {
+    try {
+      const newNode = {
+        id: `${nodes.length + 1}`,
+        position: { x: 450, y: 450 },
+        data: { value: "", toolbarPosition: Position.Top },
+        type: "textUpdater",
+        zIndex: 1000,
+        isConnectable: true,
+      };
+      const response = await fetch(process.env.NEXT_PUBLIC_CANVAS_DATA, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newNode }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+      } else {
+        console.log("Failed to create node on the server");
+      }
+      setNodes((prevNodes) => [...prevNodes, newNode]);
+      setNodesContext((prevNodes) => [...prevNodes, newNode]);
+      setNodesId(newNode.id);
+      console.log(newNode.id, "handlecreatenode node id");
+    } catch (error) {
+      console.log("error creating a node", error);
+    }
   };
 
-    useEffect(() => {
-      setNodes(deleteNodesContext);
-      console.log(deleteNodesContext, 'deletenodecontext in useeffect')
-      setUpdateNodes(false);
-      console.log("set update nodes set to false");
-    }, [updateNodes]);
-  
+  const handleSaveCanvas = async () => {
+    try{
+      const flow = rfInstance.toObject();
+      const response = await fetch('/api/saveCanvas', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ canvasState: flow }),
+      });
+      if (response.ok) {
+        console.log('canvas saved')
+      } else {
+        console.error('Error saving canvas state');
+      }
+    }
+    catch{
+
+    }
+  };
+
+  useEffect(() => {
+    setNodes(deleteNodesContext);
+    console.log(deleteNodesContext, "deletenodecontext in useeffect");
+    setUpdateNodes(false);
+    console.log("set update nodes set to false");
+  }, [updateNodes]);
+
   const handleCreateEdge = (sourceNodeId, targetNodeId) => {
     const newEdge = {
       id: `${edges.length + 1}`,
@@ -170,8 +210,14 @@ const canvas = () => {
             >
               <img src="/createCanvas.png" alt="" />
             </Panel>
-
-            <Controls position="top-right" />
+            <Panel
+              position="top-right"
+              className={canvasStyles.saveIcon}
+              onClick={handleSaveCanvas}
+            >
+              <img src="/saveflow.png" alt="" />
+            </Panel>
+            <Controls position="bottom-left" />
 
             <MiniMap
               nodeColor={"#FFFFFF"}

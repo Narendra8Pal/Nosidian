@@ -2,6 +2,10 @@
   @apply px-6 py-4 text-white border rounded-md shadow-md cursor-pointer bg-home-left-pane border-home-gray hover:bg-body-normal shadow-black;
 }
 
+.saveIcon {
+  @apply px-2 py-2 border rounded-full shadow-md cursor-pointer shadow-black bg-home-left-pane border-home-gray hover:bg-body-normal; 
+}
+
 .controls {
   @apply bg-red-500;
 }
@@ -10,16 +14,14 @@
   @apply w-full h-full p-4 text-white border-2 rounded-md resize-none border-home-gray bg-body-main-bg focus:outline-none focus:border-2 focus:border-body-normal;
 }
 
-.nodeBox{
-@apply w-full h-full
+.nodeBox {
+  @apply w-full h-full;
 }
 
 .iconsHover {
   @apply w-4 h-4;
 }
 
-.nodeIconsBox{
-  @apply  px-5 py-4 border rounded-md shadow-md cursor-pointer bg-home-left-pane border-home-gray hover:shadow-black opacity-90 hover:opacity-100;
+.nodeIconsBox {
+  @apply px-5 py-4 border rounded-md shadow-md cursor-pointer bg-home-left-pane border-home-gray hover:shadow-black opacity-90 hover:opacity-100;
 }
-
-

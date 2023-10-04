@@ -4,10 +4,17 @@ const { Schema } = mongoose;
 
 const CanvasSchema = new Schema({
   id: String,
-  postition:String,
-//   data:
+  position: {
+    x: Number, 
+    y: Number,
+  },
+  data: {
+    value: String, 
+    toolbarPosition: String, 
+  },
   type: String,
-  isConnectable:bool
+  zIndex: Number,
+  isConnectable: Boolean,
 });
 
 
