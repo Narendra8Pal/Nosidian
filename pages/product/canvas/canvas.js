@@ -4,6 +4,7 @@ import canvasStyles from "@/styles/canvas.module.css";
 import { useState, useMemo, useContext, useEffect } from "react";
 import TextUpdaterNode from "./textUpdaterNode.js";
 import { FilesConnect } from "../userContext";
+import { useRouter } from 'next/router';
 
 // LIBRARIES
 import "reactflow/dist/style.css";
@@ -23,6 +24,7 @@ import ReactFlow, {
   NodeToolbar,
   updateEdge,
   ConnectionMode,
+  useReactFlow,
 } from "reactflow";
 import Draggable, { DraggableCore } from "react-draggable";
 import { useDrag } from "@use-gesture/react";
@@ -34,11 +36,12 @@ import { Send_Flowers } from "next/font/google";
 const proOptions = { hideAttribution: true };
 const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used inside the component
 
-const canvas = () => {
+const Canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [nodesId, setNodesId] = useState([]);
-  const [rfInstance, setRfInstance] = useState(null)
+  const [rfInstance, setRfInstance] = useState(null);
+  const [canvasState, setCanvasState] = useState({});
 
   const {
     nodesContext,
@@ -48,6 +51,10 @@ const canvas = () => {
     updateNodes,
     setUpdateNodes,
   } = useContext(FilesConnect);
+
+  const { setViewport } = useReactFlow();
+  const router = useRouter()
+  const { id } = router.query;
 
   // const onConnect = (params) => {
   //   if (params.source !== params.target) {
@@ -107,7 +114,10 @@ const canvas = () => {
     try {
       const newNode = {
         id: `${nodes.length + 1}`,
-        position: { x: 450, y: 450 },
+        position: {
+          x: Math.floor(Math.random() * window.innerWidth - 100),
+          y: Math.floor(Math.random() * window.innerHeight),
+        },
         data: { value: "", toolbarPosition: Position.Top },
         type: "textUpdater",
         zIndex: 1000,
@@ -135,26 +145,48 @@ const canvas = () => {
     }
   };
 
-  const handleSaveCanvas = async () => {
-    try{
+  const handleSaveCanvas = useCallback(async () => {
+    try {
       const flow = rfInstance.toObject();
-      const response = await fetch('/api/saveCanvas', {
-        method: 'PUT',
+      const response = await fetch(process.env.NEXT_PUBLIC_CANVAS_DATA, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ canvasState: flow }),
       });
       if (response.ok) {
-        console.log('canvas saved')
+        console.log("canvas saved");
       } else {
-        console.error('Error saving canvas state');
+        console.error("Error saving canvas state");
       }
+    } catch (error) {
+      console.log("error saving the diagram", error);
     }
-    catch{
+  }, [rfInstance]);
 
-    }
-  };
+  useEffect(() => {
+    console.log("mfc useEffect of canvas running")
+    const restoreFlow = async () => {
+      console.log(id, 'fucking canvas id')
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CANVAS_DATA}/${id}`); 
+        if (response.ok) {
+          const canvasData = await response.json();
+          setCanvasState(canvasData);
+          const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+          setNodes(flow.nodes || []);
+          setEdges(flow.edges || []);
+          setViewport({ x, y, zoom });
+        } else {
+          console.error("Error fetching canvas state");
+        }
+      } catch (error) {
+        console.log('eror in restoring flow',error )
+      }
+      restoreFlow();
+    };
+  }, [id]);
 
   useEffect(() => {
     setNodes(deleteNodesContext);
@@ -187,50 +219,63 @@ const canvas = () => {
     <>
       <Home />
 
-      <ReactFlowProvider>
-        <div style={{ width: "80vw", height: "100vh" }} className="float-right">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onEdgeUpdate={onEdgeUpdate}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            proOptions={proOptions}
-            deleteKeyCode={null}
-            // onDeleteNode={onDeleteNode}
-            // fitView
-            // connectionMode={ConnectionMode.Loose}
+      {/* <ReactFlowProvider> */}
+      <div style={{ width: "80vw", height: "100vh" }} className="float-right">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onEdgeUpdate={onEdgeUpdate}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          proOptions={proOptions}
+          deleteKeyCode={null}
+          onInit={setRfInstance}
+          // onDeleteNode={onDeleteNode}
+          // fitView
+          // connectionMode={ConnectionMode.Loose}
+        >
+          <Panel
+            position="bottom-center"
+            className={canvasStyles.iconsBox}
+            onClick={handleCreateNode}
           >
-            <Panel
-              position="bottom-center"
-              className={canvasStyles.iconsBox}
-              onClick={handleCreateNode}
-            >
-              <img src="/createCanvas.png" alt="" />
-            </Panel>
-            <Panel
-              position="top-right"
-              className={canvasStyles.saveIcon}
-              onClick={handleSaveCanvas}
-            >
-              <img src="/saveflow.png" alt="" />
-            </Panel>
-            <Controls position="bottom-left" />
+            <img src="/createCanvas.png" alt="" />
+          </Panel>
+          <Panel
+            position="top-right"
+            className={canvasStyles.saveIcon}
+            onClick={handleSaveCanvas}
+          >
+            <img src="/saveflow.png" alt="" />
+          </Panel>
+          <Controls position="bottom-left" />
 
-            <MiniMap
-              nodeColor={"#FFFFFF"}
-              // nodeStrokeColor={'#7649e6"'}
-              // maskColor={"red"}
-              style={{ backgroundColor: "#1a1916" }}
-            />
-            <Background variant="" gap={12} size={1} />
-          </ReactFlow>
-        </div>
-      </ReactFlowProvider>
+          <MiniMap
+            nodeColor={"#FFFFFF"}
+            // nodeStrokeColor={'#7649e6"'}
+            // maskColor={"red"}
+            style={{ backgroundColor: "#1a1916" }}
+          />
+          <Background variant="" gap={12} size={1} />
+        </ReactFlow>
+      </div>
+      {/* </ReactFlowProvider> */}
     </>
   );
 };
 
-export default canvas;
+export default Canvas;
+
+// const canvasProvider = () => {
+//   return (
+//     <>
+//       <ReactFlowProvider>
+//         <canvas/>
+//       </ReactFlowProvider>
+//     </>
+//   );
+// };
+
+// export default canvasProvider;

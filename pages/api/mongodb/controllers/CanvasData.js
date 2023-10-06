@@ -23,6 +23,21 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+  else if (req.method === "GET"){
+    try {
+      const canvasId = req.params.id;
+      const canvas = await Canvas.findById(canvasId);
+  
+      if (!canvas) {
+        res.status(404).json({ error: "Canvas not found" });
+        return;
+      }
+      res.status(200).json(canvas);
+    } catch (error) {
+      console.error(error);
+      req.status(500).json({error: 'Internal server error'});
+    }
+  }
   else {
     console.log("eror in canvasData handler");
   }

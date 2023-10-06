@@ -15,6 +15,7 @@ const CanvasSchema = new Schema({
   type: String,
   zIndex: Number,
   isConnectable: Boolean,
+  canvasState: Object,
 });
 
 
