@@ -13,10 +13,21 @@ export default async function handler(req, res) {
   } 
   else if (req.method === 'PUT'){
     try {
-      const { canvasState } = req.body;
-      const canvasNode = new Canvas(canvasState);
-      await canvasNode.save();
+      // const canvasId = requestData.nodes.file_id;
+      // const canvasNode = new Canvas(requestData);
+      // await canvasNode.save();
+      const { requestData } = req.body;
+      const file_id = req.params.id;
 
+      const updatedCanvas = await Canvas.findByIdAndUpdate(
+        file_id,
+        requestData,
+        { new: true }
+      );
+      if (!updatedCanvas) {
+        res.status(404).json({ error: 'Canvas not found' });
+        return;
+      }
       res.status(200).json({ message: 'Canvas state updatedd successfully' });
     } catch (error) {
       console.error(error);
@@ -25,14 +36,16 @@ export default async function handler(req, res) {
   }
   else if (req.method === "GET"){
     try {
+      // const canvasId = req.params.id;
+      // const canvas = await Canvas.findById(canvasId);
+      // const canvasState = Canvas.schema;
       const canvasId = req.params.id;
-      const canvas = await Canvas.findById(canvasId);
-  
+      const canvas = await Canvas.findById(canvasId);  
       if (!canvas) {
         res.status(404).json({ error: "Canvas not found" });
         return;
       }
-      res.status(200).json(canvas);
+      res.status(200).json(canvasState);
     } catch (error) {
       console.error(error);
       req.status(500).json({error: 'Internal server error'});
