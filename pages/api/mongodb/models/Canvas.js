@@ -10,26 +10,27 @@ const EdgesSchema = new Schema({
   targetHandle: String,
 });
 
-// const NodesSchema = new Schema({
-//   data: {
-//     toolbarPosition: String,
-//     value: String,
-//   },
-//   height: Number,
-//   id: String,
-//   isConnectable: Boolean,
-//   position: {
-//     x: Number,
-//     y: Number,
-//   },
-//   positionAbsolute: {
-//     x: Number,
-//     y: Number,
-//   },
-//   type: String,
-//   width: Number,
-//   zIndex: Number,
-// });
+const NodesSchema = new Schema({
+  data: {
+    toolbarPosition: String,
+    value: String,
+  },
+  file_id: String,
+  height: Number,
+  id: String,
+  isConnectable: Boolean,
+  position: {
+    x: Number,
+    y: Number,
+  },
+  positionAbsolute: {
+    x: Number,
+    y: Number,
+  },
+  type: String,
+  width: Number,
+  zIndex: Number,
+});
 
 const CanvasSchema = new Schema({
   file_id: String,
@@ -51,28 +52,10 @@ const CanvasSchema = new Schema({
     y: Number,
     zoom: Number,
   },
-  nodes: [{
-    data: {
-      toolbarPosition: String,
-      value: String,
-    },
-    height: Number,
-    id: String,
-    isConnectable: Boolean,
-    position: {
-      x: Number,
-      y: Number,
-    },
-    positionAbsolute: {
-      x: Number,
-      y: Number,
-    },
-    type: String,
-    width: Number,
-    zIndex: Number,
-  }],
+  nodes: [NodesSchema],
   edges: [EdgesSchema],
-});
+},
+);
 
 const Canvas = mongoose.models.Canvas || mongoose.model("Canvas", CanvasSchema);
 

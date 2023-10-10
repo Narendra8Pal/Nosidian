@@ -151,7 +151,8 @@ const Canvas = () => {
   const handleSaveCanvas = useCallback(async () => {
     try {
       const requestData = rfInstance.toObject();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CANVAS_DATA}/${id}`, {
+      console.log(requestData, 'toOBject resquestData babe')
+      const response = await fetch(process.env.NEXT_PUBLIC_CANVAS_DATA, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +162,9 @@ const Canvas = () => {
       if (response.ok) {
         console.log("canvas saved");
       } else {
-        console.error("Error saving canvas state");
+        // console.error("Error saving canvas state");        
+        console.error('Error put req.:', response.status);
+        console.error(await response.text());
       }
     } catch (error) {
       console.log("error saving the diagram", error);

@@ -10,37 +10,35 @@ export default async function handler(req, res) {
     } catch (error) {
       console.log(error, "error in post method");
     }
-  } 
-  else if (req.method === 'PUT'){
-    try {
-      // const canvasId = requestData.nodes.file_id;
-      // const canvasNode = new Canvas(requestData);
-      // await canvasNode.save();
-      const { requestData } = req.body;
-      const file_id = req.params.id;
-
-      const updatedCanvas = await Canvas.findByIdAndUpdate(
-        file_id,
-        requestData,
-        { new: true }
-      );
-      if (!updatedCanvas) {
-        res.status(404).json({ error: 'Canvas not found' });
-        return;
+  } else if (req.method === "PUT") {
+    const { requestData } = req.body;
+    const nodesArray = requestData.nodes;
+    // for (const node of nodesArray) {
+      try {
+        const file_id = requestData.nodes[0].file_id;
+        const updatedCanvas = await Canvas.findOneAndUpdate(
+          { file_id: file_id },
+          {
+            $push: { nodes: { $each: nodesArray } }, 
+          },
+          { new: true }
+        );
+        if (!updatedCanvas) {
+          console.log(`No document found for file_id: ${file_id}`);
+        } else {
+          console.log(updatedCanvas, "updatedCanvas in server");
+        }
+      } catch (error) {
+        console.error("Error inserting node:", error);
       }
-      res.status(200).json({ message: 'Canvas state updatedd successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  }
-  else if (req.method === "GET"){
+    // }
+  } else if (req.method === "GET") {
     try {
       // const canvasId = req.params.id;
       // const canvas = await Canvas.findById(canvasId);
       // const canvasState = Canvas.schema;
       const canvasId = req.params.id;
-      const canvas = await Canvas.findById(canvasId);  
+      const canvas = await Canvas.findById(canvasId);
       if (!canvas) {
         res.status(404).json({ error: "Canvas not found" });
         return;
@@ -48,10 +46,9 @@ export default async function handler(req, res) {
       res.status(200).json(canvasState);
     } catch (error) {
       console.error(error);
-      req.status(500).json({error: 'Internal server error'});
+      req.status(500).json({ error: "Internal server error" });
     }
-  }
-  else {
+  } else {
     console.log("eror in canvasData handler");
   }
 }
