@@ -13,6 +13,8 @@ export default async function handler(req, res) {
   } else if (req.method === "PUT") {
     const { requestData } = req.body;
     const nodesArray = requestData.nodes;
+    const edgesArray = requestData.edges;
+    const viewportObj = requestData.viewport;
     // for (const node of nodesArray) {
       try {
         const file_id = requestData.nodes[0].file_id;
@@ -20,6 +22,8 @@ export default async function handler(req, res) {
           { file_id: file_id },
           {
             $push: { nodes: { $each: nodesArray } }, 
+            // $push: { edges: { $each: edgesArray} },
+            // $set: { viewport: { viewportObj }},
           },
           { new: true }
         );

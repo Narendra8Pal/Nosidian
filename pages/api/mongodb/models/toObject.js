@@ -26,6 +26,7 @@ const NodeSchema = new Schema({
 });
 
 const ObjectSchema = new Schema({
+  file_id: String,
   edges: [String],
   nodes: [NodeSchema],
   viewport: {

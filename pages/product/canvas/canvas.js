@@ -150,14 +150,15 @@ const Canvas = () => {
 
   const handleSaveCanvas = useCallback(async () => {
     try {
+      const file_id = id;
       const requestData = rfInstance.toObject();
       console.log(requestData, 'toOBject resquestData babe')
-      const response = await fetch(process.env.NEXT_PUBLIC_CANVAS_DATA, {
-        method: "PUT",
+      const response = await fetch(process.env.NEXT_PUBLIC_TO_OBJECT_DATA, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({requestData}),
+        body: JSON.stringify({requestData, file_id}),
       });
       if (response.ok) {
         console.log("canvas saved");
@@ -169,14 +170,15 @@ const Canvas = () => {
     } catch (error) {
       console.log("error saving the diagram", error);
     }
-  }, [rfInstance]);
+  }, [rfInstance, id]);
 
   useEffect(() => {
+    const file_id = id;
     console.log(rfInstance,'rf instance in get method useEffect')
     const restoreFlow = async () => {
       console.log(id, "fucking canvas file_id");
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_CANVAS_DATA}/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_TO_OBJECT_DATA}/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -201,22 +203,7 @@ const Canvas = () => {
       }
     };
     restoreFlow();
-
-    // const onRestore = useCallback(() => {
-      // const restoreFlow = async () => {
-      //   const flow = JSON.parse(localStorage.getItem(flowKey));
-  
-      //   if (flow) {
-      //     const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      //     setNodes(flow.nodes || []);
-      //     setEdges(flow.edges || []);
-      //     setViewport({ x, y, zoom });
-      //   }
-      // };
-  
-      // restoreFlow();
-    // }, [setNodes, setViewport]);
-  }, [ setNodes, setViewport]);
+  }, [ setNodes, setViewport, id]);
 
   useEffect(() => {
     setNodes(deleteNodesContext);

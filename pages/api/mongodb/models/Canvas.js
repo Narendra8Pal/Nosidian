@@ -16,6 +16,7 @@ const NodesSchema = new Schema({
     value: String,
   },
   file_id: String,
+  random_node_id: String,
   height: Number,
   id: String,
   isConnectable: Boolean,
