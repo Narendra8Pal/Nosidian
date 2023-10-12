@@ -27,13 +27,13 @@ function TextUpdaterNode() {
   const nodeRef = useRef(null);
   const nodeId = useNodeId();
   // const {nodesContext, setNodesContext} = useContext(FilesConnect)
-  const { onDeleteNode, setNodeIdContext } = useContext(FilesConnect);
+  const { onDeleteNode, setNodeIdContext, setTextContext, textContext } = useContext(FilesConnect);
 
   const onChange = useCallback((e) => {
-    // console.log(evt.target.value);
     const newText = e.target.value;
+    // console.log(newText);
     setText(newText);
-    
+    setTextContext(newText)
   }, []);
 
   const onInputDoubleClick = useCallback(() => {

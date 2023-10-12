@@ -33,7 +33,7 @@ export function FilenameProvider({ children }) {
   const [deleteNodesContext, setDeleteNodesContext ] = useState([])
   const [updateNodes, setUpdateNodes] = useState(false)
   const [nodeIdContext, setNodeIdContext] = useState("")
-
+  const [textContext, setTextContext] = useState("")
   // const nodeId = useNodeId();
 
   const onDeleteNode = () => {
@@ -61,7 +61,9 @@ export function FilenameProvider({ children }) {
     updateNodes,
     setUpdateNodes,
     deleteNodesContext,
-    setNodeIdContext
+    setNodeIdContext,
+    textContext,
+    setTextContext,
   };
 
 

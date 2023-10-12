@@ -50,6 +50,8 @@ const Canvas = () => {
     onDeleteNode,
     updateNodes,
     setUpdateNodes,
+    textContext,
+    nodeIdContext,
   } = useContext(FilesConnect);
 
   const { setViewport } = useReactFlow();
@@ -134,7 +136,7 @@ const Canvas = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(uuidv4(), 'checking uuidv4')
+        console.log(uuidv4(), "checking uuidv4");
         console.log(data.message);
       } else {
         console.log("Failed to create node on the server");
@@ -152,19 +154,36 @@ const Canvas = () => {
     try {
       const file_id = id;
       const requestData = rfInstance.toObject();
-      console.log(requestData, 'toOBject resquestData babe')
+
+      // requestData.nodes.forEach((node) => {
+      //   const matchingNode = nodes.find(
+      //     (n) => nodeIdContext === n.id && file_id === n.file_id
+      //   );
+      //   if (matchingNode) {
+      //     node.data.value = matchingNode.data.value;
+      //   }
+      // });
+
+      const sameNode = requestData.nodes.find((node) => node.id === nodeIdContext && node.file_id === file_id);
+      if (sameNode) {
+        sameNode.data.value = textContext;
+        console.log(sameNode.data.value, 'bro check this');
+      }
+      
+
+      console.log(requestData, "toOBject resquestData babe");
       const response = await fetch(process.env.NEXT_PUBLIC_TO_OBJECT_DATA, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({requestData, file_id}),
+        body: JSON.stringify({ requestData, file_id }),
       });
       if (response.ok) {
         console.log("canvas saved");
       } else {
-        // console.error("Error saving canvas state");        
-        console.error('Error put req.:', response.status);
+        // console.error("Error saving canvas state");
+        console.error("Error put req.:", response.status);
         console.error(await response.text());
       }
     } catch (error) {
@@ -173,37 +192,32 @@ const Canvas = () => {
   }, [rfInstance, id]);
 
   useEffect(() => {
-    const file_id = id;
-    console.log(rfInstance,'rf instance in get method useEffect')
+    console.log(rfInstance, "rfinstance in get method");
     const restoreFlow = async () => {
-      console.log(id, "fucking canvas file_id");
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_TO_OBJECT_DATA}/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_TO_OBJECT_DATA}?id=${id}`,
+          {
+            method: "GET",
+          }
+        );
         if (response.ok) {
           const canvasData = await response.json();
-          console.log(canvasData, 'canvasData babe')
-          console.log(response, 'it is response babe')
+          console.log(canvasData, "canvasData babe");
           setCanvasState(canvasData);
-          console.log(canvasData,'response.json() babe')
-          const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+          const { x = 0, y = 0, zoom = 1 } = canvasData.viewport;
           setNodes(canvasData.nodes || []);
           setEdges(canvasData.edges || []);
           setViewport({ x, y, zoom });
-          console.log(response, "get method response");
         } else {
-          console.error(response,"Error fetching canvas state");
+          console.error(response, "Error fetching canvas state");
         }
       } catch (error) {
         console.log("eror in restoring flow", error);
       }
     };
     restoreFlow();
-  }, [ setNodes, setViewport, id]);
+  }, [setNodes, setViewport, id]);
 
   useEffect(() => {
     setNodes(deleteNodesContext);
