@@ -61,6 +61,7 @@ export function FilenameProvider({ children }) {
     updateNodes,
     setUpdateNodes,
     deleteNodesContext,
+    nodeIdContext,
     setNodeIdContext,
     textContext,
     setTextContext,

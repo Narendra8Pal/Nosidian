@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const EdgesSchema = new Schema({
+  id: String,
+  source: String,
+  sourceHandle: String,
+  target: String,
+  targetHandle: String,
+});
+
 const NodeSchema = new Schema({
   data: {
     toolbarPosition: String,
@@ -27,7 +35,7 @@ const NodeSchema = new Schema({
 
 const ObjectSchema = new Schema({
   file_id: String,
-  edges: [String],
+  edges: [EdgesSchema],
   nodes: [NodeSchema],
   viewport: {
     x: Number,

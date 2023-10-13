@@ -51,6 +51,7 @@ const Canvas = () => {
     updateNodes,
     setUpdateNodes,
     textContext,
+    setTextContext,
     nodeIdContext,
   } = useContext(FilesConnect);
 
@@ -143,15 +144,65 @@ const Canvas = () => {
       }
       setNodes((prevNodes) => [...prevNodes, newNode]);
       setNodesContext((prevNodes) => [...prevNodes, newNode]);
-      setNodesId(newNode.id);
+      // setNodesId(newNode.id);
       console.log(newNode.id, "handlecreatenode node id");
     } catch (error) {
       console.log("error creating a node", error);
     }
   };
 
+  useEffect(() => {
+    const handleNodeId = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_CANVAS_DATA}?id=${id}`,
+          {
+            method: "GET",
+          }
+        );
+        if (response.ok) {
+          const nodesData = await response.json();
+          console.log(nodesData, "handlenodeid response bro");
+          setNodesId(nodesData.id);
+        } else {
+          console.error(response, "Error fetching canvas Data");
+        }
+      } catch (error) {
+        console.log(error, "error in handlenodeid");
+      }
+    };
+    handleNodeId();
+  }, [id]);
+
+  const updateNodeValue = async () => {
+    const reqBody = {
+      data: {
+        value: textContext,
+      },
+    };
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CANVAS_DATA}?id=${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        }
+      );
+      if (response.ok) {
+      } else {
+        console.error(response.status, "error in put request");
+      }
+    } catch (error) {
+      console.log(error, "error in updating node value");
+    }
+  };
+
   const handleSaveCanvas = useCallback(async () => {
     try {
+      // await updateNodeValue();
       const file_id = id;
       const requestData = rfInstance.toObject();
 
@@ -169,7 +220,6 @@ const Canvas = () => {
         sameNode.data.value = textContext;
         console.log(sameNode.data.value, 'bro check this');
       }
-      
 
       console.log(requestData, "toOBject resquestData babe");
       const response = await fetch(process.env.NEXT_PUBLIC_TO_OBJECT_DATA, {
@@ -177,10 +227,11 @@ const Canvas = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ requestData, file_id }),
+        body: JSON.stringify({ requestData, file_id}),
       });
       if (response.ok) {
         console.log("canvas saved");
+        setTextContext("")
       } else {
         // console.error("Error saving canvas state");
         console.error("Error put req.:", response.status);
