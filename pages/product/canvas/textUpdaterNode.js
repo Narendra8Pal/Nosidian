@@ -22,18 +22,39 @@ function TextUpdaterNode() {
   const [leftLineHovered, setLeftLineHovered] = useState(false);
   const [rightLineHovered, setRightLineHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [text,setText] = useState("")
+  const [text, setText] = useState("");
+  const [nodesObj, setNodesObj] = useState({});
 
   const nodeRef = useRef(null);
   const nodeId = useNodeId();
-  // const {nodesContext, setNodesContext} = useContext(FilesConnect)
-  const { onDeleteNode, setNodeIdContext, setTextContext, textContext } = useContext(FilesConnect);
+  const {
+    onDeleteNode,
+    setNodeIdContext,
+    setTextContext,
+    textContext,
+    nodesContext,
+    setNodesContext,
+    nodeIdContext,
+    setGetNodeContext,
+    textareaId,
+    nodeItems,
+    setNodeItems,
+  } = useContext(FilesConnect);
 
   const onChange = useCallback((e) => {
     const newText = e.target.value;
     // console.log(newText);
     setText(newText);
-    setTextContext(newText)
+    // setTextContext(newText);
+
+    nodesContext.forEach((node) => {
+      if (node.id === nodeIdContext) {
+        node.data.value = newText;
+        node.content = newText;
+        // setTextContext(node.data.value);
+        setTextContext(node.content);
+      }
+    });
   }, []);
 
   const onInputDoubleClick = useCallback(() => {
@@ -53,6 +74,7 @@ function TextUpdaterNode() {
     setIsActive(true);
     console.log(nodeId, "NODE ID DOO CLICK");
     setNodeIdContext(nodeId);
+    setGetNodeContext(true);
   };
 
   const handleClickOutside = (e) => {
@@ -152,10 +174,8 @@ function TextUpdaterNode() {
 
       <div className={CanvasStyles.nodeBox}>
         <textarea
-          id={uuidv4()}
           name="text"
-          // value={nodes.label}
-          value={text} // for adding the text data to backend
+          id={nodeIdContext} // id is none when refreshed
           onChange={onChange}
           onBlur={onInputBlur}
           onDoubleClick={handleDoubleClick}

@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const { requestData, file_id } = req.body;
+      // const value = nodeValue.value;
       const filter = { file_id };
       const update = { ...requestData, file_id };
       const options = { upsert: true };
@@ -21,10 +22,16 @@ export default async function handler(req, res) {
       console.error("Error while updating or creating node:", error);
       res.status(500).json({ message: "Failed to update or create node." });
     }
+  } else if (req.method === "PUT") {
+    try {
+      
+    } catch (error) {
+
+    }
   } else if (req.method === "GET") {
     try {
       const { id } = req.query;
-      const canvas = await toObject.findOne({file_id: id });
+      const canvas = await toObject.findOne({ file_id: id });
       if (!canvas) {
         res.status(404).json({ error: "Canvas not found" });
         return;

@@ -42,6 +42,8 @@ const Canvas = () => {
   const [nodesId, setNodesId] = useState([]);
   const [rfInstance, setRfInstance] = useState(null);
   const [canvasState, setCanvasState] = useState({});
+  const [updatedNodesId, setUpdatedNodesId] = useState([]);
+  const [updatingNodeId, setUpdatingNodeId] = useState([]);
 
   const {
     nodesContext,
@@ -53,6 +55,13 @@ const Canvas = () => {
     textContext,
     setTextContext,
     nodeIdContext,
+    setNodeIdContext,
+    getNodeContext,
+    setGetNodeContext,
+    textareaId,
+    setTextareaId,
+    nodeItems,
+    setNodeItems,
   } = useContext(FilesConnect);
 
   const { setViewport } = useReactFlow();
@@ -118,6 +127,7 @@ const Canvas = () => {
       const newNode = {
         file_id: id,
         random_node_id: uuidv4(),
+        // textarea_id: `${textareaId}`,
         id: `${nodes.length + 1}`,
         position: {
           x: Math.floor(Math.random() * window.innerWidth - 100),
@@ -127,7 +137,12 @@ const Canvas = () => {
         type: "textUpdater",
         zIndex: 1000,
         isConnectable: true,
+        content: "",
       };
+
+      // newNode.textarea_id = `${newNode.id}`;
+      // setTextareaId(newNode.textarea_id);
+
       const response = await fetch(process.env.NEXT_PUBLIC_CANVAS_DATA, {
         method: "POST",
         headers: {
@@ -145,6 +160,7 @@ const Canvas = () => {
       setNodes((prevNodes) => [...prevNodes, newNode]);
       setNodesContext((prevNodes) => [...prevNodes, newNode]);
       // setNodesId(newNode.id);
+      setNodeIdContext(newNode.id);
       console.log(newNode.id, "handlecreatenode node id");
     } catch (error) {
       console.log("error creating a node", error);
@@ -174,12 +190,28 @@ const Canvas = () => {
     handleNodeId();
   }, [id]);
 
+  // useEffect(() => {
   const updateNodeValue = async () => {
-    const reqBody = {
+    console.log(textContext, " textcontext inside updatenodevalue in savebtn");
+    // const updateItems = { id: nodes.id, content: textContext };
+    // setNodeItems([...nodeItems, updateItems]);
+    
+    let updatedData = {
       data: {
-        value: textContext,
+        value: ""
       },
+      content: "",
     };
+
+    nodes.forEach((node) => {
+      if (node.id === updatingNodeId) {
+        node.data.value = textContext
+        node.content = textContext
+        updatedData.data.value = node.data.value;
+        updatedData.content = node.content;
+      }
+    });
+    
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_CANVAS_DATA}?id=${id}`,
@@ -188,10 +220,34 @@ const Canvas = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(reqBody),
+          body: JSON.stringify(updatedData),
         }
       );
+
+      // use getNode from react flow to get the node (by id)in which the user is writing
+      // than update the value and content of that particular node and done....
       if (response.ok) {
+        const updatedNode = await response.json();
+        setNodes((prevNodes) => {
+          const updatedNodes = prevNodes.map((node) => {
+            if (node.id === updatingNodeId) {
+              // adding updatedNodesId equals make no data avail when handle saved run
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  value: updatedData.data.value,
+                },
+                content: updatedData.content,
+              };
+            }
+            return node;
+          });
+          return updatedNodes;
+        });
+        console.log("RESPONSE Updated node:", updatedNode);
+        console.log(textContext, "textcontext");
+        console.log(nodeItems);
       } else {
         console.error(response.status, "error in put request");
       }
@@ -199,6 +255,55 @@ const Canvas = () => {
       console.log(error, "error in updating node value");
     }
   };
+  // updateNodeValue();
+
+  // },[rfInstance])
+
+  useEffect(() => {
+    if (rfInstance) {
+      const nodes = rfInstance.getNodes();
+      // console.log(nodes)
+    }
+  }, [updateNodeValue, rfInstance]);
+
+  useEffect(() => {
+    // const gettingNodeById = () => {
+    if (getNodeContext) {
+      const node = rfInstance.getNode(nodeIdContext);
+      if (node) {
+        // const updatedArray = [];
+        // updatedArray.push(node.id);
+        // const uniqueArray = new Set(updatedArray);
+        // setUpdatedNodesId(uniqueArray);
+        console.log(node.id, "id of this node");
+        setUpdatingNodeId(node.id);
+        setGetNodeContext(false);
+        console.log(node, "your node is here");
+      } else {
+        console.log("get node don't get node");
+      }
+    } else {
+      console.log(getNodeContext, "get node context is false");
+    }
+    // };
+    // gettingNodeById();
+  }, [getNodeContext]);
+
+  // const updateNodeData = async () => {
+  //   const file_id = id;
+  //   const requestDataNoVal = rfInstance.toObject();
+
+  //   requestDataNoVal.nodes.map(async (node) => {
+  //     const matchingNode = nodes.find(
+  //       (n) => file_id === n.file_id && node.id === n.id
+  //     );
+  //     console.log("inside fetchPromise");
+  //     if (matchingNode) {
+  //       node.data.value = matchingNode.data.value;
+  //       console.log("inside matching node");
+  //     }
+  //   });
+  // };
 
   const handleSaveCanvas = useCallback(async () => {
     try {
@@ -206,32 +311,16 @@ const Canvas = () => {
       const file_id = id;
       const requestData = rfInstance.toObject();
 
-      // requestData.nodes.forEach((node) => {
-      //   const matchingNode = nodes.find(
-      //     (n) => nodeIdContext === n.id && file_id === n.file_id
-      //   );
-      //   if (matchingNode) {
-      //     node.data.value = matchingNode.data.value;
-      //   }
-      // });
-
-      const sameNode = requestData.nodes.find((node) => node.id === nodeIdContext && node.file_id === file_id);
-      if (sameNode) {
-        sameNode.data.value = textContext;
-        console.log(sameNode.data.value, 'bro check this');
-      }
-
       console.log(requestData, "toOBject resquestData babe");
       const response = await fetch(process.env.NEXT_PUBLIC_TO_OBJECT_DATA, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ requestData, file_id}),
+        body: JSON.stringify({ requestData, file_id }),
       });
       if (response.ok) {
         console.log("canvas saved");
-        setTextContext("")
       } else {
         // console.error("Error saving canvas state");
         console.error("Error put req.:", response.status);
@@ -270,12 +359,12 @@ const Canvas = () => {
     restoreFlow();
   }, [setNodes, setViewport, id]);
 
-  useEffect(() => {
-    setNodes(deleteNodesContext);
-    console.log(deleteNodesContext, "deletenodecontext in useeffect");
-    setUpdateNodes(false);
-    console.log("set update nodes set to false");
-  }, [updateNodes]);
+  // useEffect(() => {
+  //   setNodes(deleteNodesContext);
+  //   console.log(deleteNodesContext, "deletenodecontext in useeffect");
+  //   setUpdateNodes(false);
+  //   console.log("set update nodes set to false");
+  // }, [updateNodes]);
 
   const handleCreateEdge = (sourceNodeId, targetNodeId) => {
     const newEdge = {
@@ -332,6 +421,13 @@ const Canvas = () => {
           >
             <img src="/saveflow.png" alt="" />
           </Panel>
+          <Panel
+            position="top-left"
+            className={canvasStyles.saveIcon}
+            onClick={updateNodeValue}
+          >
+            update
+          </Panel>
           <Controls position="bottom-left" />
 
           <MiniMap
@@ -349,15 +445,3 @@ const Canvas = () => {
 };
 
 export default Canvas;
-
-// const canvasProvider = () => {
-//   return (
-//     <>
-//       <ReactFlowProvider>
-//         <canvas/>
-//       </ReactFlowProvider>
-//     </>
-//   );
-// };
-
-// export default canvasProvider;

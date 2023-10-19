@@ -11,45 +11,36 @@ export default async function handler(req, res) {
       console.log(error, "error in post method");
     }
   } else if (req.method === "PUT") {
-    // const { requestData } = req.body;
-    // const nodesArray = requestData.nodes;
-    // const edgesArray = requestData.edges;
-    // const viewportObj = requestData.viewport;
-    // // for (const node of nodesArray) {
-    //   try {
-    //     const file_id = requestData.nodes[0].file_id;
-    //     const updatedCanvas = await Canvas.findOneAndUpdate(
-    //       { file_id: file_id },
-    //       {
-    //         $push: { nodes: { $each: nodesArray } },
-    //         // $push: { edges: { $each: edgesArray} },
-    //         // $set: { viewport: { viewportObj }},
-    //       },
-    //       { new: true }
-    //     );
-
     try {
-      const { data } = req.body;
-      const value = data ? data.value : undefined;
+      const { data, content } = req.body;
 
       const { id } = req.query;
       const CanvasData = await Canvas.findOne({ file_id: id });
+      const existingData = CanvasData.data.toolbarPosition;
 
       if (!CanvasData) {
         console.log(`No document found for file_id: ${id}`);
         return res.status(400).json({ message: "file not found" });
-      } else {
-        // const textContext = await Canvas.findOne({value: value});
-        // console.log(textContext, "updatedCanvas in server");
-
-        CanvasData.data.value = value; 
-        const updatedCanvas = await CanvasData.save(); 
-        res.json(updatedCanvas);
       }
+
+      const updatedData = {
+        data: {
+          value: data.value,
+          toolbarPosition: existingData,
+        },
+        content: content,
+      };
+
+      const textContext = await Canvas.findOneAndUpdate(
+        { file_id: id },
+        { $set: updatedData },
+        { new: true }
+      );
+
+      res.status(200).json(textContext);
     } catch (error) {
       console.error("Error inserting node:", error);
     }
-    // }
   } else if (req.method === "GET") {
     try {
       const { id } = req.query;

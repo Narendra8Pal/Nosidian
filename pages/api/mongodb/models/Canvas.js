@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const CanvasSchema = new Schema({
   file_id: String,
   random_node_id: String,
+  textarea_id: String,
   id: String,
   position: {
     x: Number,
@@ -17,6 +18,7 @@ const CanvasSchema = new Schema({
   type: String,
   zIndex: Number,
   isConnectable: Boolean,
+  content: String,
 },
 );
 

@@ -32,8 +32,11 @@ export function FilenameProvider({ children }) {
   const [nodesContext, setNodesContext ] = useState([])
   const [deleteNodesContext, setDeleteNodesContext ] = useState([])
   const [updateNodes, setUpdateNodes] = useState(false)
-  const [nodeIdContext, setNodeIdContext] = useState("")
+  const [nodeIdContext, setNodeIdContext] = useState([])
   const [textContext, setTextContext] = useState("")
+  const [getNodeContext, setGetNodeContext] = useState(false);
+  const [textareaId, setTextareaId] = useState([])
+  const [nodeItems, setNodeItems] = useState([]);
   // const nodeId = useNodeId();
 
   const onDeleteNode = () => {
@@ -65,8 +68,14 @@ export function FilenameProvider({ children }) {
     setNodeIdContext,
     textContext,
     setTextContext,
+    getNodeContext,
+    setGetNodeContext,
+    textareaId,
+    setTextareaId,
+    nodeItems,
+    setNodeItems
   };
-
+ 
 
   return (
     <FilesConnect.Provider value={contextValue}>

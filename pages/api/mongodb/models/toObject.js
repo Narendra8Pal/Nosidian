@@ -19,6 +19,7 @@ const NodeSchema = new Schema({
   height: Number,
   id: String,
   isConnectable: Boolean,
+  content: String,
   position: {
     x: Number,
     y: Number,
@@ -28,6 +29,7 @@ const NodeSchema = new Schema({
     y: Number,
   },
   random_node_id: String,
+  textarea_id: String,
   type: String,
   width: Number,
   zIndex: Number,
