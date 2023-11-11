@@ -1,0 +1,104 @@
+.head_btn {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  text-align: center;
+  /* font-family: Roboto; */
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  background: linear-gradient(
+    111deg,
+    rgba(110, 52, 230, 0.7) 25.38%,
+    rgba(222, 192, 221, 0.8) 64.05%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: 894px;
+  display: flex;
+  margin: auto auto auto auto;
+}
+
+.button {
+  width: 151px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(93deg, rgba(110, 52, 230, 0.7) 0%, #dec0dd 100%);
+  color: white;
+  font-weight: 700;
+  margin: 29px auto auto auto;
+}
+
+.preview {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 120px;
+}
+
+.preview_screen {
+  position: absolute;
+  width: 1029px;
+  height: 579px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(110, 52, 230, 0.8) 0.08%,
+    rgba(222, 192, 221, 0.64) 99.92%
+  );
+
+  filter: blur(34.45000076293945px);
+}
+
+.screen_img1 {
+  position: relative;
+  width: 1029px;
+  height: 579px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 2px solid #dec0dd;
+
+  background: url(/my-app/public/canvas-screen.png),
+    lightgray 50% / contain no-repeat;
+}
+
+.desc {
+  text-align: center;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  width: 674px;
+  background: linear-gradient(
+    107deg,
+    rgba(110, 52, 230, 0.49) 38.12%,
+    rgba(222, 192, 221, 0.56) 62.5%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 180px auto 100px auto;
+}
+
+.screen_img2 {
+  position: relative;
+  width: 1029px;
+  height: 579px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 2px solid #dec0dd;
+
+  background: url(/my-app/public/block-screen.png),
+    lightgray 50% / contain no-repeat;
+    margin-bottom: 500px;
+}
+
+.eclipse_white{
+  
+}
