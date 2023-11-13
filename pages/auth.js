@@ -52,7 +52,6 @@ const auth = () => {
     }
   };
 
-  
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -92,6 +91,12 @@ const auth = () => {
     setEmail("");
     setPassword("");
   };
+
+  const handleLinkTxt = () => {
+    setLogin(!login);
+    inputEmpty();
+  };
+
   return (
     <div>
       <Head>
@@ -109,11 +114,12 @@ const auth = () => {
         theme="light"
       />
 
+      <div className={styles.c1} />
+      <div className={styles.c2} />
       <div className={styles.container}>
         <div className={styles.blur}></div>
         <form className={styles.form} onSubmit={(e) => e.preventDefault}>
           <h1 className={styles.heading}>{login ? "Log In" : "Sign Up"}</h1>
-          <hr className={styles.divider} />
           {!login && (
             <input
               type="text"
@@ -143,14 +149,17 @@ const auth = () => {
             className={styles.input}
           />
 
-          <button onClick={login ? handleLogin : handleSignUp}>
+          <button
+            onClick={login ? handleLogin : handleSignUp}
+            className={styles.button}
+          >
             {login ? "Log In" : "Sign Up"}
           </button>
 
           <p>
-            {login ? "create a account?" : "already have an account?"}{" "}
-            <span onClick={() => setLogin(!login)}>
-              {login ? "SignUp" : "LogIn"}{" "}
+            {login ? "create a account?" : "already have an account?"}
+            <span onClick={handleLinkTxt} className={styles.link_txt}>
+              {login ? "SignUp" : "LogIn"}
             </span>
           </p>
         </form>

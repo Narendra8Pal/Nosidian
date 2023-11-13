@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
-
+import Link from "next/link";
 import Head from "next/head";
 //styles
 import styles from "@/styles/showcase.module.css";
@@ -9,17 +9,16 @@ import styles from "@/styles/showcase.module.css";
 export default function Home() {
   return (
     <div className={styles.container}>
-      {/* <Image
-src="/logo.png"
-width={400}
-height={157}
-/> */}
-
-      <img src="/logo.png" />
+      <img src="/logo2.png" />
 
       <div className={styles.head_btn}>
-        <h1 className={styles.heading}>get things done faster with Nosidian</h1>
-        <button className={styles.button}>let's begin</button>
+        <h1 className={styles.heading}>
+          get things done faster with Nosidian.
+        </h1>
+
+        <button className={styles.button}>
+          <Link href="/auth">let's begin </Link>
+        </button>
       </div>
 
       <div className={styles.preview}>
@@ -34,10 +33,8 @@ height={157}
       </div>
 
       <h1 className={styles.desc}>
-        get access to both block-editor and canvas at the same time
+        get access to both, block-editor and canvas at the same time
       </h1>
-
-      {/* <img src="/Ellipse-white.png" className={styles.eclipse_white} /> */}
 
       <div className={styles.preview}>
         <div className={styles.preview_screen}></div>
@@ -48,6 +45,18 @@ height={157}
           width={1029}
           height={579}
         />
+      </div>
+
+      <div className={styles.footer}>
+        <div className="flex space-x-2 h-7">
+          <Link href="https://github.com/Narendra8Pal">
+            <img src="/GitHub.png" className="cursor-pointer h-7" />
+          </Link>
+
+          <Link href="https://twitter.com/Narendra8Pal">
+            <img src="/TwitterX.png" className="cursor-pointer h-7" />
+          </Link>
+        </div>
       </div>
     </div>
   );
