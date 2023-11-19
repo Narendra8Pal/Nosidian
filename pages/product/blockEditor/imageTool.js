@@ -6,7 +6,7 @@ class SimpleImage {
 
     this.data = {
       url: data.url || "",
-      caption: data.caption || "",
+      // caption: data.caption || "",
       withBorder: data.withBorder !== undefined ? data.withBorder : false,
       withBackground:
         data.withBackground !== undefined ? data.withBackground : false,
@@ -57,14 +57,16 @@ class SimpleImage {
 
   render() {
     const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-    
+
     this.addImg = document.createElement("div");
     this.addImg.classList.add("img-box");
-    
+
     const showcaseSearch = document.createElement("div");
     showcaseSearch.classList.add("showcase-search");
     const showcaseInput = document.createElement("input");
     const query = "cars";
+    // const query = showcaseInput.value;
+
     showcaseInput.placeholder = "Search for an image...";
     showcaseInput.classList.add("showcase-input");
     showcaseSearch.appendChild(showcaseInput);
@@ -145,32 +147,33 @@ class SimpleImage {
     let imgUrlsArr = [];
     unsplashImgIcon.addEventListener("click", () => {
       // if (!imagesFetched) {
-        imagesFetched = true;
-        if (this.addImg.contains(embedLink)) {
-          this.addImg.removeChild(embedLink);
-        }
-        // if(imgUrlsArr.length < 10){
-        fetch(
-          `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            // imgShowcase.appendChild(data)
-            const imgUrls = data.results.map((result) => result.urls.regular);
-            imgUrlsArr = imgUrlsArr.concat(imgUrls);
-            for (const imgUrl of imgUrls) {
-              const imgShowcase = document.createElement("img");
-              imgShowcase.setAttribute("src", imgUrl);
-              this.wrapper.appendChild(imgShowcase);
+      imagesFetched = true;
+      if (this.addImg.contains(embedLink)) {
+        this.addImg.removeChild(embedLink);
+      }
+      // if(imgUrlsArr.length < 10){
 
-              imgShowcase.classList.add("unsplash-img");
-              this.addImg.appendChild(this.box);
-            }
-            console.log(data, "success bro");
-          })
-          .catch((error) => {
-            console.error("Error fetching photos:", error);
-          });
+      fetch(
+        `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // imgShowcase.appendChild(data)
+          const imgUrls = data.results.map((result) => result.urls.regular);
+          imgUrlsArr = imgUrlsArr.concat(imgUrls);
+          for (const imgUrl of imgUrls) {
+            const imgShowcase = document.createElement("img");
+            imgShowcase.setAttribute("src", imgUrl);
+            this.wrapper.appendChild(imgShowcase);
+
+            imgShowcase.classList.add("unsplash-img");
+            this.addImg.appendChild(this.box);
+          }
+          console.log(data, "success bro");
+        })
+        .catch((error) => {
+          console.error("Error fetching photos:", error);
+        });
       // }
       // }
     });
@@ -299,17 +302,17 @@ class SimpleImage {
 
   _unsplashCreateImg(url, captionText) {
     const image = document.createElement("img");
-    const caption = document.createElement("div")
-    caption.classList.add('caption')
+    const caption = document.createElement("div");
+    // caption.classList.add('caption')
     image.src = url;
-    caption.placeholder = "Caption..."
-    caption.contentEditable = true;
-    caption.value = captionText || "";
+    // caption.placeholder = "Caption..."
+    // caption.contentEditable = true;
+    // caption.value = captionText || "";
 
     // console.log(url, "this is unsplash create img url");
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
-    this.embedImg.appendChild(caption)
+    this.embedImg.appendChild(caption);
     this._acceptTuneView();
   }
 
@@ -317,15 +320,15 @@ class SimpleImage {
     const image = document.createElement("img");
     // const caption = document.createElement("input");
     const caption = document.createElement("div");
-    caption.classList.add("caption")
+    // caption.classList.add("caption")
     image.src = url;
-    caption.placeholder = "Caption...";
-    caption.contentEditable = true;
-    caption.value = captionText || "";
+    // caption.placeholder = "Caption...";
+    // caption.contentEditable = true;
+    // caption.value = captionText || "";
 
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
-    this.embedImg.appendChild(caption);
+    // this.embedImg.appendChild(caption);
     this._acceptTuneView();
   }
 
@@ -334,13 +337,13 @@ class SimpleImage {
 
     const image = blockContent.querySelector("img");
     // const caption = blockContent.querySelector("input");
-    const caption = blockContent.querySelector("[contenteditable]");
+    // const caption = blockContent.querySelector("[contenteditable]");
 
     // return {
     return Object.assign(this.data, {
       url: image.src,
       // caption: caption.value,
-      caption: caption.innerHTML || "",
+      // caption: caption.innerHTML || "",
       // };
     });
   }

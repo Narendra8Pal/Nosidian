@@ -43,7 +43,7 @@ const Canvas = () => {
   const [rfInstance, setRfInstance] = useState(null);
   const [canvasState, setCanvasState] = useState({});
   const [updatedNodesId, setUpdatedNodesId] = useState([]);
-  const [updatingNodeId, setUpdatingNodeId] = useState([]);
+  const [nodeToUpdate, setNodeToUpdate] = useState([]);
 
   const {
     nodesContext,
@@ -62,6 +62,9 @@ const Canvas = () => {
     setTextareaId,
     nodeItems,
     setNodeItems,
+    setGetTextContext,
+    getTextContext,
+    setCanvasDataContext,
   } = useContext(FilesConnect);
 
   const { setViewport } = useReactFlow();
@@ -114,16 +117,9 @@ const Canvas = () => {
     []
   );
 
-  const generateUniqueId = () => {
-    // const uniqueId = uuidv4();
-    // console.log(uniqueId)
-    uuidv4();
-  };
-  // const sourceTopId = generateUniqueId();
-  // const sourceLeftId = generateUniqueId();
-
   const handleCreateNode = async () => {
     try {
+      // const file_id = id;
       const newNode = {
         file_id: id,
         random_node_id: uuidv4(),
@@ -156,11 +152,13 @@ const Canvas = () => {
         console.log(data.message);
       } else {
         console.log("Failed to create node on the server");
+        console.log("newNOde:", newNode);
       }
       setNodes((prevNodes) => [...prevNodes, newNode]);
       setNodesContext((prevNodes) => [...prevNodes, newNode]);
       // setNodesId(newNode.id);
-      setNodeIdContext(newNode.id);
+      // setNodeIdContext(newNode.id);
+      setTextareaId(newNode.id);
       console.log(newNode.id, "handlecreatenode node id");
     } catch (error) {
       console.log("error creating a node", error);
@@ -179,7 +177,7 @@ const Canvas = () => {
         if (response.ok) {
           const nodesData = await response.json();
           console.log(nodesData, "handlenodeid response bro");
-          setNodesId(nodesData.id);
+          setNodesId(nodesData.id); // this could have issue because you are not mapping
         } else {
           console.error(response, "Error fetching canvas Data");
         }
@@ -192,26 +190,24 @@ const Canvas = () => {
 
   // useEffect(() => {
   const updateNodeValue = async () => {
-    console.log(textContext, " textcontext inside updatenodevalue in savebtn");
-    // const updateItems = { id: nodes.id, content: textContext };
-    // setNodeItems([...nodeItems, updateItems]);
-    
+    console.log(textContext, " textcontext inside updatenodevalue");
+
     let updatedData = {
       data: {
-        value: ""
+        value: "",
       },
       content: "",
     };
 
     nodes.forEach((node) => {
-      if (node.id === updatingNodeId) {
-        node.data.value = textContext
-        node.content = textContext
+      if (node.id === nodeToUpdate) {
+        node.data.value = textContext;
+        node.content = textContext;
         updatedData.data.value = node.data.value;
         updatedData.content = node.content;
       }
     });
-    
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_CANVAS_DATA}?id=${id}`,
@@ -230,7 +226,7 @@ const Canvas = () => {
         const updatedNode = await response.json();
         setNodes((prevNodes) => {
           const updatedNodes = prevNodes.map((node) => {
-            if (node.id === updatingNodeId) {
+            if (node.id === nodeToUpdate) {
               // adding updatedNodesId equals make no data avail when handle saved run
               return {
                 ...node,
@@ -259,12 +255,12 @@ const Canvas = () => {
 
   // },[rfInstance])
 
-  useEffect(() => {
-    if (rfInstance) {
-      const nodes = rfInstance.getNodes();
-      // console.log(nodes)
-    }
-  }, [updateNodeValue, rfInstance]);
+  // useEffect(() => {
+  //   if (rfInstance) {
+  //     const nodes = rfInstance.getNodes();
+  //     // console.log(nodes)
+  //   }
+  // }, [updateNodeValue, rfInstance]);
 
   useEffect(() => {
     // const gettingNodeById = () => {
@@ -276,11 +272,11 @@ const Canvas = () => {
         // const uniqueArray = new Set(updatedArray);
         // setUpdatedNodesId(uniqueArray);
         console.log(node.id, "id of this node");
-        setUpdatingNodeId(node.id);
+        setNodeToUpdate(node.id);
         setGetNodeContext(false);
-        console.log(node, "your node is here");
+        // console.log(node, "your node is here");
       } else {
-        console.log("get node don't get node");
+        console.log("get node doesn't get node");
       }
     } else {
       console.log(getNodeContext, "get node context is false");
@@ -306,6 +302,7 @@ const Canvas = () => {
   // };
 
   const handleSaveCanvas = useCallback(async () => {
+    console.log(rfInstance.toObject(), "toObject rfinstance");
     try {
       // await updateNodeValue();
       const file_id = id;
@@ -344,11 +341,21 @@ const Canvas = () => {
         if (response.ok) {
           const canvasData = await response.json();
           console.log(canvasData, "canvasData babe");
-          setCanvasState(canvasData);
           const { x = 0, y = 0, zoom = 1 } = canvasData.viewport;
           setNodes(canvasData.nodes || []);
           setEdges(canvasData.edges || []);
           setViewport({ x, y, zoom });
+          setCanvasDataContext(canvasData);
+          setNodesContext(canvasData.nodes || []);
+
+          // canvasData.nodes.forEach((node) => {
+          //   nodes.map((nude) => {
+          //     if (nude.id === node.id) {
+          //       setGetTextContext(node.content);
+          //       console.log(getTextContext, "setGetTextContext");
+          //     }
+          //   });
+          // });
         } else {
           console.error(response, "Error fetching canvas state");
         }
@@ -376,11 +383,6 @@ const Canvas = () => {
     // setEdges((prevEdges) => [...prevEdges, newEdge]);
     // console.log(newEdge.id, "handle createEdge func coming up");
   };
-
-  // const onConnect = useCallback(
-  //   (connection) => setEdges((eds) => addEdge(connection, eds)),
-  //   [setEdges]
-  // );
 
   // const onDeleteNode = () => {
   //   setNodes(nodes.filter((node) => !nodesId.includes(node.id)));

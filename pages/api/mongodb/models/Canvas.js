@@ -18,7 +18,7 @@ const CanvasSchema = new Schema({
   type: String,
   zIndex: Number,
   isConnectable: Boolean,
-  content: String,
+  content: Object,
 },
 );
 

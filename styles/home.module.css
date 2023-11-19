@@ -26,14 +26,6 @@
   @apply flex flex-col h-full mt-5 overflow-auto ml-14;
 }
 
-.showPane {
-  @apply flex justify-center;
-}
-
-.showPane img {
-  @apply p-1 rounded-md opacity-50 cursor-pointer hover:bg-home-gray hover:bg-opacity-50 hover:opacity-100;
-}
-
 .mainContent {
   @apply text-white cursor-pointer text-opacity-70;
 }
@@ -42,8 +34,8 @@
   @apply flex flex-row px-6 py-1 mx-3 rounded-md cursor-pointer my-2px hover:bg-home-gray hover:bg-opacity-30;
 }
 
-.nameBoxEmpty{
-@apply pb-10
+.nameBoxEmpty {
+  @apply pb-10;
 }
 
 .mainPane::-webkit-scrollbar {

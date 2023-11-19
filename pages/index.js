@@ -9,16 +9,18 @@ import styles from "@/styles/showcase.module.css";
 export default function Home() {
   return (
     <div className={styles.container}>
-      <img src="/logo2.png" />
+      <img src="/logo.png" />
 
       <div className={styles.head_btn}>
         <h1 className={styles.heading}>
           get things done faster with Nosidian.
         </h1>
 
-        <button className={styles.button}>
-          <Link href="/auth">let's begin </Link>
-        </button>
+        <Link href="/auth" className={styles.button}>
+          <button className="flex items-center h-full m-auto">
+            let's begin
+          </button>
+        </Link>
       </div>
 
       <div className={styles.preview}>

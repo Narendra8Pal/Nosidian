@@ -3,7 +3,7 @@
 }
 
 .saveIcon {
-  @apply px-2 py-2 border rounded-full shadow-md cursor-pointer shadow-black bg-home-left-pane border-home-gray hover:bg-body-normal; 
+  @apply px-2 py-2 text-xs text-white border rounded-full shadow-md cursor-pointer shadow-black bg-home-left-pane border-home-gray hover:bg-body-normal text-opacity-70;
 }
 
 .controls {

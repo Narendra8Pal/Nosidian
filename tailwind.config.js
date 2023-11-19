@@ -15,6 +15,7 @@ module.exports = {
       home:{
  'left-pane': "#212120",
  'gray': "#5e5e5e",
+ 'light-pink': "#dec0dd"
       },
       editor:{
         "btn-icon":"#c0c2c4",

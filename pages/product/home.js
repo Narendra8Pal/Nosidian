@@ -56,24 +56,23 @@ const home = () => {
   const handleSelectedFileName = (fileId, layout) => {
     setHoveredId(fileId);
     setSelectedFileId(fileId);
-    if(layout === "block"){
+    if (layout === "block") {
       router.push({
         pathname: process.env.NEXT_PUBLIC_EDITOR_COMPONENT,
         query: { id: fileId },
       });
-      }
-      else if(layout === "canvas"){
-        router.push({
-          pathname: process.env.NEXT_PUBLIC_CANVAS,
-          query: { id: fileId },
-        });
+    } else if (layout === "canvas") {
+      router.push({
+        pathname: process.env.NEXT_PUBLIC_CANVAS,
+        query: { id: fileId },
+      });
     }
   };
 
   useEffect(() => {
     const fetchingEditorFileId = () => {
       if (selectedEditorFileId) {
-        setHoveredId(selectedEditorFileId)
+        setHoveredId(selectedEditorFileId);
         setSelectedFileId(selectedEditorFileId);
       }
       setEditorIdFetched(false);
@@ -137,13 +136,11 @@ const home = () => {
         pathname: `/product/blockEditor/editorComponent`,
         query: { id: createdFileNameId },
       });
-    }
-
-    else if(createdFileNameId && createdFileNameLayout == "canvas"){
+    } else if (createdFileNameId && createdFileNameLayout == "canvas") {
       router.push({
         pathname: `/product/canvas/canvas`,
-        query: {id: createdFileNameId },
-      });    
+        query: { id: createdFileNameId },
+      });
     }
   }, [createdFileNameId]);
 
@@ -347,30 +344,21 @@ const home = () => {
         <div className={styles.innerPane}>
           <div className={styles.icons}>
             <img
-              src="/flow.png"
-              alt=""
-              value="canvas"
-              onClick={() => handleIcons("canvas")}
-            />
-            <img
-              src="/kanban.png"
-              alt=""
-              value="board"
-              onClick={() => handleIcons("board")}
-            />
-          </div>
-        </div>
-
-        <div className={styles.mainPane}>
-          <div className={styles.showPane}>
-            <img
               src="/create.png"
               alt=""
               value="block"
               onClick={() => handleIcons("block")}
             />
+            <img
+              src="/flow.png"
+              alt=""
+              value="canvas"
+              onClick={() => handleIcons("canvas")}
+            />
           </div>
+        </div>
 
+        <div className={styles.mainPane}>
           {fileList &&
             fileList
               .filter((files) => files.userId === cookUserId)
@@ -384,7 +372,9 @@ const home = () => {
                   key={files._id}
                   // onMouseEnter={() => setHoveredId(files._id)}
                   // onMouseLeave={() => setHoveredId(null)}
-                  onClick={() => handleSelectedFileName(files._id, files.layout)}
+                  onClick={() =>
+                    handleSelectedFileName(files._id, files.layout)
+                  }
                 >
                   <div className={styles.mainContent}>
                     <p>{files.fileName}</p>

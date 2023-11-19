@@ -22,8 +22,8 @@ function TextUpdaterNode() {
   const [leftLineHovered, setLeftLineHovered] = useState(false);
   const [rightLineHovered, setRightLineHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [text, setText] = useState("");
-  const [nodesObj, setNodesObj] = useState({});
+  const [text, setText] = useState([]);
+  const [nodeTexts, setNodeTexts] = useState([{}]);
 
   const nodeRef = useRef(null);
   const nodeId = useNodeId();
@@ -39,44 +39,48 @@ function TextUpdaterNode() {
     textareaId,
     nodeItems,
     setNodeItems,
+    getTextContext,
+    canvasDataContext,
   } = useContext(FilesConnect);
-
-  const onChange = useCallback((e) => {
-    const newText = e.target.value;
-    // console.log(newText);
-    setText(newText);
-    // setTextContext(newText);
-
-    nodesContext.forEach((node) => {
-      if (node.id === nodeIdContext) {
-        node.data.value = newText;
-        node.content = newText;
-        // setTextContext(node.data.value);
-        setTextContext(node.content);
-      }
-    });
+  
+  const addTextWithId = (newText, nodeId) => {
+    // setTextContext((prevText) => [...prevText,  newText]);
+    
+    setTextContext(newText);
+    setText((prevText) => [...prevText, newText]);
+    console.log(text,':text state')
+  };
+  
+  const onChange = useCallback((e, nodeId) => {
+    // const newText = { ...setTextContext, [nodeId]: e.target.value };
+    const newText = { [nodeId]: e.target.value };
+    console.log(newText);
+    setNodeTexts(newText);
+    // setTextContext((prev) => [...prev, newText]);
+    
+    addTextWithId(newText, nodeId);
   }, []);
-
+  
   const onInputDoubleClick = useCallback(() => {
     setIsInputFocused(true);
   }, []);
-
+  
   const onInputBlur = useCallback(() => {
     setIsInputFocused(false);
     // setIsActive(false)'
   }, []);
-
+  
   const onNodeResize = useCallback(() => {
     setNodeSize({ width: "100%", height: "100%" });
   }, []);
-
+  
   const handleDoubleClick = () => {
     setIsActive(true);
     console.log(nodeId, "NODE ID DOO CLICK");
     setNodeIdContext(nodeId);
     setGetNodeContext(true);
   };
-
+  
   const handleClickOutside = (e) => {
     if (nodeRef.current && !nodeRef.current.contains(e.target)) {
       setIsActive(false);
@@ -173,16 +177,25 @@ function TextUpdaterNode() {
       </div>
 
       <div className={CanvasStyles.nodeBox}>
-        <textarea
-          name="text"
-          id={nodeIdContext} // id is none when refreshed
-          onChange={onChange}
-          onBlur={onInputBlur}
-          onDoubleClick={handleDoubleClick}
-          ref={nodeRef}
-          readOnly={!isActive}
-          className={isActive ? "nodrag" : ""}
-        ></textarea>
+        {textContext && 
+          // .filter((nodes) => nodes.id === textareaId)
+          // .map((node, index) => (
+          //   <div key={uuidv4()}>
+              <textarea
+                name="text"
+                id={uuidv4()} 
+                onChange={(e) => onChange(e, nodeIdContext)}
+                // value={textContext[nodeIdContext] || ""}
+                value={text}
+                onBlur={onInputBlur}
+                onDoubleClick={handleDoubleClick}
+                ref={nodeRef}
+                readOnly={!isActive}
+                className={isActive ? "nodrag" : ""}
+              />
+            //  </div>
+          // ))
+          } 
 
         <div
           onMouseEnter={() => setTopLineHovered(true)}

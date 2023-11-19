@@ -17,6 +17,7 @@ const auth = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [visibility, setVisibility] = useState(false);
 
   const router = useRouter();
 
@@ -140,14 +141,22 @@ const auth = () => {
             className={styles.input}
           />
 
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="password"
-            required
-            className={styles.input}
-          />
+          <div className="relative">
+            <input
+              type={visibility ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="password"
+              required
+              className={styles.input}
+            />
+            <img
+              className={styles.pass_icon}
+              src={visibility ? "/hide.png" : "/visible.png"}
+              alt="visible_icon"
+              onClick={() => setVisibility(!visibility)}
+            />
+          </div>
 
           <button
             onClick={login ? handleLogin : handleSignUp}
@@ -156,8 +165,8 @@ const auth = () => {
             {login ? "Log In" : "Sign Up"}
           </button>
 
-          <p>
-            {login ? "create a account?" : "already have an account?"}
+          <p className={styles.last_txt}>
+            {login ? "don't have an account?" : "already have an account?"}
             <span onClick={handleLinkTxt} className={styles.link_txt}>
               {login ? "SignUp" : "LogIn"}
             </span>

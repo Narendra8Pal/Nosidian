@@ -3,38 +3,38 @@
 @tailwind utilities;
 
 body {
-  @apply bg-editor-body ;
+  @apply bg-editor-body;
   /* @apply bg-body-main-bg; */
 }
 
-body::-webkit-scrollbar{
-@apply w-2
+body::-webkit-scrollbar {
+  @apply w-2;
 }
 
-body::-webkit-scrollbar-thumb{
-@apply bg-editor-scrollbar 
+body::-webkit-scrollbar-thumb {
+  @apply bg-editor-scrollbar;
 }
 
 ::selection {
   @apply bg-home-gray;
 }
 
-.cdx-block{
+.cdx-block {
   @apply text-lg text-editor-text;
 }
 
-.ce-header{
-  @apply text-editor-text text-lg
+.ce-header {
+  @apply text-lg text-editor-text;
 }
 
-.ce-block__content h1{
-  @apply text-3xl font-bold
+.ce-block__content h1 {
+  @apply text-3xl font-bold;
 }
-.ce-block__content h2{
-  @apply text-2xl font-bold
+.ce-block__content h2 {
+  @apply text-2xl font-bold;
 }
-.ce-block__content h3{
-  @apply text-xl font-bold
+.ce-block__content h3 {
+  @apply text-xl font-bold;
 }
 
 .codex-editor__redactor {
@@ -79,38 +79,6 @@ body::-webkit-scrollbar-thumb{
   @apply bg-home-gray bg-opacity-20;
 }
 
-/* ! this is for the unsplash package for editorjs  */
-
-/* .inline-image__embed-button {
-  @apply bg-body-normal text-white rounded-sm !important
-} */
-
-/* .inline-image__tab{
-  @apply  active:text-body-normal active:border-none active:border-body-normal  !important
-} */
-
-/* .inline-image__tab.active {
-  border-width: 0 0 0 0 !important;
-} */
-
-/* .inline-image__tab{
-  @apply hover:bg-home-gray hover:bg-opacity-50 rounded-md !important
-} */
-
-/* .inline-image__control-panel{
-  all: unset;
-} */
-/* ! end of -- this is for the unsplash package for editorjs  */
-
-/* .simple-image {
-  padding: 20px 0;
-  grid-template-columns: auto auto auto ;
-  display: grid;
-  height: ;
-} */
-
-
-
 .simple-image input,
 .simple-image [contentEditable] {
   width: 100%;
@@ -126,73 +94,68 @@ body::-webkit-scrollbar-thumb{
   margin-bottom: 15px;
 } */
 
-
-
-.simple-image img{
+.simple-image img {
   /* @apply  mb-4 h-36 w-52 rounded-md cursor-pointer object-cover */
 }
 
-.simple-image{
-  @apply py-5 grid grid-cols-4 gap-x-3 bg-editor-imgShowcase p-6 rounded-md shadow-2xl
+.simple-image {
+  @apply grid grid-cols-4 p-6 py-5 rounded-md shadow-2xl gap-x-3 bg-editor-imgShowcase;
 }
 
+.unsplash-img {
+  @apply object-cover mb-4 rounded-md cursor-pointer h-28 w-36;
+}
 
-.unsplash-img{
-  @apply h-28 w-36 rounded-md cursor-pointer object-cover mb-4
-  }
-  
-
-.showcase-box{
-@apply h-96 overflow-y-auto rounded-md w-full 
+.showcase-box {
+  @apply w-full overflow-y-auto rounded-md h-96;
 }
 
 .showcase-box::-webkit-scrollbar {
-@apply w-1.5
+  @apply w-1.5;
 }
 
 .showcase-box::-webkit-scrollbar-thumb {
-  @apply bg-editor-scrollbar rounded-md
+  @apply rounded-md bg-editor-scrollbar;
 }
 
-.showcase-search{
-  @apply px-6 pt-1 flex 
+.showcase-search {
+  @apply flex px-6 pt-1;
 }
 
-.showcase-input{
-  @apply w-full bg-editor-scrollbar bg-opacity-40   text-editor-text outline-none focus:ring-2 focus:ring-pink-400 px-1 py-1 rounded-sm text-sm 
+.showcase-input {
+  @apply w-full px-1 py-1 text-sm rounded-sm outline-none bg-editor-scrollbar bg-opacity-40 text-editor-text focus:ring-2 focus:ring-white;
 }
 
-/* .showcase-btn{
-  @apply rounded-md bg-white hover:opacity-50 px-2 ml-2 font-semibold
-} */
-
-.embed-link{
-  @apply flex flex-col px-3 py-1 
+.showcase-btn {
+  @apply px-2 ml-2 font-normal bg-white rounded-md hover:opacity-90;
 }
 
-.linearBtn{
-@apply bg-gradient-to-r from-purple-500 to-pink-500
-hover:opacity-90 opacity-100
+.embed-link {
+  @apply flex flex-col px-3 py-1;
 }
 
-.embed-input{
-@apply p-1 outline-none rounded-sm mb-6  bg-editor-scrollbar bg-opacity-40 text-editor-text focus:ring-2 focus:ring-pink-400
+.linearBtn {
+  @apply font-medium text-black bg-white opacity-100 text-opacity-70 hover:opacity-90;
 }
 
-.embed-img img{
-  @apply mx-auto object-cover max-h-[800px] max-w-800 
+.embed-input {
+  @apply p-1 mb-6 rounded-sm outline-none bg-editor-scrollbar bg-opacity-40 text-editor-text focus:ring-2 focus:ring-white;
 }
 
-.embed-img{
-  @apply mx-auto 
+.embed-img img {
+  @apply mx-auto object-cover max-h-[800px] max-w-800;
 }
 
-.resize-icon{
-@apply absolute top-1/2 w-5 h-5 bg-cover bg-no-repeat  z-10 cursor-col-resize
+.embed-img {
+  @apply mx-auto;
 }
 
-.resizer{
-  @apply  absolute right-0 bottom-0 cursor-nwse-resize mx-auto
+.resize-icon {
+  @apply absolute z-10 w-5 h-5 bg-no-repeat bg-cover top-1/2 cursor-col-resize;
+}
+
+.resizer {
+  @apply absolute bottom-0 right-0 mx-auto cursor-nwse-resize;
 }
 
 .resizer::after {
@@ -200,24 +163,23 @@ hover:opacity-90 opacity-100
   position: absolute;
   bottom: 0;
   right: 0px;
-  width: 0px; 
-   height: 0px;
+  width: 0px;
+  height: 0px;
   border-top: 15px solid transparent;
   border-right: 15px solid #ffff;
   transform: rotate(0deg);
 }
 
-.resizable{
-@apply border-white border mx-auto relative  max-w-800 max-h-[800px] min-h-[100px] min-w-[100px]  overflow-hidden 
+.resizable {
+  @apply border-white border mx-auto relative  max-w-800 max-h-[800px] min-h-[100px] min-w-[100px]  overflow-hidden;
 }
 
-
-.caption{
- @apply text-white bg-editor-imgShowcase p-3 border-pink-400 border rounded 
+.caption {
+  @apply p-3 text-white border rounded bg-editor-imgShowcase border-body-normal;
 }
 
-.ce-code__textarea.cdx-input{
-  @apply bg-home-left-pane rounded-lg border-none text-editor-text
+.ce-code__textarea.cdx-input {
+  @apply border-none rounded-lg bg-home-left-pane text-editor-text;
 }
 
 /* .ce-code__textarea.cdx-input::-webkit-scrollbar{
@@ -232,11 +194,11 @@ hover:opacity-90 opacity-100
   @apply text-white 
 } */
 
-.embedLink-btn{
-@apply linearBtn text-white w-1/2 mx-auto py-1 rounded-md font-semibold shadow-md
+.embedLink-btn {
+  @apply w-1/2 py-1 mx-auto font-semibold rounded-md shadow-md linearBtn;
 }
 
-.ce-header{
+.ce-header {
   /* @apply text-6xl */
 }
 
@@ -245,19 +207,19 @@ hover:opacity-90 opacity-100
 }
 
 .uploadBtn {
-  @apply w-full px-2 py-1 mx-auto mb-2 text-white border border-white rounded-lg ;
+  @apply w-full px-2 py-1 mx-auto mb-2 text-white border border-white rounded-lg;
 }
 
-.upload-icons{
-  @apply flex w-full py-2 border-b mb-5
+.upload-icons {
+  @apply flex w-full py-2 mb-5 border-b;
 }
 
-.embedImg-icon{
-  @apply hover:bg-home-gray hover:rounded-md hover:px-2 hover:py-1 hover:bg-opacity-50 text-white px-2 py-1 cursor-pointer
+.embedImg-icon {
+  @apply px-2 py-1 text-white cursor-pointer hover:bg-home-gray hover:rounded-md hover:px-2 hover:py-1 hover:bg-opacity-50;
 }
 
-.unsplashImg-icon{
-  @apply hover:bg-home-gray hover:bg-opacity-50 text-white ml-3 hover:rounded-md hover:px-2 hover:py-1 px-2 py-1 cursor-pointer
+.unsplashImg-icon {
+  @apply px-2 py-1 ml-3 text-white cursor-pointer hover:bg-home-gray hover:bg-opacity-50 hover:rounded-md hover:px-2 hover:py-1;
 }
 
 /* ? this is for the render setting menu  */

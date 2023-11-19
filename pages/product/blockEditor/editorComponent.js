@@ -22,7 +22,7 @@ const EditorComponent = () => {
     deleteEditorFilename,
     setDeleteEditorFilename,
     setSelectedEditorFileId,
-    setEditorIdFetched
+    setEditorIdFetched,
   } = useContext(FilesConnect);
 
   const router = useRouter();
@@ -49,21 +49,14 @@ const EditorComponent = () => {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-        setSelectedEditorFileId(id)
-        setEditorIdFetched(true)
+      setSelectedEditorFileId(id);
+      setEditorIdFetched(true);
     }
   }, [id]);
 
   const handleSaveToServer = async (data) => {
-    // Handle saving data to the server
-    // also you can send the data to the server from here
     if (filenameContext !== "") {
       try {
-        // const jsonDataPromise = await data; // Call .save() on the instance
-        // const jsonData = await jsonDataPromise; // Resolve the Promise to get JSON data
-
-        // console.log(jsonData, "this is json data save server");
-        // console.log(filenameContext, "in filenameContext");
         const reqBody = {
           filename: filenameContext,
         };
@@ -184,8 +177,6 @@ const EditorComponent = () => {
         const jsonData = await response.json();
         setFetchedData(jsonData);
         setInitialData(jsonData);
-        // console.log("you have entered the fetchandsetData useEffect");
-        // console.log(jsonData, "this is for setinitialData AGAIN");
         setIsLoading(false);
         setIsDataChanged(false);
       } catch (error) {
@@ -246,9 +237,9 @@ const EditorComponent = () => {
           <button
             id="save-btn"
             onClick={handleSaveToServer}
-            className="text-white"
+            className={styles.btn}
           >
-            Save
+            Save Title
           </button>
 
           {initialData

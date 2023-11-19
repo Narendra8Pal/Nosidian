@@ -1,26 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-// import  {useNodeId} from "reactflow";
-// const UserContext = createContext();
-
-// export const UserProvider = ({ children }) => {
-//   const [userId, setUserId] = useState(null);
-
-//   const updateUser = (newUserId) => {
-//     setUserId(newUserId);
-//   };
-
-//   return (
-//     <UserContext.Provider value={{ userId, updateUser }}>
-//       {children}
-//     </UserContext.Provider>
-//   );
-// };
-
-// export const useUser = () => useContext(UserContext);
-
-// ! **********up until this******** 
-
-// for the editorComponent
 export const FilesConnect = createContext();
 
 export function FilenameProvider({ children }) {
@@ -33,10 +11,12 @@ export function FilenameProvider({ children }) {
   const [deleteNodesContext, setDeleteNodesContext ] = useState([])
   const [updateNodes, setUpdateNodes] = useState(false)
   const [nodeIdContext, setNodeIdContext] = useState([])
-  const [textContext, setTextContext] = useState("")
+  const [textContext, setTextContext] = useState([])
+  const [getTextContext, setGetTextContext] = useState([])
   const [getNodeContext, setGetNodeContext] = useState(false);
   const [textareaId, setTextareaId] = useState([])
   const [nodeItems, setNodeItems] = useState([]);
+  const [canvasDataContext, setCanvasDataContext] = useState({})
   // const nodeId = useNodeId();
 
   const onDeleteNode = () => {
@@ -73,7 +53,11 @@ export function FilenameProvider({ children }) {
     textareaId,
     setTextareaId,
     nodeItems,
-    setNodeItems
+    setNodeItems,
+    getTextContext,
+    setGetTextContext,
+    canvasDataContext,
+    setCanvasDataContext
   };
  
 

@@ -9,11 +9,12 @@ export default async function handler(req, res) {
       res.status(200).json({ message: "node created successfully" });
     } catch (error) {
       console.log(error, "error in post method");
+      res.status(500).json({ message: "Failed to update or create node." });
     }
   } else if (req.method === "PUT") {
     try {
-      const { data, content } = req.body;
-
+      const updatedData  = req.body;
+      console.log(updatedData, ": updatedData here");
       const { id } = req.query;
       const CanvasData = await Canvas.findOne({ file_id: id });
       const existingData = CanvasData.data.toolbarPosition;
@@ -23,17 +24,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "file not found" });
       }
 
-      const updatedData = {
+      const updatedDataServer = {
         data: {
-          value: data.value,
+          value: updatedData.data.value,
           toolbarPosition: existingData,
         },
-        content: content,
+        content: updatedData.content,
       };
 
       const textContext = await Canvas.findOneAndUpdate(
         { file_id: id },
-        { $set: updatedData },
+        { $set: updatedDataServer },
         { new: true }
       );
 
