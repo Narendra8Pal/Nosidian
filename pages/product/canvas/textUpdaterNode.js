@@ -13,6 +13,7 @@ import {
 import CanvasStyles from "@/styles/canvas.module.css";
 import { userContext } from "./canvas.js";
 import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
 function TextUpdaterNode() {
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -42,45 +43,45 @@ function TextUpdaterNode() {
     getTextContext,
     canvasDataContext,
   } = useContext(FilesConnect);
-  
+
   const addTextWithId = (newText, nodeId) => {
     // setTextContext((prevText) => [...prevText,  newText]);
-    
+
     setTextContext(newText);
     setText((prevText) => [...prevText, newText]);
-    console.log(text,':text state')
+    console.log(text, ":text state");
   };
-  
+
   const onChange = useCallback((e, nodeId) => {
     // const newText = { ...setTextContext, [nodeId]: e.target.value };
     const newText = { [nodeId]: e.target.value };
     console.log(newText);
     setNodeTexts(newText);
     // setTextContext((prev) => [...prev, newText]);
-    
+
     addTextWithId(newText, nodeId);
   }, []);
-  
+
   const onInputDoubleClick = useCallback(() => {
     setIsInputFocused(true);
   }, []);
-  
+
   const onInputBlur = useCallback(() => {
     setIsInputFocused(false);
     // setIsActive(false)'
   }, []);
-  
+
   const onNodeResize = useCallback(() => {
     setNodeSize({ width: "100%", height: "100%" });
   }, []);
-  
+
   const handleDoubleClick = () => {
     setIsActive(true);
     console.log(nodeId, "NODE ID DOO CLICK");
     setNodeIdContext(nodeId);
     setGetNodeContext(true);
   };
-  
+
   const handleClickOutside = (e) => {
     if (nodeRef.current && !nodeRef.current.contains(e.target)) {
       setIsActive(false);
@@ -107,11 +108,13 @@ function TextUpdaterNode() {
     >
       <NodeToolbar>
         <div className={CanvasStyles.nodeIconsBox}>
-          <img
+          <Image
             src="/nodeDelete.png"
             alt=""
             onClick={onDeleteNode}
             className={CanvasStyles.iconsHover}
+            width={16}
+            height={16}
           />
         </div>
       </NodeToolbar>
@@ -177,25 +180,27 @@ function TextUpdaterNode() {
       </div>
 
       <div className={CanvasStyles.nodeBox}>
-        {textContext && 
-          // .filter((nodes) => nodes.id === textareaId)
-          // .map((node, index) => (
-          //   <div key={uuidv4()}>
-              <textarea
-                name="text"
-                id={uuidv4()} 
-                onChange={(e) => onChange(e, nodeIdContext)}
-                // value={textContext[nodeIdContext] || ""}
-                value={text}
-                onBlur={onInputBlur}
-                onDoubleClick={handleDoubleClick}
-                ref={nodeRef}
-                readOnly={!isActive}
-                className={isActive ? "nodrag" : ""}
-              />
-            //  </div>
+        {
+          textContext && (
+            // .filter((nodes) => nodes.id === textareaId)
+            // .map((node, index) => (
+            //   <div key={uuidv4()}>
+            <textarea
+              name="text"
+              id={uuidv4()}
+              onChange={(e) => onChange(e, nodeIdContext)}
+              // value={textContext[nodeIdContext] || ""}
+              value={text}
+              onBlur={onInputBlur}
+              onDoubleClick={handleDoubleClick}
+              ref={nodeRef}
+              readOnly={!isActive}
+              className={isActive ? "nodrag" : ""}
+            />
+          )
+          //  </div>
           // ))
-          } 
+        }
 
         <div
           onMouseEnter={() => setTopLineHovered(true)}

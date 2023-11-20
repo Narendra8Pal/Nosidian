@@ -5,6 +5,7 @@ import { useState, useMemo, useContext, useEffect } from "react";
 import TextUpdaterNode from "./textUpdaterNode.js";
 import { FilesConnect } from "../userContext";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 // LIBRARIES
 import "reactflow/dist/style.css";
@@ -414,14 +415,14 @@ const Canvas = () => {
             className={canvasStyles.iconsBox}
             onClick={handleCreateNode}
           >
-            <img src="/createCanvas.png" alt="" />
+            <Image src="/createCanvas.png" alt="" width={28} height={28}/>
           </Panel>
           <Panel
             position="top-right"
             className={canvasStyles.saveIcon}
             onClick={handleSaveCanvas}
           >
-            <img src="/saveflow.png" alt="" />
+            <Image src="/saveflow.png" alt="" width={30} height={30}/>
           </Panel>
           <Panel
             position="top-left"

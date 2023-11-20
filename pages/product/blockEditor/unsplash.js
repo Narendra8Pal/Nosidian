@@ -18,9 +18,9 @@ function PhotoSearch() {
 
   return (
     <div>
-      {photos && photos.map(photo => (
+      {/* {photos && photos.map(photo => (
         <img key={photo.id} src={photo.urls.regular} className='w-1/12 h-1/6' alt={photo.alt_description} />
-      ))}
+      ))} */}
     </div>
   );
 }

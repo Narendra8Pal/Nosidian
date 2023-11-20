@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect, useContext } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Image from "next/image";
 //styles, files
 import styles from "@/styles/home.module.css";
 import ModelStyles from "@/styles/modal.module.css";
@@ -343,13 +344,17 @@ const home = () => {
       <div className={styles.leftPane}>
         <div className={styles.innerPane}>
           <div className={styles.icons}>
-            <img
+            <Image
+              width={28}
+              height={28}
               src="/create.png"
               alt=""
               value="block"
               onClick={() => handleIcons("block")}
             />
-            <img
+            <Image
+              width={28}
+              height={28}
               src="/flow.png"
               alt=""
               value="canvas"
@@ -382,12 +387,16 @@ const home = () => {
 
                   {hoveredId === files._id && (
                     <div className={styles.iconsHover}>
-                      <img
+                      <Image
+                        width={16}
+                        height={16}
                         src="/edit.png"
                         alt=""
                         onClick={() => handleEdit(files)}
                       />
-                      <img
+                      <Image
+                        width={16}
+                        height={16}
                         src="/delete.png"
                         alt=""
                         onClick={() => handleDelete(files._id)}
@@ -407,7 +416,7 @@ const home = () => {
             <div className={styles.layouts}>
               <div className={styles.canvasBox}>
                 <div className={styles.canvasImg}>
-                  <img
+                  <Image
                     src="/createCanvas.png"
                     alt=""
                     className={styles.layoutsIcons}
@@ -417,7 +426,7 @@ const home = () => {
               </div>
               <div className={styles.flowBox}>
                 <div className={styles.flowImg}>
-                  <img src="/flow.png" alt="" className={styles.layoutsIcons} />
+                  <Image src="/flow.png" alt="" className={styles.layoutsIcons} />
                 </div>
                 <p>enjoy making blocks</p>
               </div>

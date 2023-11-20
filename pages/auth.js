@@ -2,6 +2,7 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 //styles, files
 import styles from "@/styles/auth.module.css";
 // import { useUser } from "./product/userContext.js";
@@ -150,11 +151,13 @@ const auth = () => {
               required
               className={styles.input}
             />
-            <img
+            <Image
               className={styles.pass_icon}
               src={visibility ? "/hide.png" : "/visible.png"}
               alt="visible_icon"
               onClick={() => setVisibility(!visibility)}
+              width={20}
+              height={20}
             />
           </div>
 

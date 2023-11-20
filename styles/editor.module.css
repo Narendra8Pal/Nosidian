@@ -7,5 +7,5 @@
 }
 
 .btn {
-  @apply flex px-2 py-2 ml-auto text-xs text-white border rounded-full shadow-md cursor-pointer shadow-black bg-home-left-pane border-home-gray hover:bg-home-gray text-opacity-70 max-w-800 mr-96;
+  @apply flex px-2 py-2 mb-5 ml-auto text-xs text-white border rounded-full shadow-md cursor-pointer shadow-black bg-home-left-pane border-home-gray hover:bg-home-gray text-opacity-70 max-w-800 mr-96;
 }

@@ -9,7 +9,7 @@ import styles from "@/styles/showcase.module.css";
 export default function Home() {
   return (
     <div className={styles.container}>
-      <img src="/logo.png" />
+      <Image src="/logo.svg" height={330} width={1199} />
 
       <div className={styles.head_btn}>
         <h1 className={styles.heading}>
@@ -52,11 +52,21 @@ export default function Home() {
       <div className={styles.footer}>
         <div className="flex space-x-2 h-7">
           <Link href="https://github.com/Narendra8Pal">
-            <img src="/GitHub.png" className="cursor-pointer h-7" />
+            <Image
+              src="/GitHub.png"
+              className="cursor-pointer h-7"
+              width={28}
+              height={28}
+            />
           </Link>
 
           <Link href="https://twitter.com/Narendra8Pal">
-            <img src="/TwitterX.png" className="cursor-pointer h-7" />
+            <Image
+              width={28}
+              height={28}
+              src="/TwitterX.png"
+              className="cursor-pointer h-7"
+            />
           </Link>
         </div>
       </div>

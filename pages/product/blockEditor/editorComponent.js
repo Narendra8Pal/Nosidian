@@ -1,5 +1,6 @@
 // REACT, IMPORTS
 import React from "react";
+import Image from "next/image";
 import { useState, useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
 import { FilenameProvider } from "@/pages/product/userContext.js";
@@ -228,7 +229,12 @@ const EditorComponent = () => {
           <Home />
         </div>
         <div className="w-4/5">
-          <img src="/coverPage.png" className={styles.coverPage} />
+          <Image
+            src="/coverPage.png"
+            className={styles.coverPage}
+            width={1536}
+            height={256}
+          />
 
           <h1 className={styles.heading} contentEditable={true}>
             {filenameContext}
