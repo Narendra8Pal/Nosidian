@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 import cookies from "js-cookie";
 
-const auth = () => {
+const Auth = () => {
   const [login, setLogin] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -180,4 +180,4 @@ const auth = () => {
   );
 };
 
-export default auth;
+export default Auth;

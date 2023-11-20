@@ -13,7 +13,7 @@ import { FilesConnect, useFilename } from "./userContext.js";
 //libraries
 import { ToastContainer, toast } from "react-toastify";
 
-const home = () => {
+const Home = () => {
   const [fileName, setFileName] = useState("");
   const [fileList, setFileList] = useState([]);
   const [currentFileName, setCurrentFileName] = useState({});
@@ -442,4 +442,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;
