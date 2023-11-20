@@ -18,7 +18,7 @@ export default function Home() {
 
         <Link href="/auth" className={styles.button}>
           <button className="flex items-center h-full m-auto">
-            let's begin
+            let&apos;s begin
           </button>
         </Link>
       </div>
