@@ -234,6 +234,7 @@ const EditorComponent = () => {
             className={styles.coverPage}
             width={1536}
             height={256}
+            alt=""
           />
 
           <h1 className={styles.heading} contentEditable={true}>

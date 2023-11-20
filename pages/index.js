@@ -9,7 +9,7 @@ import styles from "@/styles/showcase.module.css";
 export default function Home() {
   return (
     <div className={styles.container}>
-      <Image src="/logo.svg" height={330} width={1199} />
+      <Image src="/logo.svg" height={330} width={1199} alt="" />
 
       <div className={styles.head_btn}>
         <h1 className={styles.heading}>
@@ -57,6 +57,7 @@ export default function Home() {
               className="cursor-pointer h-7"
               width={28}
               height={28}
+              alt=""
             />
           </Link>
 
@@ -66,6 +67,7 @@ export default function Home() {
               height={28}
               src="/TwitterX.png"
               className="cursor-pointer h-7"
+              alt=""
             />
           </Link>
         </div>
