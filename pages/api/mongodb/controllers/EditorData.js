@@ -61,7 +61,7 @@ export default async function handler(req, res) {
         const removeEditorFile = await Editor.deleteOne({ _id: _id });
         return res.status(200).json(removeEditorFile);
       } catch (error) {
-        console.log("Error deleting the Editor data:", err);
+        console.log("Error deleting the Editor data:", error);
         return res
           .status(500)
           .json({ message: "Error in deleting the editor data in server" });
