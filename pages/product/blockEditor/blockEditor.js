@@ -16,7 +16,6 @@ import Embed from "@editorjs/embed";
 import Quote from "@editorjs/quote";
 import ImageTool from "@editorjs/image";
 import Delimiter from "@editorjs/delimiter";
-import DragDrop from "editorjs-drag-drop";
 import InlineImage from "editorjs-inline-image";
 import CodeTool from "@editorjs/code";
 
@@ -32,8 +31,8 @@ const BlockEditor = ({
   const { filenameContext } = useContext(FilesConnect);
 
   useEffect(() => {
-    console.log(fetchedData, "fetch data state");
-    console.log(filenameContext, "filename in editor useeff");
+    // console.log(fetchedData, "fetch data state");
+    // console.log(filenameContext, "filename in editor useeff");
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = new EditorJS({
         holder: editorRef.current,
@@ -70,7 +69,7 @@ const BlockEditor = ({
             inlineToolbar: true,
           },
 
-          delimiter: Delimiter,
+          // delimiter: Delimiter,
         },
 
         data: {

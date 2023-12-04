@@ -313,7 +313,6 @@ class SimpleImage {
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
     this.embedImg.appendChild(caption);
-    this._acceptTuneView();
   }
 
   _createImage(url, captionText) {
@@ -329,7 +328,6 @@ class SimpleImage {
     this.embedImg.innerHTML = "";
     this.embedImg.appendChild(image);
     // this.embedImg.appendChild(caption);
-    this._acceptTuneView();
   }
 
   save(blockContent) {
@@ -384,40 +382,9 @@ class SimpleImage {
   }
 
   _toggleTune(tune) {
-    // console.log('Image tune clicked', tune);
     this.data[tune] = !this.data[tune];
-    this._acceptTuneView();
   }
 
-  _acceptTuneView() {
-    this.settings.forEach((tune) => {
-      this.embedImg.classList.toggle(tune.name, !!this.data[tune.name]);
-
-      if (tune.name === "stretched") {
-        this.api.blocks.stretchBlock(
-          this.api.blocks.getCurrentBlockIndex(),
-          !this.data.stretched
-        );
-      }
-    });
-  }
-
-  // _acceptTuneView() {
-  //   this.settings.forEach((tune) => {
-  //     if (tune.name === "stretched") {
-  //       const currentIndex = this.api.blocks.getCurrentBlockIndex();
-  //       const block = this.api.blocks.getBlockByIndex(currentIndex);
-  //       if (block && block.type === "image") {
-  //         this.api.blocks.updateBlock(currentIndex, {
-  //           data: {
-  //             ...block.data,
-  //             stretched: !this.data.stretched,
-  //           },
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
 }
 
 export default SimpleImage;

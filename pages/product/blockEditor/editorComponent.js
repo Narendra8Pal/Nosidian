@@ -75,7 +75,7 @@ const EditorComponent = () => {
         setIsDataChanged(true);
         // setShowFilteredData(true);
       } catch (error) {
-        console.error("Error saving document", error);
+        // console.error("Error saving document", error);
       }
     }
   };
@@ -130,7 +130,7 @@ const EditorComponent = () => {
         setIsDataChanged(true);
         setUpdateEditorFilename(false);
       } catch (error) {
-        console.error("Error saving document", error);
+        // console.error("Error saving document", error);
       }
     };
     handleUpdateToEditor();
@@ -229,15 +229,21 @@ const EditorComponent = () => {
           <Home />
         </div>
         <div className="w-4/5">
-          <Image
+          {/* cover page functionality  */}
+          {/* <Image
             src="/coverPage.png"
             className={styles.coverPage}
             width={1536}
             height={256}
             alt=""
-          />
+            priority={true}
+          /> */}
 
-          <h1 className={styles.heading} contentEditable={true}>
+          <h1
+            className={styles.heading}
+            contentEditable={true}
+            suppressContentEditableWarning={true}
+          >
             {filenameContext}
           </h1>
 

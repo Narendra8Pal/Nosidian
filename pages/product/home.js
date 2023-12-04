@@ -351,6 +351,7 @@ const Home = () => {
               alt=""
               value="block"
               onClick={() => handleIcons("block")}
+              priority={true}
             />
             <Image
               width={28}
@@ -359,6 +360,7 @@ const Home = () => {
               alt=""
               value="canvas"
               onClick={() => handleIcons("canvas")}
+              priority={true}
             />
           </div>
         </div>

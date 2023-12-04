@@ -9,7 +9,7 @@ import styles from "@/styles/showcase.module.css";
 export default function Home() {
   return (
     <div className={styles.container}>
-      <Image src="/logo.svg" height={330} width={1199} alt="" />
+      <Image src="/logo.svg" height={330} width={1199} alt="" priority={true} />
 
       <div className={styles.head_btn}>
         <h1 className={styles.heading}>

@@ -3,7 +3,7 @@
 }
 
 .heading {
-  @apply mt-32 mr-auto text-4xl font-bold border-none outline-none ml-363px text-editor-text max-w-800;
+  @apply mt-16 mr-auto text-4xl font-bold border-none outline-none ml-363px text-editor-text max-w-800;
 }
 
 .btn {
