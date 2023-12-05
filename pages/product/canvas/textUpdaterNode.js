@@ -1,7 +1,7 @@
 // REACT, files, styles
 import { useState, useContext, useEffect, useRef } from "react";
 import { useCallback, memo } from "react";
-import { FilesConnect } from "../userContext.js";
+import { FilesConnect } from "../../userContext.js";
 import {
   Handle,
   Position,

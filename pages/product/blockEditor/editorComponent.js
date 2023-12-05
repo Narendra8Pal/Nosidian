@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { useState, useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
-import { FilesConnect } from "../userContext.js";
+import { FilesConnect } from "../../userContext.js";
 import { useRouter } from "next/router";
 import styles from "@/styles/editor.module.css";
 
