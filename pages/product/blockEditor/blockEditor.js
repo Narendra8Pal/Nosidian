@@ -2,7 +2,7 @@
 // import React, { useContext, useEffect, useRef, useState } from "react";
 // import styles from "@/styles/editor.module.css";
 // import SimpleImage from "./imageTool";
-// import { FilesConnect } from "@/pages/product/userContext.js";
+// import { FilesConnect } from "../userContext.js";
 
 // // library
 // import EditorJS from "@editorjs/editorjs";
