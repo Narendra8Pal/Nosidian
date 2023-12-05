@@ -152,3 +152,14 @@
 // };
 
 // export default BlockEditor;
+
+
+import React from 'react'
+
+const BlockEditor = () => {
+  return (
+    <div></div>
+  )
+}
+
+export default BlockEditor
