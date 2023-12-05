@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 export const FilesConnect = createContext();
 
-export function FilesConnect({ children }) {
+export function FilenameProvider({ children }) {
   const [filenameContext, setFilenameContext] = useState('');
   const [updateEditorFilename, setUpdateEditorFilename] = useState(false)
   const [deleteEditorFilename, setDeleteEditorFilename] = useState(false)
@@ -67,7 +67,4 @@ export function FilesConnect({ children }) {
     </FilesConnect.Provider>
   );
 }
-// export const  useFilename = () => {
-//   return useContext(FilesConnect);
-// }
 
