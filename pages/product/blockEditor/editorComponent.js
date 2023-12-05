@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import { useState, useEffect, useRef, useContext } from "react";
 import dynamic from "next/dynamic";
-import { FilenameProvider } from "@/pages/product/userContext.js";
 import { FilesConnect, useFilename } from "@/pages/product/userContext.js";
 import { useRouter } from "next/router";
 import styles from "@/styles/editor.module.css";
@@ -222,7 +221,6 @@ const EditorComponent = () => {
 
   return (
     <>
-      {/* <FilenameProvider> */}
       <div className="flex">
         <div className="w-1/5">
           <Home />
@@ -274,7 +272,6 @@ const EditorComponent = () => {
             ))} */}
         </div>
       </div>
-      {/* </FilenameProvider> */}
     </>
   );
 };
