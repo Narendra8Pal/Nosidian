@@ -1,5 +1,3 @@
-import PhotoSearch from "./unsplash";
-import { useGesture } from "@use-gesture/react";
 class SimpleImage {
   constructor({ data, api, block }) {
     // this.data = data;

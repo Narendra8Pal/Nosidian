@@ -9,7 +9,7 @@ import styles from "@/styles/editor.module.css";
 
 // LIBRARIES
 import Home from "@/pages/product/home.js";
-const EditorWidget = dynamic(import("./blockEditor.js"), { ssr: false }); // it will be executed on the client side after the initial page load (working with DOM)
+const EditorWidget = dynamic(import("../../../utils/blockEditor.js"), { ssr: false }); // it will be executed on the client side after the initial page load (working with DOM)
 
 const EditorComponent = () => {
   const editorInstanceRef = useRef(null);
@@ -252,7 +252,7 @@ const EditorComponent = () => {
             Save Title
           </button>
 
-          {/* {initialData
+          {initialData
             .filter((item) => item.filename === filenameContext)
             .map((filteredItem) => (
               <div key={filteredItem.filename}>
@@ -269,7 +269,7 @@ const EditorComponent = () => {
                   />
                 )}
               </div>
-            ))} */}
+            ))}
         </div>
       </div>
     </>

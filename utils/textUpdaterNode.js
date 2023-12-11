@@ -1,7 +1,7 @@
 // REACT, files, styles
 import { useState, useContext, useEffect, useRef } from "react";
 import { useCallback, memo } from "react";
-import { FilesConnect } from "../../../utils/userContext.js";
+import { FilesConnect } from "./userContext.js";
 import {
   Handle,
   Position,
@@ -11,7 +11,6 @@ import {
   NodeToolbar,
 } from "reactflow";
 import CanvasStyles from "@/styles/canvas.module.css";
-import { userContext } from "./canvas.js";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 

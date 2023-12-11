@@ -2,7 +2,7 @@
 import Home from "../home";
 import canvasStyles from "@/styles/canvas.module.css";
 import { useState, useMemo, useContext, useEffect } from "react";
-import TextUpdaterNode from "./textUpdaterNode.js";
+import TextUpdaterNode from "../../../utils/textUpdaterNode.js";
 import { FilesConnect } from "../../../utils/userContext.js";
 import { useRouter } from "next/router";
 import Image from "next/image";
