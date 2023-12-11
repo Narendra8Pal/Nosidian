@@ -393,56 +393,56 @@ const Canvas = () => {
     <>
       <Home />
 
-      {/* <ReactFlowProvider> */}
-      <div style={{ width: "80vw", height: "100vh" }} className="float-right">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onEdgeUpdate={onEdgeUpdate}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          proOptions={proOptions}
-          deleteKeyCode={null}
-          onInit={setRfInstance}
-          // onDeleteNode={onDeleteNode}
-          // fitView
-          // connectionMode={ConnectionMode.Loose}
-        >
-          <Panel
-            position="bottom-center"
-            className={canvasStyles.iconsBox}
-            onClick={handleCreateNode}
+      <ReactFlowProvider>
+        <div style={{ width: "80vw", height: "100vh" }} className="float-right">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onEdgeUpdate={onEdgeUpdate}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            proOptions={proOptions}
+            deleteKeyCode={null}
+            onInit={setRfInstance}
+            // onDeleteNode={onDeleteNode}
+            // fitView
+            // connectionMode={ConnectionMode.Loose}
           >
-            <Image src="/createCanvas.png" alt="" width={28} height={28}/>
-          </Panel>
-          <Panel
-            position="top-right"
-            className={canvasStyles.saveIcon}
-            onClick={handleSaveCanvas}
-          >
-            <Image src="/saveflow.png" alt="" width={30} height={30}/>
-          </Panel>
-          <Panel
-            position="top-left"
-            className={canvasStyles.saveIcon}
-            onClick={updateNodeValue}
-          >
-            update
-          </Panel>
-          <Controls position="bottom-left" />
+            <Panel
+              position="bottom-center"
+              className={canvasStyles.iconsBox}
+              onClick={handleCreateNode}
+            >
+              <Image src="/createCanvas.png" alt="" width={28} height={28} />
+            </Panel>
+            <Panel
+              position="top-right"
+              className={canvasStyles.saveIcon}
+              onClick={handleSaveCanvas}
+            >
+              <Image src="/saveflow.png" alt="" width={30} height={30} />
+            </Panel>
+            <Panel
+              position="top-left"
+              className={canvasStyles.saveIcon}
+              onClick={updateNodeValue}
+            >
+              update
+            </Panel>
+            <Controls position="bottom-left" />
 
-          <MiniMap
-            nodeColor={"#FFFFFF"}
-            // nodeStrokeColor={'#7649e6"'}
-            // maskColor={"red"}
-            style={{ backgroundColor: "#1a1916" }}
-          />
-          <Background variant="" gap={12} size={1} />
-        </ReactFlow>
-      </div>
-      {/* </ReactFlowProvider> */}
+            <MiniMap
+              nodeColor={"#FFFFFF"}
+              // nodeStrokeColor={'#7649e6"'}
+              // maskColor={"red"}
+              style={{ backgroundColor: "#1a1916" }}
+            />
+            <Background variant="" gap={12} size={1} />
+          </ReactFlow>
+        </div>
+      </ReactFlowProvider>
     </>
   );
 };
