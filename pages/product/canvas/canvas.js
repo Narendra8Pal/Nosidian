@@ -27,10 +27,7 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
 } from "reactflow";
-import Draggable, { DraggableCore } from "react-draggable";
-import { useDrag } from "@use-gesture/react";
 import { v4 as uuidv4 } from "uuid";
-import { Send_Flowers } from "next/font/google";
 
 // const userContext = createContext();
 

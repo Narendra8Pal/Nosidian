@@ -118,8 +118,6 @@ const Home = () => {
         setFileName("");
         fetchData();
         setFilenameContext(fileName); // in inputchange it was (filename) visible under the modal
-        // console.log(filenameContext, "filename context");
-        // console.log(fileList, "this list from createfile func");
       } catch (error) {
         // console.log(error, "err in try catch shiva");
       }
@@ -138,7 +136,7 @@ const Home = () => {
       });
     } else if (createdFileNameId && createdFileNameLayout == "canvas") {
       router.push({
-        pathname: `/product/canvas/canvas`,
+        pathname: `/product/canvas/canvasProvider`,
         query: { id: createdFileNameId },
       });
     }

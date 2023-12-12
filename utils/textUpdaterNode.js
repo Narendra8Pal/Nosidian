@@ -48,13 +48,13 @@ function TextUpdaterNode() {
 
     setTextContext(newText);
     setText((prevText) => [...prevText, newText]);
-    console.log(text, ":text state");
+    // console.log(text, ":text state");
   };
 
   const onChange = useCallback((e, nodeId) => {
     // const newText = { ...setTextContext, [nodeId]: e.target.value };
     const newText = { [nodeId]: e.target.value };
-    console.log(newText);
+    // console.log(newText);
     setNodeTexts(newText);
     // setTextContext((prev) => [...prev, newText]);
 
@@ -189,7 +189,7 @@ function TextUpdaterNode() {
               id={uuidv4()}
               onChange={(e) => onChange(e, nodeIdContext)}
               // value={textContext[nodeIdContext] || ""}
-              value={text}
+              // value={text}
               onBlur={onInputBlur}
               onDoubleClick={handleDoubleClick}
               ref={nodeRef}
