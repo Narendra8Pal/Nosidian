@@ -1,11 +1,11 @@
-import ReactFlow, { ReactFlowProvider } from "reactflow";
+import { ReactFlowProvider } from "reactflow";
 import Canvas from "./canvas.js";
 
-const canvasProvider = () => {
+const canvasProvider = (props) => {
   return (
     <>
       <ReactFlowProvider>
-      <Canvas />
+        <Canvas {...props} />
       </ReactFlowProvider>
     </>
   );
