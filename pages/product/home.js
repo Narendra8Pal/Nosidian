@@ -7,7 +7,7 @@ import Image from "next/image";
 //styles, files
 import styles from "@/styles/home.module.css";
 import ModelStyles from "@/styles/modal.module.css";
-import Modal from "../components/Modal";
+import Modal from "../../utils/Modal.js";
 import { FilesConnect } from "../../utils/userContext.js";
 //libraries
 import { ToastContainer, toast } from "react-toastify";

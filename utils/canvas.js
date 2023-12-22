@@ -1,9 +1,9 @@
 //styles, files, REACT
-import Home from "../home";
+import Home from "../pages/product/home";
 import canvasStyles from "@/styles/canvas.module.css";
 import { useState, useMemo, useContext, useEffect } from "react";
-import TextUpdaterNode from "../../../utils/textUpdaterNode.js";
-import { FilesConnect } from "../../../utils/userContext.js";
+import TextUpdaterNode from "./textUpdaterNode.js";
+import { FilesConnect } from "./userContext.js";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
@@ -11,7 +11,6 @@ import Image from "next/image";
 import "reactflow/dist/style.css";
 import React, { useCallback, createContext } from "react";
 import ReactFlow, {
-  ReactFlowProvider,
   MiniMap,
   Controls,
   Background,
@@ -34,7 +33,7 @@ import { v4 as uuidv4 } from "uuid";
 const proOptions = { hideAttribution: true };
 const nodeTypes = { textUpdater: TextUpdaterNode }; // it will rerender if used inside the component
 
-const Canvas = (props) => {
+const Canvas = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [nodesId, setNodesId] = useState([]);
