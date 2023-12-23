@@ -103,7 +103,7 @@ const Home = () => {
         });
 
         const fileData = await res.json();
-        console.log("fetchData:", fileData);
+        // console.log("fetchData:", fileData);
         // console.log("req body:", reqBody);
         setCreatedFileNameId(fileData._id);
         setCreatedFileNameLayout(fileData.layout);
@@ -136,7 +136,7 @@ const Home = () => {
       });
     } else if (createdFileNameId && createdFileNameLayout == "canvas") {
       router.push({
-        pathname: `/product/canvas/canvasProvider`,
+        pathname: process.env.NEXT_PUBLIC_CANVAS,
         query: { id: createdFileNameId },
       });
     }

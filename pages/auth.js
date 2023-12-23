@@ -33,7 +33,7 @@ const Auth = () => {
       password: password,
       verificationToken: verificationToken,
     };
-    const response = await fetch("/api/mongodb/controllers/auth", {
+    const response = await fetch(process.env.NEXT_PUBLIC_AUTH, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const Auth = () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data); // Handle successful response
+      // console.log(data); // Handle successful response
       inputEmpty();
       toast("Verification link has been sent to your email");
     } else {
@@ -57,7 +57,7 @@ const Auth = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/mongodb/controllers/auth", {
+      const response = await fetch(process.env.NEXT_PUBLIC_AUTH, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const Auth = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      console.log(data, "data from login in try catch");
+      // console.log(data, "data from login in try catch");
 
       setEmail("");
       setPassword("");

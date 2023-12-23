@@ -145,18 +145,18 @@ const Canvas = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(uuidv4(), "checking uuidv4");
-        console.log(data.message);
+        // console.log(uuidv4(), "checking uuidv4");
+        // console.log(data.message);
       } else {
-        console.log("Failed to create node on the server");
-        console.log("newNOde:", newNode);
+        // console.log("Failed to create node on the server");
+        // console.log("newNOde:", newNode);
       }
       setNodes((prevNodes) => [...prevNodes, newNode]);
       setNodesContext((prevNodes) => [...prevNodes, newNode]);
       // setNodesId(newNode.id);
       // setNodeIdContext(newNode.id);
       setTextareaId(newNode.id);
-      console.log(newNode.id, "handlecreatenode node id");
+      // console.log(newNode.id, "handlecreatenode node id");
     } catch (error) {
       console.log("error creating a node", error);
     }
@@ -173,7 +173,6 @@ const Canvas = () => {
         );
         if (response.ok) {
           const nodesData = await response.json();
-          console.log(nodesData, "handlenodeid response bro");
           setNodesId(nodesData.id); // this could have issue because you are not mapping
         } else {
           console.error(response, "Error fetching canvas Data");
@@ -187,8 +186,6 @@ const Canvas = () => {
 
   // useEffect(() => {
   const updateNodeValue = async () => {
-    console.log(textContext, " textcontext inside updatenodevalue");
-
     let updatedData = {
       data: {
         value: "",
@@ -238,9 +235,6 @@ const Canvas = () => {
           });
           return updatedNodes;
         });
-        console.log("RESPONSE Updated node:", updatedNode);
-        console.log(textContext, "textcontext");
-        console.log(nodeItems);
       } else {
         console.error(response.status, "error in put request");
       }
@@ -268,7 +262,6 @@ const Canvas = () => {
         // updatedArray.push(node.id);
         // const uniqueArray = new Set(updatedArray);
         // setUpdatedNodesId(uniqueArray);
-        console.log(node.id, "id of this node");
         setNodeToUpdate(node.id);
         setGetNodeContext(false);
         // console.log(node, "your node is here");
@@ -276,7 +269,7 @@ const Canvas = () => {
         console.log("get node doesn't get node");
       }
     } else {
-      console.log(getNodeContext, "get node context is false");
+      // console.log(getNodeContext, "get node context is false");
     }
     // };
     // gettingNodeById();
@@ -299,7 +292,6 @@ const Canvas = () => {
   // };
 
   const handleSaveCanvas = useCallback(async () => {
-    console.log(rfInstance.toObject(), "toObject rfinstance");
     try {
       // await updateNodeValue();
       const file_id = id;
@@ -326,7 +318,6 @@ const Canvas = () => {
   }, [rfInstance, id]);
 
   useEffect(() => {
-    console.log(rfInstance, "rfinstance in get method");
     const restoreFlow = async () => {
       try {
         const response = await fetch(
@@ -389,7 +380,7 @@ const Canvas = () => {
     <>
       <Home />
 
-      <div style={{ width: "80vw", height: "100vh" }} className="float-right">
+      <div style={{ width: "80vw", height: "100vh", float: "right" }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

@@ -167,7 +167,6 @@ class SimpleImage {
             imgShowcase.classList.add("unsplash-img");
             this.addImg.appendChild(this.box);
           }
-          console.log(data, "success bro");
         })
         .catch((error) => {
           console.error("Error fetching photos:", error);
@@ -382,7 +381,6 @@ class SimpleImage {
   _toggleTune(tune) {
     this.data[tune] = !this.data[tune];
   }
-
 }
 
 export default SimpleImage;

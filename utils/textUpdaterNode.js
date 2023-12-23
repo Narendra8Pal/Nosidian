@@ -76,7 +76,6 @@ function TextUpdaterNode() {
 
   const handleDoubleClick = () => {
     setIsActive(true);
-    console.log(nodeId, "NODE ID DOO CLICK");
     setNodeIdContext(nodeId);
     setGetNodeContext(true);
   };
