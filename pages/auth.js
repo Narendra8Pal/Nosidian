@@ -74,7 +74,6 @@ const Auth = () => {
         cookies.set("token", data.token, {
           expires: 7,
           path: "/",
-          domain: "localhost:3000",
           domain: "nosidian.vercel.app",
           secure: process.env.NODE_ENV === "production" ? true : false,
         });
