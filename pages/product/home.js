@@ -38,6 +38,9 @@ const Home = () => {
     selectedEditorFileId,
     editorIdFetched,
     setEditorIdFetched,
+    selectedCanvasFileId,
+    setCanvasIdFetched,
+    canvasIdFetched,
   } = useContext(FilesConnect);
   const router = useRouter();
 
@@ -71,7 +74,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchingEditorFileId = () => {
-      if (selectedEditorFileId) {
+      if (selectedEditorFileId && selectedCanvasFileId === false) {
         setHoveredId(selectedEditorFileId);
         setSelectedFileId(selectedEditorFileId);
       }
@@ -79,6 +82,18 @@ const Home = () => {
     };
     fetchingEditorFileId();
   }, [selectedFileId, editorIdFetched]);
+
+  useEffect(() => {
+    const fetchingCanvasFileId = () => {
+      if (selectedCanvasFileId && selectedEditorFileId === false) {
+        console.log(selectedCanvasFileId);
+        setHoveredId(selectedCanvasFileId);
+        setSelectedFileId(selectedCanvasFileId);
+      }
+      setCanvasIdFetched(false);
+    };
+    fetchingCanvasFileId();
+  }, [selectedFileId, selectedCanvasFileId]);
 
   const handleTitleInputChange = (e) => {
     setFileName(e.target.value);

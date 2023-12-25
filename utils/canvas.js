@@ -62,6 +62,8 @@ const Canvas = () => {
     setGetTextContext,
     getTextContext,
     setCanvasDataContext,
+    setSelectedCanvasFileId,
+    setCanvasIdFetched,
   } = useContext(FilesConnect);
 
   const { setViewport } = useReactFlow();
@@ -180,6 +182,8 @@ const Canvas = () => {
       } catch (error) {
         console.log(error, "error in handlenodeid");
       }
+      setSelectedCanvasFileId(id);
+      setCanvasIdFetched(true);
     };
     handleNodeId();
   }, [id]);

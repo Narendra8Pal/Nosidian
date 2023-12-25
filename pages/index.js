@@ -26,7 +26,7 @@ export default function Home() {
       <div className={styles.preview}>
         <div className={styles.preview_screen}></div>
         <Image
-          src="/canvas-screen.png"
+          src="/canvas-screen1.png"
           alt="canvas"
           className={styles.screen_img1}
           width={1029}
@@ -41,7 +41,7 @@ export default function Home() {
       <div className={styles.preview}>
         <div className={styles.preview_screen}></div>
         <Image
-          src="/block-screen.png"
+          src="/block-screen2.png"
           alt="block-editor"
           className={styles.screen_img2}
           width={1029}

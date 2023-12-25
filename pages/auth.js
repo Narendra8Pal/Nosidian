@@ -75,10 +75,9 @@ const Auth = () => {
           expires: 7,
           path: "/",
           domain: "localhost:3000",
+          domain: "nosidian.vercel.app",
           secure: process.env.NODE_ENV === "production" ? true : false,
         });
-        // updateUser(data.userId);
-        // console.log(data.userId);
         router.push("/product/home");
       } else {
         console.error(data.message);

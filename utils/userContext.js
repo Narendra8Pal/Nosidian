@@ -1,30 +1,38 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 export const FilesConnect = createContext();
 
 export function FilenameProvider({ children }) {
-  const [filenameContext, setFilenameContext] = useState('');
-  const [updateEditorFilename, setUpdateEditorFilename] = useState(false)
-  const [deleteEditorFilename, setDeleteEditorFilename] = useState(false)
-  const [selectedEditorFileId, setSelectedEditorFileId] = useState("")
-  const [editorIdFetched, setEditorIdFetched] = useState(false)
-  const [nodesContext, setNodesContext ] = useState([])
-  const [deleteNodesContext, setDeleteNodesContext ] = useState([])
-  const [updateNodes, setUpdateNodes] = useState(false)
-  const [nodeIdContext, setNodeIdContext] = useState([])
-  const [textContext, setTextContext] = useState([])
-  const [getTextContext, setGetTextContext] = useState([])
+  const [filenameContext, setFilenameContext] = useState("");
+  const [updateEditorFilename, setUpdateEditorFilename] = useState(false);
+  const [deleteEditorFilename, setDeleteEditorFilename] = useState(false);
+  const [selectedEditorFileId, setSelectedEditorFileId] = useState("");
+  const [editorIdFetched, setEditorIdFetched] = useState(false);
+  const [nodesContext, setNodesContext] = useState([]);
+  const [deleteNodesContext, setDeleteNodesContext] = useState([]);
+  const [updateNodes, setUpdateNodes] = useState(false);
+  const [nodeIdContext, setNodeIdContext] = useState([]);
+  const [textContext, setTextContext] = useState([]);
+  const [getTextContext, setGetTextContext] = useState([]);
   const [getNodeContext, setGetNodeContext] = useState(false);
-  const [textareaId, setTextareaId] = useState([])
+  const [textareaId, setTextareaId] = useState([]);
   const [nodeItems, setNodeItems] = useState([]);
-  const [canvasDataContext, setCanvasDataContext] = useState({})
+  const [canvasDataContext, setCanvasDataContext] = useState({});
+  const [selectedCanvasFileId, setSelectedCanvasFileId] = useState("");
+  const [canvasIdFetched, setCanvasIdFetched] = useState(false);
+
   // const nodeId = useNodeId();
 
   const onDeleteNode = () => {
-    console.log(nodeIdContext,'node id')
-    console.log(nodesContext, 'nodes context this is')
-    setDeleteNodesContext(nodesContext.filter((node) => node.id !== nodeIdContext));
-    console.log(nodesContext, 'delete works setupdate node is going to be true');
-    setUpdateNodes(true)
+    console.log(nodeIdContext, "node id");
+    console.log(nodesContext, "nodes context this is");
+    setDeleteNodesContext(
+      nodesContext.filter((node) => node.id !== nodeIdContext)
+    );
+    console.log(
+      nodesContext,
+      "delete works setupdate node is going to be true"
+    );
+    setUpdateNodes(true);
   };
 
   const contextValue = {
@@ -57,9 +65,12 @@ export function FilenameProvider({ children }) {
     getTextContext,
     setGetTextContext,
     canvasDataContext,
-    setCanvasDataContext
+    setCanvasDataContext,
+    selectedCanvasFileId,
+    setSelectedCanvasFileId,
+    canvasIdFetched,
+    setCanvasIdFetched,
   };
- 
 
   return (
     <FilesConnect.Provider value={contextValue}>
@@ -67,4 +78,3 @@ export function FilenameProvider({ children }) {
     </FilesConnect.Provider>
   );
 }
-
